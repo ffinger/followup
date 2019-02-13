@@ -1,0 +1,14 @@
+Meta
+doc
+^\.Rproj.user
+^\.Rhistory
+^\.RData
+^\.Ruserdata
+^\.httr-oauth
+*~$
+*.swp
+^inst/doc
+.Rproj.user
+vignettes/*.html
+vignettes/*.R
+vignettes/*/

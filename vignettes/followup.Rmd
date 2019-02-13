@@ -1,0 +1,280 @@
+---
+title: "followup: package overview"
+date: "`r Sys.Date()`"
+output:
+   rmarkdown::html_vignette:
+     toc: true
+     toc_depth: 2
+     df_print: tibble
+vignette: >
+  %\VignetteIndexEntry{Overview}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width=7,
+  fig.height=5,
+  fig.path="figs-overview/")
+```
+
+# Installing the package
+
+To install the current stable, CRAN version of the package, type:
+```{r install, eval=FALSE}
+install.packages("followup")
+```
+
+To benefit from the latest features and bug fixes, install the development, *github* version of the package using:
+
+```{r install2, eval=FALSE}
+devtools::install_github("ffinger/followup")
+```
+
+Note that this requires the package *devtools* installed.
+
+# Main functions of the package
+
+The main functions of the package include:
+
+__`followup_priorities()`__ : Compute the followup priorities for a list of contacts.
+
+Outputs the probability that the symptoms onset of a contact was between the last follow up (day of last follow up included in interval by default, see parameter include_last_follow_up) and the analysis date, which defaults to day before current day and is included in interval.
+
+__`p_new_onset()`__ Computes the probability of new symptoms on a particular day for a particular contact
+
+__`p_integral_onset()`__ Computes the probability of new symptoms within a range of dates for a particular contact, given the incubation period.
+
+__`p_disease_saturation()`__ Helper function to compute the probability p_disease of getting disease after a certain number of days of exposure based on a saturating exponential growth model.
+
+# Background
+
+## Contact has never been followed up
+
+The probability of symptoms onset by day $t$ after exposure event that leads to symptomatic infection is
+
+$$P(\mathrm{onset\,by\,day\,}t) = \sum_{\tau=0}^t p_I(\tau)$$
+
+where $p_I(\tau)$ is the probability that the incubation period is $\tau$.
+
+Combined with a given probability $p_S$ of an exposure event leading to symptoms we thus get a probability of symptoms by day $t$ of
+
+$$P(\mathrm{symptoms\,by\,day\,}t) = p_S\,\sum_{\tau=0}^t p_I(\tau)$$
+
+## Contact has previously been followed up
+
+If a contact has previously been followed up on day $T$ and no symptoms observed the probability of onset on day $t >= T$ has to be modified as follows
+
+$$P(\mathrm{onset\,between\,days\,}t \mathrm{\,and\,}T\, \vert \mathrm{\,no\,onset\,between\,days\,}0 \mathrm{\,and\,}T-1) = \frac{\sum_{\tau=T}^t p_I(\tau)}{1-\sum_{\tau=0}^{T-1} p_I(\tau)}$$
+
+and
+
+$$P(\mathrm{symptoms\,between\,days\,}t \mathrm{\,and\,}T) = p_S \frac{\sum_{\tau=T}^t p_I(\tau)}{1-\sum_{\tau=0}^{T-1} p_I(\tau)}$$
+
+__Note__ that due to the discrete nature of the problem, a decision has to be made if observing no symptoms at some time during day $T$ is taken as the onset of symptoms being at a time $t$ after the end of day $T-1$ (and thus could be during day $T$ but after the observation), or after the end of day $T$. By default this package assumes that follow up on day $T$ ensures that symptoms onset has not occurred before the end of day $T-1$, as shown in the equations above. The parameter `include_last_follow_up` can be used to modify this behaviour.
+
+# Examples
+
+Load environment:
+
+```{r, echo = TRUE, message=FALSE}
+library(dplyr)
+library(epitrix)
+library(distcrete)
+library(followup)
+```
+
+Set up the incubation period distribution:
+
+```{r, echo = TRUE}
+incubation_days <- 0:12
+incubation_frequency <- distcrete("gamma", 1, shape = 12, rate = 3, w =
+0)$d(incubation_days)
+
+plot(incubation_days, incubation_frequency, type = "h")
+```
+
+## Create toy data
+
+Make a list of example contacts each having a sequence of consecutive __exposure dates__. The beginning of the exposure is given in column `dates_exposure` and the end in `exposure_end`. Some contacts hae a date when they were __last followed up__. Contacts that have never been followed up will have NA in the `date_last_followup` column.
+
+```{r, echo = TRUE}
+n = 10
+contact_list <- data.frame(
+  id_contact = replicate(n, paste(sample(letters, 3, replace = TRUE),
+          collapse = "")),
+  type_exposure = sample(c("hospital", "funeral", "family", "other"), n, replace = TRUE),
+  dates_exposure = Sys.Date() - sample(6:20, n, replace = TRUE)
+)
+
+contact_list$exposure_end <- contact_list$dates_exposure + sample(1:5, n, replace = TRUE)
+contact_list$date_last_followup <- Sys.Date() - sample(c(1:8, rep(NA, 6)), n, replace = TRUE)
+
+contact_list
+```
+
+Sometimes __exposure dates__ for a contact are not consecutive. In this case we can give the possible exposure dates for each patient as a list. Make a separate contact list to illustrate this case:
+
+```{r, echo = TRUE}
+contact_list_2 <- dplyr::select(contact_list, id_contact, type_exposure, date_last_followup)
+
+#function used to create toy non-consecutive exposure dates
+mkexposures <- function(foo) foo - base::sample(
+    incubation_days,
+    size = sample.int(4, size = 1),
+    replace = FALSE,
+    prob = incubation_frequency
+  )
+
+contact_list_2$dates_exposure <- sapply(Sys.Date() - 15 + sample(1:15, n, replace = TRUE), mkexposures)
+
+contact_list_2
+```
+
+
+Let's just have a closer look at the structure of the `dates_exposure` column, which is a so-called list column,
+where each element contains a vector of dates of variable length:
+
+```{r echo = TRUE}
+str(contact_list_2$dates_exposure)
+```
+
+
+## All contacts have the same probability of getting disease
+
+Now compute the probability of the symptoms onset being between the last day of follow up and yesterday (including start and end days):
+
+```{r, echo = TRUE}
+contact_list_p <- followup_priorities(
+                    contact_list,
+                    exposure = dates_exposure,
+                    exposure_end = exposure_end,
+                    last_followup = date_last_followup,
+                    p_disease = 0.3,
+                    incubation_period = incubation_frequency
+                )
+
+contact_list_p
+```
+
+## Non-consecutive exposure dates
+
+Do the same for contact_list_2, where exposure_dates are non-consecutive:
+
+```{r, echo = TRUE}
+contact_list_p2 <- followup_priorities(
+                    contact_list_2,
+                    exposure = dates_exposure,
+                    last_followup = date_last_followup,
+                    p_disease = 0.3,
+                    incubation_period = incubation_frequency
+                )
+
+contact_list_p2
+```
+
+## Probability of getting disease depends on type of exposure
+
+Above we assumed that every kind of exposure results in the same probability of developing disease. Thus the prioritization is solely based on the incubation period, the time spent since exposure and the last follow up.
+
+Let's now take into account different exposure pathways and assign different probabilities of developing disease after different types of exposure:
+
+```{r, echo = TRUE}
+pathways = data.frame(
+  type_exposure = c("hospital", "funeral", "family", "other"),
+  p_disease = c(0.2, 0.3, 0.45, 0.12)
+)
+
+pathways
+```
+
+Include those probabilities in the contact list:
+
+```{r, echo = TRUE}
+contact_list <- dplyr::left_join(contact_list, pathways, by = "type_exposure")
+
+contact_list
+```
+
+Now recompute the priorities:
+
+```{r, echo = TRUE}
+contact_list_p3 <- followup_priorities(
+                  contact_list,
+                  exposure = dates_exposure,
+                  exposure_end = exposure_end,
+                  last_followup = date_last_followup,
+                  p_disease = p_disease,
+                  incubation_period = incubation_frequency
+                )
+
+contact_list_p3
+```
+
+
+## Probability of getting disease depends on type and duration of exposure
+
+So far we assumed that the probability of getting the disease is independent of the duration of exposure. This may not be true in practice.
+
+This example uses the helper function `p_disease_saturation()` to take the number of exposure days into account when computing the probability of exposure leading to disease.
+
+Let's assume that for very long exposure the probability of exposure leading to disease is the `p_disease` used above, so let's rename it to `p_disease_max`.
+
+```{r, echo = TRUE}
+names(contact_list)[names(contact_list) == "p_disease"] <- "p_disease_max"
+```
+
+The function we are going to use to compute `p_disease` is a saturating fonction of the following form:
+
+$$p_S = p_{S\mathrm{max}} (1-\exp(-kd))$$
+
+where $d$ is the number of exposure days and $k$ can be computed using the duration $d_{50}$ for $p_S$ to reach half its maximum value:
+
+$$k = \dfrac{\log(2)}{d_{50}}$$
+
+To illustrate:
+
+```{r, echo = TRUE}
+d <- seq(0,10)
+d50 <- 1
+p_disease_max = 1
+
+plot(d, p_disease_saturation(d, p_disease_max, d50))
+
+d50 <- 2
+
+points(d, p_disease_saturation(d, p_disease_max, d50), col = "red")
+```
+
+Let's now get the number of exposure days for each contact and then compute their `p_disease`:
+
+```{r, echo = TRUE}
+d50 <- 1
+contact_list$d_exposure <- sapply(contact_list$dates_exposure, length)
+contact_list$p_disease <- mapply(
+                              p_disease_saturation,
+                              contact_list$d_exposure,
+                              contact_list$p_disease_max,
+                              MoreArgs = list(d50 = d50)
+                            )
+
+contact_list
+```
+
+And then recompute the followup priorities:
+
+```{r, echo = TRUE}
+contact_list_p4 <- followup_priorities(
+                      contact_list,
+                      exposure = dates_exposure,
+                      exposure_end = exposure_end,
+                      last_followup = date_last_followup,
+                      p_disease = p_disease,
+                      incubation_period = incubation_frequency
+                )
+
+contact_list_p4
+```
