@@ -11,6 +11,10 @@
 #' @param include_last_follow_up TRUE if the date of last follow up should be included in the date range and thus the probability of symptoms starting on that date included in the result, FALSE if not (default TRUE).
 #'
 #' @export
+#' @importFrom rlang enquo "!!" get_expr
+#' @importFrom dplyr pull if_else
+#' @importFrom tidyr complete full_seq
+#' @importFrom purrr map2_dbl pmap_dbl
 followup_priorities <- function(contact_list, dates_exposure, last_followup = NULL, p_disease = 1, incubation_period = NULL, date_analysis = Sys.Date(), include_last_follow_up = TRUE) {
 
   #------------- check inputs --------------------
@@ -22,12 +26,12 @@ followup_priorities <- function(contact_list, dates_exposure, last_followup = NU
     stop("contact_list has no columns")
   }
 
-  dates_exposure <- enquo(dates_exposure)
+  dates_exposure <- rlang::enquo(dates_exposure)
   dates_exposure <- dplyr::pull(contact_list, !!dates_exposure)
 
-  last_followup <- enquo(last_followup)
+  last_followup <- rlang::enquo(last_followup)
   if (is.null(rlang::get_expr(last_followup))) {
-    last_followup <- lubridate::as_date(NA)
+    last_followup <- as.Date(NA)
   } else {
     last_followup <- dplyr::pull(contact_list, !!last_followup)
     if (any(last_followup > date_analysis, na.rm = TRUE)) {
@@ -36,7 +40,7 @@ followup_priorities <- function(contact_list, dates_exposure, last_followup = NU
   }
 
   if (rlang::quo_text(rlang::enquo(p_disease)) %in% names(contact_list)) { #is a column
-    p_disease <- enquo(p_disease)
+    p_disease <- rlang::enquo(p_disease)
     p_disease <- dplyr::pull(contact_list, !!p_disease)
   } else if ((inherits(p_disease, "numeric") & (length(p_disease) == 1)) ) { #is a single numeric
     contact_list$p_disease <- p_disease
@@ -56,7 +60,7 @@ followup_priorities <- function(contact_list, dates_exposure, last_followup = NU
   if (inherits(incubation_period, "distcrete")) {
 
     max_inc <- as.integer(
-      max(date_analysis - lubridate::as_date(unlist(dates_exposure)))
+      max(date_analysis - as.Date(unlist(dates_exposure)))
     )
 
     incubation_period <- incubation_period$d(0:max_inc)
@@ -88,7 +92,7 @@ followup_priorities <- function(contact_list, dates_exposure, last_followup = NU
   }
 
   #the lowest exposure date for each contact
-  min_exp <- lubridate::as_date(vapply(dates_exposure, min, 1))
+  min_exp <- as.Date(vapply(dates_exposure, min, 1))
 
   #lower lim of integration
   date_lower <- dplyr::if_else(
