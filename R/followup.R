@@ -85,6 +85,8 @@ followup_priorities <- function(contact_list, dates_exposure, last_followup = NU
     incubation_period <- incubation_period$incubation_period
   }
 
+  incubation_period <- incubation_period[ 1 : max( which( x != 0 )) ] #remove trailing 0s
+
   # check if incubation_period distribution sums to 1, otherwise force it
   if (sum(incubation_period) != 1) {
     warning("Incubation period probabilities don't sum to 1. Automatically adjusted.")
@@ -191,6 +193,7 @@ p_new_onset <- function(incubation_period, date_analysis, dates_exposure) {
   }
 
   idx <- as.integer(date_analysis - dates_exposure) + 1
+  incubation_period <- incubation_period[ 1 : max( which( x != 0 )) ] #remove trailing 0s
   idx <- idx[idx <= length(incubation_period)] #remove index larger than maximal incubation period
 
   # if (any(idx < 1)) {
