@@ -19,5 +19,5 @@ p_integral_onset(incubation_period, date_lower, date_upper, dates_exposure)
 a probability
 }
 \description{
-The lower but not the upper limit is included in the interval such that the probability returned is the sum over the probability for each date_analysis that fulfills the following: date_lower <= date_analysis < date_upper.
+The lower but not the upper limit is included in the interval such that the probability returned is the sum over the probability for each date_analysis that fulfils the following: date_lower <= date_analysis < date_upper.
 }
