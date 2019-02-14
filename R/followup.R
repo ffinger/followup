@@ -9,13 +9,19 @@
 #' @param p_disease The overall probability that exposure leads to disease. Can either be a scalar applying to all contacts, or the name of a column (bare variable name or in quotes) in contact_list containing a different probability per contact. Defaults to 1.
 #' @param date_analysis the date on which the prioritization should be done. The probability of symptoms onset is computed until the end of the previous day. Defaults to the system date (i.e. today).
 #' @param include_last_follow_up TRUE if the date of last follow up should be included in the date range and thus the probability of symptoms starting on that date included in the result, FALSE if not (default TRUE).
+#' @param sort If TRUE (default) the result is sorted by followup priority.
+#'
+#' @return A data.frame containing all columns in contact_list and the following additional columns:
+#'              - p_onset, the probability of disease has onset by date_analysis given that the exposure results in disease
+#'              - p_symptoms, the overall probability of disease has onset by date_analysis
+#'              - followup_priority, an index ranging from 1 for the highest priority to the number of patients
 #'
 #' @export
 #' @importFrom rlang enquo "!!" get_expr
 #' @importFrom dplyr pull if_else
 #' @importFrom tidyr complete full_seq
 #' @importFrom purrr map2_dbl pmap_dbl
-followup_priorities <- function(contact_list, dates_exposure, last_followup = NULL, p_disease = 1, incubation_period = NULL, date_analysis = Sys.Date(), include_last_follow_up = TRUE) {
+followup_priorities <- function(contact_list, dates_exposure, last_followup = NULL, p_disease = 1, incubation_period = NULL, date_analysis = Sys.Date(), include_last_follow_up = TRUE, sort = TRUE) {
 
   #------------- check inputs --------------------
   if (!is.data.frame(contact_list)) {
@@ -82,7 +88,7 @@ followup_priorities <- function(contact_list, dates_exposure, last_followup = NU
   # check if incubation_period distribution sums to 1, otherwise force it
   if (sum(incubation_period) != 1) {
     warning("Incubation period probabilities don't sum to 1. Automatically adjusted.")
-    incubation_period = incubation_period/sum(incubation_period)
+    incubation_period <- incubation_period/sum(incubation_period)
   }
 
 
@@ -130,15 +136,19 @@ followup_priorities <- function(contact_list, dates_exposure, last_followup = NU
   contact_list$p_symptoms <- contact_list$p_onset * p_disease
 
   #sort
-  contact_list <- contact_list[order(contact_list$p_symptoms, decreasing = TRUE),]
-  contact_list$followup_priority <- 1:nrow(contact_list)
+  contact_list$followup_priority <- order(contact_list$p_symptoms, decreasing = TRUE)
+  if (sort) {
+    contact_list <- contact_list[contact_list$followup_priority,]
+  }
 
   return(contact_list)
 }
 
 
 
-#' Computes the probability of new symptoms within a range of dates for a particular contact. The lower but not the upper limit is included in the interval such that the probability returned is the sum over the probability for each date_analysis that fulfills the following: date_lower <= date_analysis < date_upper.
+#' Computes the probability of new symptoms within a range of dates for a particular contact, given the incubation period.
+#'
+#' The lower but not the upper limit is included in the interval such that the probability returned is the sum over the probability for each date_analysis that fulfills the following: date_lower <= date_analysis < date_upper.
 #'
 #' @param incubation_period a vector of probabilities. Has to sum to 1.
 #' @param date_lower the lower limit for which to compute the probability of new symptoms.
@@ -146,7 +156,7 @@ followup_priorities <- function(contact_list, dates_exposure, last_followup = NU
 #' @param dates_exposure a vector containing one or several possible dates of exposure. They are equally weighted.
 #' @return a probability
 #'
-#' @noRd
+#' @export
 p_integral_onset <- function(incubation_period, date_lower, date_upper, dates_exposure) {
 
   fct <- function(x) p_new_onset(incubation_period, x, dates_exposure)
@@ -170,7 +180,7 @@ p_integral_onset <- function(incubation_period, date_lower, date_upper, dates_ex
 #' @param dates_exposure a vector containing one or several possible dates of exposure. They are equally weighted.
 #' @return a probability
 #'
-#' @noRd
+#' @export
 p_new_onset <- function(incubation_period, date_analysis, dates_exposure) {
 
   if (sum(incubation_period) != 1) {

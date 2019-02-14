@@ -6,7 +6,8 @@
 \usage{
 followup_priorities(contact_list, dates_exposure, last_followup = NULL,
   p_disease = 1, incubation_period = NULL,
-  date_analysis = Sys.Date(), include_last_follow_up = TRUE)
+  date_analysis = Sys.Date(), include_last_follow_up = TRUE,
+  sort = TRUE)
 }
 \arguments{
 \item{contact_list}{A data.frame with one row per contact, containing at least a list column with possible dates of exposure.}
@@ -22,6 +23,14 @@ followup_priorities(contact_list, dates_exposure, last_followup = NULL,
 \item{date_analysis}{the date on which the prioritization should be done. The probability of symptoms onset is computed until the end of the previous day. Defaults to the system date (i.e. today).}
 
 \item{include_last_follow_up}{TRUE if the date of last follow up should be included in the date range and thus the probability of symptoms starting on that date included in the result, FALSE if not (default TRUE).}
+
+\item{sort}{If TRUE (default) the result is sorted by followup priority.}
+}
+\value{
+A data.frame containing all columns in contact_list and the following additional columns:
+             - p_onset, the probability of disease has onset by date_analysis given that the exposure results in disease
+             - p_symptoms, the overall probability of disease has onset by date_analysis
+             - followup_priority, an index ranging from 1 for the highest priority to the number of patients
 }
 \description{
 Outputs the probability that the symptoms onset of a contact was between the last follow up (day of last follow up included in interval by default, see parameter include_last_follow_up) and the analysis date, which defaults to day before current day and is included in interval.

@@ -44,6 +44,10 @@ __`followup_priorities()`__ : Compute the followup priorities for a list of cont
 
 Outputs the probability that the symptoms onset of a contact was between the last follow up (day of last follow up included in interval by default, see parameter include_last_follow_up) and the analysis date, which defaults to day before current day and is included in interval.
 
+__`p_new_onset()`__ Computes the probability of new symptoms within a range of dates for a particular contact, given the incubation period.
+
+__`p_integral_onset()`__ Computes the probability of new symptoms on a particular day for a particular contact.
+
 __`plot(priorities)`__ _yet to implement_
 
 __`to_html(priorities)`__ _yet to implement_
