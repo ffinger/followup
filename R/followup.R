@@ -60,7 +60,7 @@ followup_priorities <- function(contact_list, dates_exposure, last_followup = NU
   if (inherits(incubation_period, "distcrete")) {
 
     max_inc <- as.integer(
-      max(date_analysis - as.Date(unlist(dates_exposure)))
+      max(date_analysis - as.Date(unlist(dates_exposure)), origin = as.Date("1970-01-01"))
     )
 
     incubation_period <- incubation_period$d(0:max_inc)
@@ -92,7 +92,7 @@ followup_priorities <- function(contact_list, dates_exposure, last_followup = NU
   }
 
   #the lowest exposure date for each contact
-  min_exp <- as.Date(vapply(dates_exposure, min, 1))
+  min_exp <- as.Date(vapply(dates_exposure, min, 1), origin = as.Date("1970-01-01"))
 
   #lower lim of integration
   date_lower <- dplyr::if_else(
