@@ -145,10 +145,9 @@ followup_priorities <- function(contact_list, dates_exposure, last_followup = NU
 }
 
 
-
 #' Computes the probability of new symptoms within a range of dates for a particular contact, given the incubation period.
 #'
-#' The lower but not the upper limit is included in the interval such that the probability returned is the sum over the probability for each date_analysis that fulfills the following: date_lower <= date_analysis < date_upper.
+#' The lower but not the upper limit is included in the interval such that the probability returned is the sum over the probability for each date_analysis that fulfils the following: date_lower <= date_analysis < date_upper.
 #'
 #' @param incubation_period a vector of probabilities. Has to sum to 1.
 #' @param date_lower the lower limit for which to compute the probability of new symptoms.
@@ -187,6 +186,10 @@ p_new_onset <- function(incubation_period, date_analysis, dates_exposure) {
     stop("incubation_period doesn't sum to 1.")
   }
 
+  if (any(incubation_period < 0)) {
+    stop("incubation_period contains negative elements.")
+  }
+
   idx <- as.integer(date_analysis - dates_exposure) + 1
   idx <- idx[idx <= length(incubation_period)] #remove index larger than maximal incubation period
 
@@ -199,7 +202,7 @@ p_new_onset <- function(incubation_period, date_analysis, dates_exposure) {
   if (length(idx) == 0) {
     p <- 0 #all exposures are further in the past than the maximal incubation period or after the analysis date
   } else {
-    p <- sum(incubation_period[idx]/length(dates_exposure))
+    p <- sum(incubation_period[idx])/length(idx)
   }
 
   return(p)
