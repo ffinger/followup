@@ -4,7 +4,7 @@ Version: 0.0.1.9000
 Authors@R: person("Flavio", "Finger", email = "flavio.finger@lshtm.ac.uk", role = c("aut", "cre"))
 Description:
   Prioritise contacts to be followed for contact tracing during infectious disease outbreaks. Priorities are based on the date and type of exposure, and on the last time since follow up. The incubation period describes the probability of observing new symptoms on a given day. If several days have been missed from follow-up, these probabilities accumulate. Combined with the average probability of a type of contact being infectious, this provides a base for prioritising contacts to follow up.
-Depends: R (>= 3.5.2)
+Depends: R (>= 3.5)
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
@@ -12,7 +12,7 @@ Imports: dplyr,
   purrr,
   rlang,
   tidyr
-Suggests: testthat, roxygen2, knitr
+Suggests: testthat, roxygen2, knitr, distcrete, epitrix, ggplot2, magrittr
 RoxygenNote: 6.1.1
 URL: https://github.com/reconhub/followup
 BugReports: https://github.com/reconhub/followup/issues
