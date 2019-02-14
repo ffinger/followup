@@ -28,9 +28,12 @@ followup_priorities(contact_list, dates_exposure, last_followup = NULL,
 }
 \value{
 A data.frame containing all columns in contact_list and the following additional columns:
-             - p_onset, the probability of disease has onset by date_analysis given that the exposure results in disease
-             - p_symptoms, the overall probability of disease has onset by date_analysis
-             - followup_priority, an index ranging from 1 for the highest priority to the number of patients
+
+* p_onset, the probability of disease has onset by date_analysis given that the exposure results in disease
+
+* p_symptoms, the overall probability of disease has onset by date_analysis
+
+* followup_priority, an index ranging from 1 for the highest priority to the number of patients
 }
 \description{
 Outputs the probability that the symptoms onset of a contact was between the last follow up (day of last follow up included in interval by default, see parameter include_last_follow_up) and the analysis date, which defaults to day before current day and is included in interval.

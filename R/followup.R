@@ -12,9 +12,9 @@
 #' @param sort If TRUE (default) the result is sorted by followup priority.
 #'
 #' @return A data.frame containing all columns in contact_list and the following additional columns:
-#'              - p_onset, the probability of disease has onset by date_analysis given that the exposure results in disease
-#'              - p_symptoms, the overall probability of disease has onset by date_analysis
-#'              - followup_priority, an index ranging from 1 for the highest priority to the number of patients
+#' @return   * p_onset, the probability of disease has onset by date_analysis given that the exposure results in disease
+#' @return   * p_symptoms, the overall probability of disease has onset by date_analysis
+#' @return   * followup_priority, an index ranging from 1 for the highest priority to the number of patients
 #'
 #' @export
 #' @importFrom rlang enquo "!!" get_expr
