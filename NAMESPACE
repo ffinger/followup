@@ -3,6 +3,7 @@
 export(followup_priorities)
 export(p_integral_onset)
 export(p_new_onset)
+importFrom(checkmate,assert_data_frame)
 importFrom(dplyr,if_else)
 importFrom(dplyr,pull)
 importFrom(purrr,map2_dbl)
