@@ -1,6 +1,10 @@
 context("Testing followup_priorities function")
 
-#testing functionality
+myrank <- function(x) {
+  res <- NA
+  res[order(x, decreasing = TRUE)] <- 1:length(x)
+  return(res)
+}
 
 inc <- c(0.1, 0.15, 0.2, 0.25, 0.3)
 
@@ -43,13 +47,12 @@ expected_p_onset_4 <- c(
 )
 expected_p_symptoms_4 <- expected_p_onset_4 * contact_list_2$p_disease[1:3]
 
-
 test_that("output is right for constant p_disease", {
   fp <- followup_priorities(contact_list, dates_exposure, last_followup = date_last_followup, p_disease = p_d, incubation_period = inc, date_analysis = date_analysis, include_last_follow_up = TRUE, sort = FALSE)
 
   expect_equal(fp$p_onset, expected_p_onset)
   expect_equal(fp$p_symptoms, expected_p_symptoms)
-  expect_equal(fp$followup_priority, order(expected_p_symptoms, decreasing = TRUE))
+  expect_equal(fp$followup_priority, myrank(expected_p_symptoms))
 })
 
 test_that("output is right for varying p_disease", {
@@ -57,7 +60,7 @@ test_that("output is right for varying p_disease", {
 
   expect_equal(fp$p_onset, expected_p_onset)
   expect_equal(fp$p_symptoms, expected_p_symptoms_2)
-  expect_equal(fp$followup_priority, order(expected_p_symptoms_2, decreasing = TRUE))
+  expect_equal(fp$followup_priority, myrank(expected_p_symptoms_2))
 })
 
 test_that("output is right for varying p_disease with sort = TRUE", {
@@ -65,7 +68,7 @@ test_that("output is right for varying p_disease with sort = TRUE", {
 
   expect_equal(fp$p_onset, expected_p_onset[order(expected_p_symptoms_2, decreasing = TRUE)])
   expect_equal(fp$p_symptoms, expected_p_symptoms_2[order(expected_p_symptoms_2, decreasing = TRUE)])
-  expect_equal(fp$followup_priority, 1:length(expected_p_symptoms_2))
+  expect_equal(fp$followup_priority, 1:4)
 })
 
 test_that("output is right for varying p_disease with date last follow up null", {
@@ -73,7 +76,7 @@ test_that("output is right for varying p_disease with date last follow up null",
 
   expect_equal(fp$p_onset, expected_p_onset_3)
   expect_equal(fp$p_symptoms, expected_p_symptoms_3)
-  expect_equal(fp$followup_priority, order(expected_p_symptoms_3, decreasing = TRUE))
+  expect_equal(fp$followup_priority, myrank(expected_p_symptoms_3))
 })
 
 
@@ -82,7 +85,7 @@ test_that("output is right for varying p_disease with date last follow up null a
 
   expect_equal(fp$p_onset, expected_p_onset_4)
   expect_equal(fp$p_symptoms, expected_p_symptoms_4)
-  expect_equal(fp$followup_priority, order(expected_p_symptoms_4, decreasing = TRUE))
+  expect_equal(fp$followup_priority, myrank(expected_p_symptoms_4))
 })
 
 

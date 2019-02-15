@@ -21,25 +21,32 @@
 #' @importFrom dplyr pull if_else
 #' @importFrom tidyr complete full_seq
 #' @importFrom purrr map2_dbl pmap_dbl
+#' @importFrom checkmate assert_data_frame
 followup_priorities <- function(contact_list, dates_exposure, last_followup = NULL, p_disease = 1, incubation_period = NULL, date_analysis = Sys.Date(), include_last_follow_up = TRUE, sort = TRUE) {
 
-  #------------- check inputs --------------------
-  if (!is.data.frame(contact_list)) {
-    stop("contact_list is not a data.frame")
-  }
+  #-------------------------------------------------------------
+  #------------- check inputs and transform --------------------
+  #-------------------------------------------------------------
 
-  if (ncol(contact_list) == 0L) {
-    stop("contact_list has no columns")
-  }
+  #is contact list a df and has at least one row and col
+  checkmate::assert_data_frame(contact_list, min.rows = 1, min.cols = 1)
 
+  #get dates exposure
   dates_exposure <- rlang::enquo(dates_exposure)
   dates_exposure <- dplyr::pull(contact_list, !!dates_exposure)
 
+  #get last_followup
   last_followup <- rlang::enquo(last_followup)
+
   if (is.null(rlang::get_expr(last_followup))) {
+    #is last followup not given --> put NA.
     last_followup <- rep(as.Date(NA), nrow(contact_list))
-  } else {
+
+  } else if (rlang::quo_text(last_followup) %in% names(contact_list)) {
+    #is a quosure
+
     last_followup <- dplyr::pull(contact_list, !!last_followup)
+
     if (any(last_followup > date_analysis, na.rm = TRUE) & include_last_follow_up) {
       warning("Some followup dates are after the analysis date. Ignoring them.")
       last_followup[last_followup > date_analysis] <- as.Date(NA)
@@ -47,27 +54,32 @@ followup_priorities <- function(contact_list, dates_exposure, last_followup = NU
       warning("Some followup dates are equal or after the analysis date. Ignoring them.")
       last_followup[last_followup >= date_analysis] <- as.Date(NA)
     }
+  } else {
+    stop("last_followup is not a column of contact_list")
   }
 
+  #get p_disease
   if (rlang::quo_text(rlang::enquo(p_disease)) %in% names(contact_list)) { #is a column
     p_disease <- rlang::enquo(p_disease)
     p_disease <- dplyr::pull(contact_list, !!p_disease)
   } else if ((inherits(p_disease, "numeric") & (length(p_disease) == 1)) ) { #is a single numeric
     contact_list$p_disease <- p_disease
   } else {
-    stop("p_disease is of unexpected type or not a column of contact_list")
+    stop("p_disease is not a scalar and not a column of contact_list")
   }
 
-  if (any(p_disease < 0) | any(p_disease > 1)) {
-    warning("p_disease should be between 0 and 1")
+  if (any(p_disease < 0) | any(p_disease > 1, na.rm = TRUE)) {
+    stop("p_disease should be between 0 and 1")
   }
 
+  #incubation_period
   if (is.null(incubation_period)) {
-    stop("incubation_period is required")
+    stop("Required argument incubation_period not given.")
   }
 
   # make a simple vector for incubation period distribution
   if (inherits(incubation_period, "distcrete")) {
+    #from distcrete
 
     max_inc <- as.integer(
       max(date_analysis - as.Date(unlist(dates_exposure)), origin = as.Date("1970-01-01"))
@@ -76,6 +88,7 @@ followup_priorities <- function(contact_list, dates_exposure, last_followup = NU
     incubation_period <- incubation_period$d(0:max_inc)
 
   } else if (inherits(incubation_period, "data.frame")) {
+    #from df given by epitrix::empirical_incubation_dist()
 
     if (any(incubation_period$incubation_period < 0)) {
       stop("Incubation periods can't be negative")
@@ -89,19 +102,29 @@ followup_priorities <- function(contact_list, dates_exposure, last_followup = NU
     incubation_period <- incubation_period$incubation_period
   }
 
-  incubation_period <- incubation_period[ 1 : max( which(incubation_period != 0 )) ] #remove trailing 0s
+  #remove trailing 0s
+  incubation_period <- incubation_period[ 1 : max( which(incubation_period != 0 )) ]
+
 
   # check if incubation_period distribution sums to 1, otherwise force it
   if (sum(incubation_period) != 1) {
-    warning("Incubation period probabilities don't sum to 1. Automatically adjusted.")
+    warning(paste0("Incubation period probabilities don't sum to 1 but to ", sum(incubation_period), " Automatically adjusted."))
     incubation_period <- incubation_period/sum(incubation_period)
+  }
+
+  if (any(is.na(incubation_period))) {
+    stop("incubation_period contains NA.")
   }
 
   if (date_analysis < min(unlist(dates_exposure))) {
     stop("date_analysis before first exposure date.")
   }
 
+
+  #----------------------------------------------
   #------------- do the work --------------------
+  #----------------------------------------------
+
   if (!include_last_follow_up) {
     last_followup <- last_followup + 1
   }
@@ -146,9 +169,9 @@ followup_priorities <- function(contact_list, dates_exposure, last_followup = NU
 
   #sort
 
-  contact_list$followup_priority <- nrow(contact_list) - rank(contact_list$p_symptoms, na.last = "keep", ties.method = "first") + 1
+  contact_list$followup_priority[order(contact_list$p_symptoms, decreasing = TRUE)] <- 1:nrow(contact_list)
   if (sort) {
-    contact_list <- contact_list[order(contact_list$p_symptoms, decreasing = TRUE),]
+    contact_list <- contact_list[order(contact_list$followup_priority),]
   }
 
   return(contact_list)
