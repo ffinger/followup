@@ -27,7 +27,7 @@ test_that("p is right if incubation period is 0", {
 })
 
 test_that("p is right for two exposure dates, one of them outside range", {
-  expect_identical(p_new_onset(inc, as.Date("2019-01-06"), c(as.Date("2019-01-01"), as.Date("2019-01-03"))), .25)
+  expect_identical(p_new_onset(inc, as.Date("2019-01-06"), c(as.Date("2019-01-01"), as.Date("2019-01-03"))), .25/2)
 })
 
 test_that("p is right for several exposure dates, all within range", {

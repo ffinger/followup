@@ -2,6 +2,11 @@ context("Testing p_integral_onset function")
 
 inc <- c(0.1, 0.15, 0.2, 0.25, 0.3)
 
+test_that("error is thrown if date_lower > date_upper", {
+  expect_error(
+    p_integral_onset(inc, as.Date("2019-01-08"), as.Date("2019-01-07"), c(as.Date("2019-01-02"), as.Date("2019-01-04"))), "date_upper is before date_lower.")
+})
+
 test_that("p is 0 if date_lower == date_upper", {
   expect_identical(p_integral_onset(inc, as.Date("2019-01-07"), as.Date("2019-01-07"), c(as.Date("2019-01-02"), as.Date("2019-01-04"))), 0)
 })
@@ -23,11 +28,11 @@ test_that("p is right for multiple exposure single analysis date", {
 })
 
 test_that("p is right for multiple exposure (one further back than max incubation duration) and single analysis date", {
-  expect_identical(p_integral_onset(inc, as.Date("2019-01-30"), as.Date("2019-01-31"), c(as.Date("2019-01-25"), as.Date("2019-01-28"))), inc[3])
+  expect_identical(p_integral_onset(inc, as.Date("2019-01-30"), as.Date("2019-01-31"), c(as.Date("2019-01-25"), as.Date("2019-01-28"))), inc[3]/2)
 })
 
 test_that("p is right for multiple exposure (one after analysis) and single analysis date", {
-  expect_identical(p_integral_onset(inc, as.Date("2019-01-30"), as.Date("2019-01-31"), c(as.Date("2019-02-01"), as.Date("2019-01-28"))), inc[3])
+  expect_identical(p_integral_onset(inc, as.Date("2019-01-30"), as.Date("2019-01-31"), c(as.Date("2019-02-01"), as.Date("2019-01-28"))), inc[3]/2)
 })
 
 test_that("p is right multiple analysis dates and single exposure date previous to analysis dates", {
@@ -46,6 +51,6 @@ test_that("p is right multiple analysis dates and multiple analysis and multiple
       as.Date("2019-01-29"),
       c(as.Date("2019-01-23"), as.Date("2019-01-24"), as.Date("2019-01-26"))
     ),
-    sum(inc[c(2,3)])/2 + sum(inc[c(1,3,4)])/3 + sum(inc[c(2,4,5)])/3 + sum(inc[c(3,5)])/2
+    sum(inc[c(2,3)])/3 + sum(inc[c(1,3,4)])/3 + sum(inc[c(2,4,5)])/3 + sum(inc[c(3,5)])/3
   )
 })

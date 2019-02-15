@@ -37,11 +37,15 @@ followup_priorities <- function(contact_list, dates_exposure, last_followup = NU
 
   last_followup <- rlang::enquo(last_followup)
   if (is.null(rlang::get_expr(last_followup))) {
-    last_followup <- as.Date(NA)
+    last_followup <- rep(as.Date(NA), nrow(contact_list))
   } else {
     last_followup <- dplyr::pull(contact_list, !!last_followup)
-    if (any(last_followup > date_analysis, na.rm = TRUE)) {
-      warning("Some followup dates are in the future.")
+    if (any(last_followup > date_analysis, na.rm = TRUE) & include_last_follow_up) {
+      warning("Some followup dates are after the analysis date. Ignoring them.")
+      last_followup[last_followup > date_analysis] <- as.Date(NA)
+    } else if (any(last_followup >= date_analysis, na.rm = TRUE) & !include_last_follow_up) {
+      warning("Some followup dates are equal or after the analysis date. Ignoring them.")
+      last_followup[last_followup >= date_analysis] <- as.Date(NA)
     }
   }
 
@@ -93,6 +97,9 @@ followup_priorities <- function(contact_list, dates_exposure, last_followup = NU
     incubation_period <- incubation_period/sum(incubation_period)
   }
 
+  if (date_analysis < min(unlist(dates_exposure))) {
+    stop("date_analysis before first exposure date.")
+  }
 
   #------------- do the work --------------------
   if (!include_last_follow_up) {
@@ -162,7 +169,9 @@ p_integral_onset <- function(incubation_period, date_lower, date_upper, dates_ex
 
   fct <- function(x) p_new_onset(incubation_period, x, dates_exposure)
 
-  if (date_lower == date_upper) {
+  if (date_lower > date_upper) {
+    stop("date_upper is before date_lower.")
+  } else if (date_lower == date_upper) {
     p <- 0
   } else {
     p <- sum(vapply(seq(from = date_lower, to = date_upper - 1, by = 1), fct, 1))
@@ -205,7 +214,7 @@ p_new_onset <- function(incubation_period, date_analysis, dates_exposure) {
   if (length(idx) == 0) {
     p <- 0 #all exposures are further in the past than the maximal incubation period or after the analysis date
   } else {
-    p <- sum(incubation_period[idx])/length(idx)
+    p <- sum(incubation_period[idx])/length(dates_exposure)
   }
 
   return(p)
