@@ -130,7 +130,8 @@ contact_list_p <- followup_priorities(
                   dates_exposure,
                   date_last_followup,
                   p_disease = 0.3,
-                  incubation_period = incubation_frequency
+                  incubation_period = incubation_frequency,
+                  sort = TRUE
                 )
 
 print(contact_list_p)

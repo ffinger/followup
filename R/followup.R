@@ -145,9 +145,10 @@ followup_priorities <- function(contact_list, dates_exposure, last_followup = NU
   contact_list$p_symptoms <- contact_list$p_onset * p_disease
 
   #sort
-  contact_list$followup_priority <- order(contact_list$p_symptoms, decreasing = TRUE)
+
+  contact_list$followup_priority <- nrow(contact_list) - rank(contact_list$p_symptoms, na.last = "keep", ties.method = "first") + 1
   if (sort) {
-    contact_list <- contact_list[contact_list$followup_priority,]
+    contact_list <- contact_list[order(contact_list$p_symptoms, decreasing = TRUE),]
   }
 
   return(contact_list)
