@@ -112,10 +112,10 @@ contact_list <- data.frame(
 )
 
 #function used to create toy exposure dates
-mkexposures <- function(foo) foo - base::sample(incubation_days, size = sample.int(6, size = 1), replace = FALSE, prob = incubation_frequency)
+mkexposures <- function(foo) foo - base::sample(incubation_days, size = sample.int(4, size = 1), replace = FALSE, prob = incubation_frequency)
 
-contact_list$dates_exposure <- sapply(Sys.Date() - 10 + sample(1:10, n, replace = TRUE), mkexposures)
-contact_list$date_last_followup <- Sys.Date() - sample(c(1:6, rep(NA, 3)), n, replace = TRUE)
+contact_list$dates_exposure <- sapply(Sys.Date() - 15 + sample(1:15, n, replace = TRUE), mkexposures)
+contact_list$date_last_followup <- Sys.Date() - sample(c(1:8, rep(NA, 3)), n, replace = TRUE)
 
 print(contact_list)
 ```
