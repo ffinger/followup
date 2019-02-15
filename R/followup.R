@@ -125,18 +125,19 @@ followup_priorities <- function(contact_list, dates_exposure, last_followup = NU
   #------------- do the work --------------------
   #----------------------------------------------
 
-  if (!include_last_follow_up) {
-    last_followup <- last_followup + 1
-  }
-
-  #the lowest exposure date for each contact
+  #the first exposure date for each contact
   min_exp <- as.Date(vapply(dates_exposure, min, 1), origin = as.Date("1970-01-01"))
+
+  increment <- 0
+  if (!include_last_follow_up) {
+    increment <- 1
+  }
 
   #lower lim of integration
   date_lower <- dplyr::if_else(
     is.na(last_followup),
     min_exp,
-    last_followup
+    last_followup + increment #add increment of 1 if last followup not included in integration range
   )
 
   #compute probs
@@ -167,8 +168,7 @@ followup_priorities <- function(contact_list, dates_exposure, last_followup = NU
   #apply base probability of disease being transmitted
   contact_list$p_symptoms <- contact_list$p_onset * p_disease
 
-  #sort
-
+  #sort and add priorities
   contact_list$followup_priority[order(contact_list$p_symptoms, decreasing = TRUE)] <- 1:nrow(contact_list)
   if (sort) {
     contact_list <- contact_list[order(contact_list$followup_priority),]
