@@ -157,8 +157,8 @@ followup_priorities <- function(contact_list, dates_exposure, last_followup = NU
     function(x,y,z) p_integral_onset(incubation_period, x, y, z)
   )
 
-  contact_list$p_onset1 <- p_onset
-  contact_list$p_corr <- p_corr
+  # contact_list$p_onset1 <- p_onset
+  # contact_list$p_corr <- p_corr
   p_onset <- p_onset/(1-p_corr)
 
   #if the last followup is after the maximum incubation period from the last exposure then p_onset drops to 0. manual correction necessary since p_corr in this case is 1, so p_onset is 0/0 = NaN
