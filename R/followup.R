@@ -147,30 +147,6 @@ followup_priorities <- function(contact_list, dates_exposure, last_followup = NU
     function(x,y) p_integral_onset(incubation_period, x, date_analysis, y)
   )
 
-  # correct the probs for previous follow up
-  p_corr <- purrr::pmap_dbl(
-    list(
-      min_exp,
-      pmax(date_lower, min_exp),
-      dates_exposure
-    ),
-    function(x,y,z) p_integral_onset(incubation_period, x, y, z)
-  )
-
-  # contact_list$p_onset1 <- p_onset
-  # contact_list$p_corr <- p_corr
-  p_onset <- p_onset/(1-p_corr)
-
-  #if the last followup is after the maximum incubation period from the last exposure then p_onset drops to 0. manual correction necessary since p_corr in this case is 1, so p_onset is 0/0 = NaN
-  max_exp <- as.Date(vapply(dates_exposure, max, 1), origin = as.Date("1970-01-01"))
-  max_inc <- length(incubation_period) - 1
-  p_onset <- if_else(
-    last_followup > (max_exp + max_inc),
-    0,
-    p_onset,
-    missing = p_onset
-  )
-
   #put into df
   contact_list$p_onset <- p_onset
 

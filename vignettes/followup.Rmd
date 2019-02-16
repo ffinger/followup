@@ -70,11 +70,11 @@ $$P(\mathrm{symptoms\,by\,day\,}t) = p_S\,\sum_{\tau=0}^t p_I(\tau)$$
 
 If a contact has previously been followed up on day $T$ and no symptoms observed the probability of onset on day $t >= T$ has to be modified as follows
 
-$$P(\mathrm{onset\,by\,day\,}t \; | \; \mathrm{no\,onset\,by\,day\,}T) = \dfrac{\sum_{\tau=T}^t p_I(\tau)}{1 - \sum_{\tau=0}^{T-1} p_I(\tau)}$$
+$$P(\mathrm{onset\,between\,days\,}t \mathrm{\,and\,}T) = \sum_{\tau=T}^t p_I(\tau)$$
 
 and
 
-$$P(\mathrm{symptoms\,by\,day\,}t) = p_S\,\dfrac{\sum_{\tau=T}^t p_I(\tau)}{1 - \sum_{\tau=0}^{T-1} p_I(\tau)}$$
+$$P(\mathrm{symptoms\,between\,days\,}t \mathrm{\,and\,}T) = p_S\,\sum_{\tau=T}^t p_I(\tau)$$
 
 __Note__ that due to the discrete nature of the problem, a decision has to be made if observing no symptoms at some time during day $T$ is taken as the onset of symptoms being at a time $t$ after the end of day $T-1$ (and thus could be during day $T$ but after the observation), or after the end of day $T$. By default this package assumes that follow up on day $T$ ensures that symptoms onset has not occurred before the end of day $T-1$, as shown in the equations above. The parameter `include_last_follow_up` can be used to modify this behaviour.
 
