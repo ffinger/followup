@@ -12,8 +12,11 @@ Imports: dplyr,
   purrr,
   rlang,
   tidyr,
-  checkmate
-Suggests: testthat, roxygen2, knitr, distcrete, epitrix, ggplot2, magrittr
+  checkmate,
+  htmlTable,
+  kableExtra,
+  magrittr
+Suggests: testthat, roxygen2, knitr, distcrete, epitrix
 RoxygenNote: 6.1.1
 URL: https://github.com/reconhub/followup
 BugReports: https://github.com/reconhub/followup/issues

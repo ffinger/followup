@@ -230,7 +230,64 @@ p_new_onset <- function(incubation_period, date_analysis, dates_exposure) {
 }
 
 
-# #' @export
-# p_disease_saturation <- function(p_disease_max, ndays, alpha) {
-#   return( p_disease_max * atan(alpha * ndays) * 2/pi )
-# }
+
+#' Helper function to compute the probability p_disease of getting disease after a certain number of days of exposure based on a saturating exponential growth model.
+#'
+#' @param d the number of exposure days.
+#' @param p_disease_max the maximum probability of getting disease, reached for high d only.
+#' @param d50 the number of exposure days after which p_disease = 0.5*p_disease_max is reached. Can be float.
+#'
+#' @return the proabbility p_disease
+#'
+#' @export
+p_disease_saturation <- function(d, p_disease_max = 1, d50 = 1) {
+  k <- log(2)/d50
+  return( p_disease_max * (1-exp(-k*d)) )
+}
+
+#' Helper function print contact list as html table.
+#'
+#' @param contact_list a data frame
+#' @param cols_round a list of quoted column names to be rounded
+#' @param date_cols a list of quoted column names containing dates
+#' @param ndigit number of digits for rouning (default: 2)
+#'
+#' @importFrom dplyr mutate
+#' @importFrom htmlTable txtRound
+#' @importFrom kableExtra kable kable_styling
+#' @importFrom magrittr "%>%"
+#'
+#' @export
+to_html <- function(contact_list, cols_round = list(), date_cols = list(), ndigit = 2) {
+
+  # date_cols <- dplyr::quos(unlist(date_cols))
+
+  if (length(cols_round) > 0) {
+    for (i in 1:length(cols_round)) {
+      col <- cols_round[[i]]
+      contact_list[col] <- htmlTable::txtRound(contact_list[col], ndigit)
+    }
+  }
+
+  if (length(date_cols) > 0) {
+    for (i in 1:length(date_cols)) {
+      col <- date_cols[[i]]
+      if (inherits(contact_list[[col]], "Date")) {
+          contact_list[col] <- sapply(contact_list[col], as.character)
+      } else if (inherits(contact_list[[col]], "list")) {
+          contact_list[col] <- sapply(contact_list[col], datevec_to_txt)
+      } else {
+        stop(paste("unexpected column type", class(contact_list[[col]])))
+      }
+    }
+  }
+
+  kableExtra::kable(contact_list) %>%
+    kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = FALSE)
+}
+
+datevec_to_txt <- function(datevec) {
+    datevec <- sapply(datevec, as.Date)
+    datevec <- sapply(datevec, as.character)
+    return(paste(datevec))
+}

@@ -48,9 +48,7 @@ __`p_new_onset()`__ Computes the probability of new symptoms within a range of d
 
 __`p_integral_onset()`__ Computes the probability of new symptoms on a particular day for a particular contact.
 
-__`plot(priorities)`__ _yet to implement_
-
-__`to_html(priorities)`__ _yet to implement_
+__`p_disease_saturation()`__ Helper function to compute the probability p_disease of getting disease after a certain number of days of exposure based on a saturating exponential growth model.
 
 # Background
 
@@ -88,7 +86,6 @@ library(magrittr)
 library(epitrix)
 library(distcrete)
 library(followup)
-library(ggplot2)
 ```
 
 Set up the incubation period distribution:
@@ -104,9 +101,9 @@ plot(incubation_days, incubation_frequency, type = "h")
 Make a list of example contacts each having several possible __exposure dates__ and some having a date when they were __last followed up__. Contacts that have never been followed up will have NA in the `date_last_followup` column:
 
 ```{r, echo = TRUE}
-n = 20
+n = 12
 contact_list <- data.frame(
-  id_contact = replicate(n, paste(sample(letters, 6, replace = TRUE),
+  id_contact = replicate(n, paste(sample(letters, 3, replace = TRUE),
           collapse = "")),
   type_exposure = sample(c("hospital", "funeral", "family", "other"), n, replace = TRUE)
 )
@@ -115,9 +112,9 @@ contact_list <- data.frame(
 mkexposures <- function(foo) foo - base::sample(incubation_days, size = sample.int(4, size = 1), replace = FALSE, prob = incubation_frequency)
 
 contact_list$dates_exposure <- sapply(Sys.Date() - 15 + sample(1:15, n, replace = TRUE), mkexposures)
-contact_list$date_last_followup <- Sys.Date() - sample(c(1:8, rep(NA, 3)), n, replace = TRUE)
+contact_list$date_last_followup <- Sys.Date() - sample(c(1:8, rep(NA, 6)), n, replace = TRUE)
 
-print(contact_list)
+to_html(contact_list, date_cols = list("dates_exposure", "date_last_followup"))
 ```
 
 ## All contacts have the same probability of getting disease
@@ -133,7 +130,7 @@ contact_list_p <- followup_priorities(
                   incubation_period = incubation_frequency
                 )
 
-print(contact_list_p)
+to_html(contact_list_p, cols_round = list("p_onset", "p_symptoms"), date_cols = list("dates_exposure", "date_last_followup"))
 ```
 
 ## Probability of getting disease depends on type of exposure
@@ -148,7 +145,7 @@ pathways = data.frame(
   p_disease = c(0.2, 0.3, 0.45, 0.12)
 )
 
-print(pathways)
+to_html(pathways)
 ```
 
 Include those probabilities in the contact list:
@@ -157,7 +154,7 @@ Include those probabilities in the contact list:
 contact_list <- contact_list %>%
                   dplyr::left_join(pathways, by = "type_exposure")
 
-print(contact_list)
+to_html(contact_list, date_cols = list("dates_exposure", "date_last_followup"))
 ```
 
 Now recompute the priorities:
@@ -171,5 +168,69 @@ contact_list_p2 <- followup_priorities(
                   incubation_period = incubation_frequency
                 )
 
-print(contact_list_p2)
+to_html(contact_list_p2, cols_round = list("p_onset", "p_symptoms"), date_cols = list("dates_exposure", "date_last_followup"))
+```
+
+
+## Probability of getting disease depends on type and duration of exposure
+
+So far we assumed that the probability of getting the disease is independent of the duration of exposure. This may not be true in practice.
+
+This example uses the helper function `p_disease_saturation()` to take the number of exposure days into account when computing the probability of exposure leading to disease.
+
+Let's assume that for very long exposure the probability of exposure leading to disease is the `p_disease` used above, so let's rename it to `p_disease_max`.
+
+```{r, echo = TRUE}
+names(contact_list)[names(contact_list) == "p_disease"] <- "p_disease_max"
+```
+
+The function we are going to use to compute `p_disease` is a saturating fonction of the following form:
+
+$$p_S = p_{S\mathrm{max}} (1-\exp(-kd))$$
+
+where $d$ is the number of exposure days and $k$ can be computed using the duration $d_{50}$ for $p_S$ to reach half its maximum value:
+
+$$k = \dfrac{\log(2)}{d_{50}}$$
+
+To illustrate:
+
+```{r, echo = TRUE}
+d <- seq(0,10)
+d50 <- 1
+p_disease_max = 1
+
+plot(d, p_disease_saturation(d, p_disease_max, d50))
+
+d50 <- 2
+
+points(d, p_disease_saturation(d, p_disease_max, d50), col = "red")
+```
+
+Let's now get the number of exposure days for each contact and then compute their `p_disease`:
+
+```{r, echo = TRUE}
+d50 <- 1
+contact_list$d_exposure <- sapply(contact_list$dates_exposure, length)
+contact_list$p_disease <- mapply(
+                              p_disease_saturation,
+                              contact_list$d_exposure,
+                              contact_list$p_disease_max,
+                              MoreArgs = list(d50 = d50)
+                            )
+
+to_html(contact_list, cols_round = list("p_disease"), date_cols = list("dates_exposure", "date_last_followup"))
+```
+
+And then recompute the followup priorities:
+
+```{r, echo = TRUE}
+contact_list_p3 <- followup_priorities(
+                  contact_list,
+                  dates_exposure,
+                  date_last_followup,
+                  p_disease,
+                  incubation_period = incubation_frequency
+                )
+
+to_html(contact_list_p3, cols_round = list("p_disease", "p_onset", "p_symptoms"), date_cols = list("dates_exposure", "date_last_followup"))
 ```

@@ -1,517 +1,2257 @@
 <!DOCTYPE html>
-<html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 
-<title>Installing the package</title>
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
 
-<script type="text/javascript">
-window.onload = function() {
-  var imgs = document.getElementsByTagName('img'), i, img;
-  for (i = 0; i < imgs.length; i++) {
-    img = imgs[i];
-    // center an image if it is the only element of its parent
-    if (img.parentElement.childElementCount === 1)
-      img.parentElement.style.textAlign = 'center';
-  }
-};
-</script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-<!-- Styles for R syntax highlighter -->
+
+<meta name="date" content="2019-02-20" />
+
+<title>followup: package overview</title>
+
+<script src="data:application/x-javascript;base64,JChkb2N1bWVudCkucmVhZHkoZnVuY3Rpb24oKXsKICAgIGlmICh0eXBlb2YgJCgnW2RhdGEtdG9nZ2xlPSJ0b29sdGlwIl0nKS50b29sdGlwID09PSAnZnVuY3Rpb24nKSB7CiAgICAgICAgJCgnW2RhdGEtdG9nZ2xlPSJ0b29sdGlwIl0nKS50b29sdGlwKCk7CiAgICB9CiAgICBpZiAoJCgnW2RhdGEtdG9nZ2xlPSJwb3BvdmVyIl0nKS5wb3BvdmVyID09PSAnZnVuY3Rpb24nKSB7CiAgICAgICAgJCgnW2RhdGEtdG9nZ2xlPSJwb3BvdmVyIl0nKS5wb3BvdmVyKCk7CiAgICB9Cn0pOwo="></script>
+
+
+<style type="text/css">code{white-space: pre;}</style>
 <style type="text/css">
-   pre .operator,
-   pre .paren {
-     color: rgb(104, 118, 135)
-   }
-
-   pre .literal {
-     color: #990073
-   }
-
-   pre .number {
-     color: #099;
-   }
-
-   pre .comment {
-     color: #998;
-     font-style: italic
-   }
-
-   pre .keyword {
-     color: #900;
-     font-weight: bold
-   }
-
-   pre .identifier {
-     color: rgb(0, 0, 0);
-   }
-
-   pre .string {
-     color: #d14;
-   }
-</style>
-
-<!-- R syntax highlighter -->
-<script type="text/javascript">
-var hljs=new function(){function m(p){return p.replace(/&/gm,"&amp;").replace(/</gm,"&lt;")}function f(r,q,p){return RegExp(q,"m"+(r.cI?"i":"")+(p?"g":""))}function b(r){for(var p=0;p<r.childNodes.length;p++){var q=r.childNodes[p];if(q.nodeName=="CODE"){return q}if(!(q.nodeType==3&&q.nodeValue.match(/\s+/))){break}}}function h(t,s){var p="";for(var r=0;r<t.childNodes.length;r++){if(t.childNodes[r].nodeType==3){var q=t.childNodes[r].nodeValue;if(s){q=q.replace(/\n/g,"")}p+=q}else{if(t.childNodes[r].nodeName=="BR"){p+="\n"}else{p+=h(t.childNodes[r])}}}if(/MSIE [678]/.test(navigator.userAgent)){p=p.replace(/\r/g,"\n")}return p}function a(s){var r=s.className.split(/\s+/);r=r.concat(s.parentNode.className.split(/\s+/));for(var q=0;q<r.length;q++){var p=r[q].replace(/^language-/,"");if(e[p]){return p}}}function c(q){var p=[];(function(s,t){for(var r=0;r<s.childNodes.length;r++){if(s.childNodes[r].nodeType==3){t+=s.childNodes[r].nodeValue.length}else{if(s.childNodes[r].nodeName=="BR"){t+=1}else{if(s.childNodes[r].nodeType==1){p.push({event:"start",offset:t,node:s.childNodes[r]});t=arguments.callee(s.childNodes[r],t);p.push({event:"stop",offset:t,node:s.childNodes[r]})}}}}return t})(q,0);return p}function k(y,w,x){var q=0;var z="";var s=[];function u(){if(y.length&&w.length){if(y[0].offset!=w[0].offset){return(y[0].offset<w[0].offset)?y:w}else{return w[0].event=="start"?y:w}}else{return y.length?y:w}}function t(D){var A="<"+D.nodeName.toLowerCase();for(var B=0;B<D.attributes.length;B++){var C=D.attributes[B];A+=" "+C.nodeName.toLowerCase();if(C.value!==undefined&&C.value!==false&&C.value!==null){A+='="'+m(C.value)+'"'}}return A+">"}while(y.length||w.length){var v=u().splice(0,1)[0];z+=m(x.substr(q,v.offset-q));q=v.offset;if(v.event=="start"){z+=t(v.node);s.push(v.node)}else{if(v.event=="stop"){var p,r=s.length;do{r--;p=s[r];z+=("</"+p.nodeName.toLowerCase()+">")}while(p!=v.node);s.splice(r,1);while(r<s.length){z+=t(s[r]);r++}}}}return z+m(x.substr(q))}function j(){function q(x,y,v){if(x.compiled){return}var u;var s=[];if(x.k){x.lR=f(y,x.l||hljs.IR,true);for(var w in x.k){if(!x.k.hasOwnProperty(w)){continue}if(x.k[w] instanceof Object){u=x.k[w]}else{u=x.k;w="keyword"}for(var r in u){if(!u.hasOwnProperty(r)){continue}x.k[r]=[w,u[r]];s.push(r)}}}if(!v){if(x.bWK){x.b="\\b("+s.join("|")+")\\s"}x.bR=f(y,x.b?x.b:"\\B|\\b");if(!x.e&&!x.eW){x.e="\\B|\\b"}if(x.e){x.eR=f(y,x.e)}}if(x.i){x.iR=f(y,x.i)}if(x.r===undefined){x.r=1}if(!x.c){x.c=[]}x.compiled=true;for(var t=0;t<x.c.length;t++){if(x.c[t]=="self"){x.c[t]=x}q(x.c[t],y,false)}if(x.starts){q(x.starts,y,false)}}for(var p in e){if(!e.hasOwnProperty(p)){continue}q(e[p].dM,e[p],true)}}function d(B,C){if(!j.called){j();j.called=true}function q(r,M){for(var L=0;L<M.c.length;L++){if((M.c[L].bR.exec(r)||[null])[0]==r){return M.c[L]}}}function v(L,r){if(D[L].e&&D[L].eR.test(r)){return 1}if(D[L].eW){var M=v(L-1,r);return M?M+1:0}return 0}function w(r,L){return L.i&&L.iR.test(r)}function K(N,O){var M=[];for(var L=0;L<N.c.length;L++){M.push(N.c[L].b)}var r=D.length-1;do{if(D[r].e){M.push(D[r].e)}r--}while(D[r+1].eW);if(N.i){M.push(N.i)}return f(O,M.join("|"),true)}function p(M,L){var N=D[D.length-1];if(!N.t){N.t=K(N,E)}N.t.lastIndex=L;var r=N.t.exec(M);return r?[M.substr(L,r.index-L),r[0],false]:[M.substr(L),"",true]}function z(N,r){var L=E.cI?r[0].toLowerCase():r[0];var M=N.k[L];if(M&&M instanceof Array){return M}return false}function F(L,P){L=m(L);if(!P.k){return L}var r="";var O=0;P.lR.lastIndex=0;var M=P.lR.exec(L);while(M){r+=L.substr(O,M.index-O);var N=z(P,M);if(N){x+=N[1];r+='<span class="'+N[0]+'">'+M[0]+"</span>"}else{r+=M[0]}O=P.lR.lastIndex;M=P.lR.exec(L)}return r+L.substr(O,L.length-O)}function J(L,M){if(M.sL&&e[M.sL]){var r=d(M.sL,L);x+=r.keyword_count;return r.value}else{return F(L,M)}}function I(M,r){var L=M.cN?'<span class="'+M.cN+'">':"";if(M.rB){y+=L;M.buffer=""}else{if(M.eB){y+=m(r)+L;M.buffer=""}else{y+=L;M.buffer=r}}D.push(M);A+=M.r}function G(N,M,Q){var R=D[D.length-1];if(Q){y+=J(R.buffer+N,R);return false}var P=q(M,R);if(P){y+=J(R.buffer+N,R);I(P,M);return P.rB}var L=v(D.length-1,M);if(L){var O=R.cN?"</span>":"";if(R.rE){y+=J(R.buffer+N,R)+O}else{if(R.eE){y+=J(R.buffer+N,R)+O+m(M)}else{y+=J(R.buffer+N+M,R)+O}}while(L>1){O=D[D.length-2].cN?"</span>":"";y+=O;L--;D.length--}var r=D[D.length-1];D.length--;D[D.length-1].buffer="";if(r.starts){I(r.starts,"")}return R.rE}if(w(M,R)){throw"Illegal"}}var E=e[B];var D=[E.dM];var A=0;var x=0;var y="";try{var s,u=0;E.dM.buffer="";do{s=p(C,u);var t=G(s[0],s[1],s[2]);u+=s[0].length;if(!t){u+=s[1].length}}while(!s[2]);if(D.length>1){throw"Illegal"}return{r:A,keyword_count:x,value:y}}catch(H){if(H=="Illegal"){return{r:0,keyword_count:0,value:m(C)}}else{throw H}}}function g(t){var p={keyword_count:0,r:0,value:m(t)};var r=p;for(var q in e){if(!e.hasOwnProperty(q)){continue}var s=d(q,t);s.language=q;if(s.keyword_count+s.r>r.keyword_count+r.r){r=s}if(s.keyword_count+s.r>p.keyword_count+p.r){r=p;p=s}}if(r.language){p.second_best=r}return p}function i(r,q,p){if(q){r=r.replace(/^((<[^>]+>|\t)+)/gm,function(t,w,v,u){return w.replace(/\t/g,q)})}if(p){r=r.replace(/\n/g,"<br>")}return r}function n(t,w,r){var x=h(t,r);var v=a(t);var y,s;if(v){y=d(v,x)}else{return}var q=c(t);if(q.length){s=document.createElement("pre");s.innerHTML=y.value;y.value=k(q,c(s),x)}y.value=i(y.value,w,r);var u=t.className;if(!u.match("(\\s|^)(language-)?"+v+"(\\s|$)")){u=u?(u+" "+v):v}if(/MSIE [678]/.test(navigator.userAgent)&&t.tagName=="CODE"&&t.parentNode.tagName=="PRE"){s=t.parentNode;var p=document.createElement("div");p.innerHTML="<pre><code>"+y.value+"</code></pre>";t=p.firstChild.firstChild;p.firstChild.cN=s.cN;s.parentNode.replaceChild(p.firstChild,s)}else{t.innerHTML=y.value}t.className=u;t.result={language:v,kw:y.keyword_count,re:y.r};if(y.second_best){t.second_best={language:y.second_best.language,kw:y.second_best.keyword_count,re:y.second_best.r}}}function o(){if(o.called){return}o.called=true;var r=document.getElementsByTagName("pre");for(var p=0;p<r.length;p++){var q=b(r[p]);if(q){n(q,hljs.tabReplace)}}}function l(){if(window.addEventListener){window.addEventListener("DOMContentLoaded",o,false);window.addEventListener("load",o,false)}else{if(window.attachEvent){window.attachEvent("onload",o)}else{window.onload=o}}}var e={};this.LANGUAGES=e;this.highlight=d;this.highlightAuto=g;this.fixMarkup=i;this.highlightBlock=n;this.initHighlighting=o;this.initHighlightingOnLoad=l;this.IR="[a-zA-Z][a-zA-Z0-9_]*";this.UIR="[a-zA-Z_][a-zA-Z0-9_]*";this.NR="\\b\\d+(\\.\\d+)?";this.CNR="\\b(0[xX][a-fA-F0-9]+|(\\d+(\\.\\d*)?|\\.\\d+)([eE][-+]?\\d+)?)";this.BNR="\\b(0b[01]+)";this.RSR="!|!=|!==|%|%=|&|&&|&=|\\*|\\*=|\\+|\\+=|,|\\.|-|-=|/|/=|:|;|<|<<|<<=|<=|=|==|===|>|>=|>>|>>=|>>>|>>>=|\\?|\\[|\\{|\\(|\\^|\\^=|\\||\\|=|\\|\\||~";this.ER="(?![\\s\\S])";this.BE={b:"\\\\.",r:0};this.ASM={cN:"string",b:"'",e:"'",i:"\\n",c:[this.BE],r:0};this.QSM={cN:"string",b:'"',e:'"',i:"\\n",c:[this.BE],r:0};this.CLCM={cN:"comment",b:"//",e:"$"};this.CBLCLM={cN:"comment",b:"/\\*",e:"\\*/"};this.HCM={cN:"comment",b:"#",e:"$"};this.NM={cN:"number",b:this.NR,r:0};this.CNM={cN:"number",b:this.CNR,r:0};this.BNM={cN:"number",b:this.BNR,r:0};this.inherit=function(r,s){var p={};for(var q in r){p[q]=r[q]}if(s){for(var q in s){p[q]=s[q]}}return p}}();hljs.LANGUAGES.cpp=function(){var a={keyword:{"false":1,"int":1,"float":1,"while":1,"private":1,"char":1,"catch":1,"export":1,virtual:1,operator:2,sizeof:2,dynamic_cast:2,typedef:2,const_cast:2,"const":1,struct:1,"for":1,static_cast:2,union:1,namespace:1,unsigned:1,"long":1,"throw":1,"volatile":2,"static":1,"protected":1,bool:1,template:1,mutable:1,"if":1,"public":1,friend:2,"do":1,"return":1,"goto":1,auto:1,"void":2,"enum":1,"else":1,"break":1,"new":1,extern:1,using:1,"true":1,"class":1,asm:1,"case":1,typeid:1,"short":1,reinterpret_cast:2,"default":1,"double":1,register:1,explicit:1,signed:1,typename:1,"try":1,"this":1,"switch":1,"continue":1,wchar_t:1,inline:1,"delete":1,alignof:1,char16_t:1,char32_t:1,constexpr:1,decltype:1,noexcept:1,nullptr:1,static_assert:1,thread_local:1,restrict:1,_Bool:1,complex:1},built_in:{std:1,string:1,cin:1,cout:1,cerr:1,clog:1,stringstream:1,istringstream:1,ostringstream:1,auto_ptr:1,deque:1,list:1,queue:1,stack:1,vector:1,map:1,set:1,bitset:1,multiset:1,multimap:1,unordered_set:1,unordered_map:1,unordered_multiset:1,unordered_multimap:1,array:1,shared_ptr:1}};return{dM:{k:a,i:"</",c:[hljs.CLCM,hljs.CBLCLM,hljs.QSM,{cN:"string",b:"'\\\\?.",e:"'",i:"."},{cN:"number",b:"\\b(\\d+(\\.\\d*)?|\\.\\d+)(u|U|l|L|ul|UL|f|F)"},hljs.CNM,{cN:"preprocessor",b:"#",e:"$"},{cN:"stl_container",b:"\\b(deque|list|queue|stack|vector|map|set|bitset|multiset|multimap|unordered_map|unordered_set|unordered_multiset|unordered_multimap|array)\\s*<",e:">",k:a,r:10,c:["self"]}]}}}();hljs.LANGUAGES.r={dM:{c:[hljs.HCM,{cN:"number",b:"\\b0[xX][0-9a-fA-F]+[Li]?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+(?:[eE][+\\-]?\\d*)?L\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+\\.(?!\\d)(?:i\\b)?",e:hljs.IMMEDIATE_RE,r:1},{cN:"number",b:"\\b\\d+(?:\\.\\d*)?(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\.\\d+(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"keyword",b:"(?:tryCatch|library|setGeneric|setGroupGeneric)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\.",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\d+(?![\\w.])",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\b(?:function)",e:hljs.IMMEDIATE_RE,r:2},{cN:"keyword",b:"(?:if|in|break|next|repeat|else|for|return|switch|while|try|stop|warning|require|attach|detach|source|setMethod|setClass)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"literal",b:"(?:NA|NA_integer_|NA_real_|NA_character_|NA_complex_)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"literal",b:"(?:NULL|TRUE|FALSE|T|F|Inf|NaN)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"identifier",b:"[a-zA-Z.][a-zA-Z0-9._]*\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"<\\-(?!\\s*\\d)",e:hljs.IMMEDIATE_RE,r:2},{cN:"operator",b:"\\->|<\\-",e:hljs.IMMEDIATE_RE,r:1},{cN:"operator",b:"%%|~",e:hljs.IMMEDIATE_RE},{cN:"operator",b:">=|<=|==|!=|\\|\\||&&|=|\\+|\\-|\\*|/|\\^|>|<|!|&|\\||\\$|:",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"%",e:"%",i:"\\n",r:1},{cN:"identifier",b:"`",e:"`",r:0},{cN:"string",b:'"',e:'"',c:[hljs.BE],r:0},{cN:"string",b:"'",e:"'",c:[hljs.BE],r:0},{cN:"paren",b:"[[({\\])}]",e:hljs.IMMEDIATE_RE,r:0}]}};
-hljs.initHighlightingOnLoad();
-</script>
-
-<!-- MathJax scripts -->
-<script type="text/javascript" src="https://cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML">
-</script>
-
-
-<style type="text/css">
-body, td {
-   font-family: sans-serif;
-   background-color: white;
-   font-size: 13px;
-}
-
-body {
-  max-width: 800px;
-  margin: auto;
-  padding: 1em;
-  line-height: 20px;
-}
-
-tt, code, pre {
-   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
-}
-
-h1 {
-   font-size:2.2em;
-}
-
-h2 {
-   font-size:1.8em;
-}
-
-h3 {
-   font-size:1.4em;
-}
-
-h4 {
-   font-size:1.0em;
-}
-
-h5 {
-   font-size:0.9em;
-}
-
-h6 {
-   font-size:0.8em;
-}
-
-a:visited {
-   color: rgb(50%, 0%, 50%);
-}
-
-pre, img {
-  max-width: 100%;
-}
-pre {
-  overflow-x: auto;
-}
-pre code {
-   display: block; padding: 0.5em;
-}
-
-code {
-  font-size: 92%;
-  border: 1px solid #ccc;
-}
-
-code[class] {
-  background-color: #F8F8F8;
-}
-
-table, td, th {
-  border: none;
-}
-
-blockquote {
-   color:#666666;
-   margin:0;
-   padding-left: 1em;
-   border-left: 0.5em #EEE solid;
-}
-
-hr {
-   height: 0px;
-   border-bottom: none;
-   border-top-width: thin;
-   border-top-style: dotted;
-   border-top-color: #999999;
-}
-
-@media print {
-   * {
-      background: transparent !important;
-      color: black !important;
-      filter:none !important;
-      -ms-filter: none !important;
-   }
-
-   body {
-      font-size:12pt;
-      max-width:100%;
-   }
-
-   a, a:visited {
-      text-decoration: underline;
-   }
-
-   hr {
-      visibility: hidden;
-      page-break-before: always;
-   }
-
-   pre, blockquote {
-      padding-right: 1em;
-      page-break-inside: avoid;
-   }
-
-   tr, img {
-      page-break-inside: avoid;
-   }
-
-   img {
-      max-width: 100% !important;
-   }
-
-   @page :left {
-      margin: 15mm 20mm 15mm 10mm;
-   }
-
-   @page :right {
-      margin: 15mm 10mm 15mm 20mm;
-   }
-
-   p, h2, h3 {
-      orphans: 3; widows: 3;
-   }
-
-   h2, h3 {
-      page-break-after: avoid;
-   }
-}
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
 </style>
 
 
+
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
 
 </head>
 
 <body>
-<h1>Installing the package</h1>
 
+
+
+
+<h1 class="title toc-ignore">followup: package overview</h1>
+<h4 class="date"><em>2019-02-20</em></h4>
+
+
+<div id="TOC">
+<ul>
+<li><a href="#installing-the-package">Installing the package</a></li>
+<li><a href="#main-visible-functions-of-the-package">Main visible functions of the package</a></li>
+<li><a href="#background">Background</a><ul>
+<li><a href="#contact-has-never-been-followed-up">Contact has never been followed up</a></li>
+<li><a href="#contact-has-previously-been-followed-up">Contact has previously been followed up</a></li>
+</ul></li>
+<li><a href="#examples">Examples</a><ul>
+<li><a href="#all-contacts-have-the-same-probability-of-getting-disease">All contacts have the same probability of getting disease</a></li>
+<li><a href="#probability-of-getting-disease-depends-on-type-of-exposure">Probability of getting disease depends on type of exposure</a></li>
+<li><a href="#probability-of-getting-disease-depends-on-type-and-duration-of-exposure">Probability of getting disease depends on type and duration of exposure</a></li>
+</ul></li>
+</ul>
+</div>
+
+<div id="installing-the-package" class="section level1">
+<h1>Installing the package</h1>
 <!-- To install the current stable, CRAN version of the package, type:
 
 ```r
 install.packages("followup")
 ``` -->
-
 <p>To benefit from the latest features and bug fixes, install the development, <em>github</em> version of the package using:</p>
-
-<pre><code>
-```r
-devtools::install_github(&quot;reconhub/followup&quot;)
-</code></pre>
-
+<p>```</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;reconhub/followup&quot;</span>)</code></pre></div>
 <p>Note that this requires the package <em>devtools</em> installed.</p>
-
+</div>
+<div id="main-visible-functions-of-the-package" class="section level1">
 <h1>Main visible functions of the package</h1>
-
 <p>The main functions of the package include:</p>
-
 <p><strong><code>followup_priorities()</code></strong> : Compute the followup priorities for a list of contacts.</p>
-
 <p>Outputs the probability that the symptoms onset of a contact was between the last follow up (day of last follow up included in interval by default, see parameter include_last_follow_up) and the analysis date, which defaults to day before current day and is included in interval.</p>
-
 <p><strong><code>p_new_onset()</code></strong> Computes the probability of new symptoms within a range of dates for a particular contact, given the incubation period.</p>
-
 <p><strong><code>p_integral_onset()</code></strong> Computes the probability of new symptoms on a particular day for a particular contact.</p>
-
-<p><strong><code>plot(priorities)</code></strong> <em>yet to implement</em></p>
-
-<p><strong><code>to_html(priorities)</code></strong> <em>yet to implement</em></p>
-
+<p><strong><code>p_disease_saturation()</code></strong> Helper function to compute the probability p_disease of getting disease after a certain number of days of exposure based on a saturating exponential growth model.</p>
+</div>
+<div id="background" class="section level1">
 <h1>Background</h1>
-
+<div id="contact-has-never-been-followed-up" class="section level2">
 <h2>Contact has never been followed up</h2>
-
-<p>The probability of symptoms onset by day \(t\) after exposure event that leads to symptomatic infection is</p>
-
-<p>\[P(\mathrm{onset\,by\,day\,}t) = \sum_{\tau=0}^t p_I(\tau)\]</p>
-
-<p>where \(p_I(\tau)\) is the probability that the incubation period is \(\tau\).</p>
-
-<p>Combined with a given probability \(p_S\) of an exposure event leading to symptoms we thus get a probability of symptoms by day \(t\) of</p>
-
-<p>\[P(\mathrm{symptoms\,by\,day\,}t) = p_S\,\sum_{\tau=0}^t p_I(\tau)\]</p>
-
+<p>The probability of symptoms onset by day <span class="math inline">\(t\)</span> after exposure event that leads to symptomatic infection is</p>
+<p><span class="math display">\[P(\mathrm{onset\,by\,day\,}t) = \sum_{\tau=0}^t p_I(\tau)\]</span></p>
+<p>where <span class="math inline">\(p_I(\tau)\)</span> is the probability that the incubation period is <span class="math inline">\(\tau\)</span>.</p>
+<p>Combined with a given probability <span class="math inline">\(p_S\)</span> of an exposure event leading to symptoms we thus get a probability of symptoms by day <span class="math inline">\(t\)</span> of</p>
+<p><span class="math display">\[P(\mathrm{symptoms\,by\,day\,}t) = p_S\,\sum_{\tau=0}^t p_I(\tau)\]</span></p>
+</div>
+<div id="contact-has-previously-been-followed-up" class="section level2">
 <h2>Contact has previously been followed up</h2>
-
-<p>If a contact has previously been followed up on day \(T\) and no symptoms observed the probability of onset on day \(t >= T\) has to be modified as follows</p>
-
-<p>\[P(\mathrm{onset\,between\,days\,}t \mathrm{\,and\,}T) = \sum_{\tau=T}^t p_I(\tau)\]</p>
-
+<p>If a contact has previously been followed up on day <span class="math inline">\(T\)</span> and no symptoms observed the probability of onset on day <span class="math inline">\(t &gt;= T\)</span> has to be modified as follows</p>
+<p><span class="math display">\[P(\mathrm{onset\,between\,days\,}t \mathrm{\,and\,}T) = \sum_{\tau=T}^t p_I(\tau)\]</span></p>
 <p>and</p>
-
-<p>\[P(\mathrm{symptoms\,between\,days\,}t \mathrm{\,and\,}T) = p_S\,\sum_{\tau=T}^t p_I(\tau)\]</p>
-
-<p><strong>Note</strong> that due to the discrete nature of the problem, a decision has to be made if observing no symptoms at some time during day \(T\) is taken as the onset of symptoms being at a time \(t\) after the end of day \(T-1\) (and thus could be during day \(T\) but after the observation), or after the end of day \(T\). By default this package assumes that follow up on day \(T\) ensures that symptoms onset has not occurred before the end of day \(T-1\), as shown in the equations above. The parameter <code>include_last_follow_up</code> can be used to modify this behaviour.</p>
-
+<p><span class="math display">\[P(\mathrm{symptoms\,between\,days\,}t \mathrm{\,and\,}T) = p_S\,\sum_{\tau=T}^t p_I(\tau)\]</span></p>
+<p><strong>Note</strong> that due to the discrete nature of the problem, a decision has to be made if observing no symptoms at some time during day <span class="math inline">\(T\)</span> is taken as the onset of symptoms being at a time <span class="math inline">\(t\)</span> after the end of day <span class="math inline">\(T-1\)</span> (and thus could be during day <span class="math inline">\(T\)</span> but after the observation), or after the end of day <span class="math inline">\(T\)</span>. By default this package assumes that follow up on day <span class="math inline">\(T\)</span> ensures that symptoms onset has not occurred before the end of day <span class="math inline">\(T-1\)</span>, as shown in the equations above. The parameter <code>include_last_follow_up</code> can be used to modify this behaviour.</p>
+</div>
+</div>
+<div id="examples" class="section level1">
 <h1>Examples</h1>
-
 <p>Load environment:</p>
-
-<pre><code class="r">library(dplyr)
-library(magrittr)
-library(epitrix)
-library(distcrete)
-library(followup)
-library(ggplot2)
-</code></pre>
-
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(dplyr)
+<span class="kw">library</span>(magrittr)
+<span class="kw">library</span>(epitrix)
+<span class="kw">library</span>(distcrete)
+<span class="kw">library</span>(followup)</code></pre></div>
 <p>Set up the incubation period distribution:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">incubation_days &lt;-<span class="st"> </span><span class="dv">0</span><span class="op">:</span><span class="dv">12</span>
+incubation_frequency &lt;-<span class="st"> </span><span class="kw">distcrete</span>(<span class="st">&quot;gamma&quot;</span>, <span class="dv">1</span>, <span class="dt">shape =</span> <span class="dv">12</span>, <span class="dt">rate =</span> <span class="dv">3</span>, <span class="dt">w =</span>
+<span class="dv">0</span>)<span class="op">$</span><span class="kw">d</span>(incubation_days)
 
-<pre><code class="r">incubation_days &lt;- 0:12
-incubation_frequency &lt;- distcrete(&quot;gamma&quot;, 1, shape = 12, rate = 3, w =
-0)$d(incubation_days)
-
-plot(incubation_days, incubation_frequency, type = &quot;h&quot;)
-</code></pre>
-
-<p><img src="data:image/png;base64,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" alt="plot of chunk unnamed-chunk-3"/></p>
-
+<span class="kw">plot</span>(incubation_days, incubation_frequency, <span class="dt">type =</span> <span class="st">&quot;h&quot;</span>)</code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
 <p>Make a list of example contacts each having several possible <strong>exposure dates</strong> and some having a date when they were <strong>last followed up</strong>. Contacts that have never been followed up will have NA in the <code>date_last_followup</code> column:</p>
-
-<pre><code class="r">n = 20
-contact_list &lt;- data.frame(
-  id_contact = replicate(n, paste(sample(letters, 6, replace = TRUE),
-          collapse = &quot;&quot;)),
-  type_exposure = sample(c(&quot;hospital&quot;, &quot;funeral&quot;, &quot;family&quot;, &quot;other&quot;), n, replace = TRUE)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">n =<span class="st"> </span><span class="dv">12</span>
+contact_list &lt;-<span class="st"> </span><span class="kw">data.frame</span>(
+  <span class="dt">id_contact =</span> <span class="kw">replicate</span>(n, <span class="kw">paste</span>(<span class="kw">sample</span>(letters, <span class="dv">3</span>, <span class="dt">replace =</span> <span class="ot">TRUE</span>),
+          <span class="dt">collapse =</span> <span class="st">&quot;&quot;</span>)),
+  <span class="dt">type_exposure =</span> <span class="kw">sample</span>(<span class="kw">c</span>(<span class="st">&quot;hospital&quot;</span>, <span class="st">&quot;funeral&quot;</span>, <span class="st">&quot;family&quot;</span>, <span class="st">&quot;other&quot;</span>), n, <span class="dt">replace =</span> <span class="ot">TRUE</span>)
 )
 
-#function used to create toy exposure dates
-mkexposures &lt;- function(foo) foo - base::sample(incubation_days, size = sample.int(4, size = 1), replace = FALSE, prob = incubation_frequency)
+<span class="co">#function used to create toy exposure dates</span>
+mkexposures &lt;-<span class="st"> </span><span class="cf">function</span>(foo) foo <span class="op">-</span><span class="st"> </span>base<span class="op">::</span><span class="kw">sample</span>(incubation_days, <span class="dt">size =</span> <span class="kw">sample.int</span>(<span class="dv">4</span>, <span class="dt">size =</span> <span class="dv">1</span>), <span class="dt">replace =</span> <span class="ot">FALSE</span>, <span class="dt">prob =</span> incubation_frequency)
 
-contact_list$dates_exposure &lt;- sapply(Sys.Date() - 15 + sample(1:15, n, replace = TRUE), mkexposures)
-contact_list$date_last_followup &lt;- Sys.Date() - sample(c(1:8, rep(NA, 3)), n, replace = TRUE)
+contact_list<span class="op">$</span>dates_exposure &lt;-<span class="st"> </span><span class="kw">sapply</span>(<span class="kw">Sys.Date</span>() <span class="op">-</span><span class="st"> </span><span class="dv">15</span> <span class="op">+</span><span class="st"> </span><span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">15</span>, n, <span class="dt">replace =</span> <span class="ot">TRUE</span>), mkexposures)
+contact_list<span class="op">$</span>date_last_followup &lt;-<span class="st"> </span><span class="kw">Sys.Date</span>() <span class="op">-</span><span class="st"> </span><span class="kw">sample</span>(<span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">8</span>, <span class="kw">rep</span>(<span class="ot">NA</span>, <span class="dv">6</span>)), n, <span class="dt">replace =</span> <span class="ot">TRUE</span>)
 
-print(contact_list)
-#&gt;    id_contact type_exposure             dates_exposure date_last_followup
-#&gt; 1      gahzuy       funeral                      17935         2019-02-15
-#&gt; 2      rzbdsl         other               17936, 17937         2019-02-13
-#&gt; 3      gpcxez      hospital 17932, 17931, 17930, 17933         2019-02-12
-#&gt; 4      trjfcx      hospital               17930, 17929         2019-02-12
-#&gt; 5      azqvap        family        17936, 17937, 17935               &lt;NA&gt;
-#&gt; 6      svpqeh         other        17933, 17934, 17932         2019-02-14
-#&gt; 7      ptebrn         other 17931, 17927, 17928, 17930         2019-02-14
-#&gt; 8      htmmeu      hospital               17940, 17939               &lt;NA&gt;
-#&gt; 9      ooliwm         other               17929, 17931         2019-02-13
-#&gt; 10     hfeagh        family 17926, 17925, 17927, 17924         2019-02-15
-#&gt; 11     meciey        family 17926, 17928, 17927, 17930         2019-02-15
-#&gt; 12     ccxkxm       funeral 17932, 17930, 17929, 17931         2019-02-14
-#&gt; 13     rocyce      hospital                      17929         2019-02-15
-#&gt; 14     npizkt         other               17938, 17939         2019-02-09
-#&gt; 15     wxrasj      hospital 17928, 17927, 17926, 17929         2019-02-10
-#&gt; 16     eawsrv       funeral               17937, 17936               &lt;NA&gt;
-#&gt; 17     ytpwoy       funeral                      17927         2019-02-14
-#&gt; 18     panxuj      hospital                      17928         2019-02-08
-#&gt; 19     bpphrf      hospital                      17933               &lt;NA&gt;
-#&gt; 20     rzilvm         other 17936, 17935, 17937, 17934         2019-02-10
-</code></pre>
-
+<span class="kw">to_html</span>(contact_list, <span class="dt">date_cols =</span> <span class="kw">list</span>(<span class="st">&quot;dates_exposure&quot;</span>, <span class="st">&quot;date_last_followup&quot;</span>))</code></pre></div>
+<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+id_contact
+</th>
+<th style="text-align:left;">
+type_exposure
+</th>
+<th style="text-align:left;">
+dates_exposure
+</th>
+<th style="text-align:left;">
+date_last_followup
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+jnf
+</td>
+<td style="text-align:left;">
+hospital
+</td>
+<td style="text-align:left;">
+2019-02-16
+</td>
+<td style="text-align:left;">
+2019-02-15
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+koo
+</td>
+<td style="text-align:left;">
+other
+</td>
+<td style="text-align:left;">
+c(“2019-02-16”, “2019-02-14”, “2019-02-15”)
+</td>
+<td style="text-align:left;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+fft
+</td>
+<td style="text-align:left;">
+funeral
+</td>
+<td style="text-align:left;">
+c(“2019-02-12”, “2019-02-11”, “2019-02-10”, “2019-02-08”)
+</td>
+<td style="text-align:left;">
+2019-02-16
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+pop
+</td>
+<td style="text-align:left;">
+family
+</td>
+<td style="text-align:left;">
+2019-02-06
+</td>
+<td style="text-align:left;">
+2019-02-17
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+efm
+</td>
+<td style="text-align:left;">
+hospital
+</td>
+<td style="text-align:left;">
+2019-02-06
+</td>
+<td style="text-align:left;">
+2019-02-13
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+dsq
+</td>
+<td style="text-align:left;">
+funeral
+</td>
+<td style="text-align:left;">
+c(“2019-02-06”, “2019-02-03”, “2019-02-04”)
+</td>
+<td style="text-align:left;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+pns
+</td>
+<td style="text-align:left;">
+family
+</td>
+<td style="text-align:left;">
+c(“2019-02-17”, “2019-02-13”)
+</td>
+<td style="text-align:left;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+bfe
+</td>
+<td style="text-align:left;">
+other
+</td>
+<td style="text-align:left;">
+c(“2019-02-08”, “2019-02-10”)
+</td>
+<td style="text-align:left;">
+2019-02-18
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+lyh
+</td>
+<td style="text-align:left;">
+funeral
+</td>
+<td style="text-align:left;">
+c(“2019-02-08”, “2019-02-06”, “2019-02-07”, “2019-02-04”)
+</td>
+<td style="text-align:left;">
+2019-02-12
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+sxm
+</td>
+<td style="text-align:left;">
+family
+</td>
+<td style="text-align:left;">
+c(“2019-02-16”, “2019-02-14”, “2019-02-18”)
+</td>
+<td style="text-align:left;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+hls
+</td>
+<td style="text-align:left;">
+family
+</td>
+<td style="text-align:left;">
+c(“2019-02-09”, “2019-02-08”)
+</td>
+<td style="text-align:left;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+vna
+</td>
+<td style="text-align:left;">
+hospital
+</td>
+<td style="text-align:left;">
+2019-02-15
+</td>
+<td style="text-align:left;">
+2019-02-16
+</td>
+</tr>
+</tbody>
+</table>
+<div id="all-contacts-have-the-same-probability-of-getting-disease" class="section level2">
 <h2>All contacts have the same probability of getting disease</h2>
-
 <p>Now compute the probability of the symptoms onset being between the last day of follow up and yesterday (including start and end days):</p>
-
-<pre><code class="r">contact_list_p &lt;- followup_priorities(
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">contact_list_p &lt;-<span class="st"> </span><span class="kw">followup_priorities</span>(
                   contact_list,
                   dates_exposure,
                   date_last_followup,
-                  p_disease = 0.3,
-                  incubation_period = incubation_frequency
+                  <span class="dt">p_disease =</span> <span class="fl">0.3</span>,
+                  <span class="dt">incubation_period =</span> incubation_frequency
                 )
-#&gt; Warning in followup_priorities(contact_list, dates_exposure,
-#&gt; date_last_followup, : Incubation period probabilities don&#39;t sum to 1 but to
-#&gt; 0.999999873689809 Automatically adjusted.
+<span class="co">#&gt; Warning in followup_priorities(contact_list, dates_exposure,</span>
+<span class="co">#&gt; date_last_followup, : Incubation period probabilities don't sum to 1 but to</span>
+<span class="co">#&gt; 0.999999873689809 Automatically adjusted.</span>
 
-print(contact_list_p)
-#&gt;    id_contact type_exposure             dates_exposure date_last_followup
-#&gt; 19     bpphrf      hospital                      17933               &lt;NA&gt;
-#&gt; 5      azqvap        family        17936, 17937, 17935               &lt;NA&gt;
-#&gt; 16     eawsrv       funeral               17937, 17936               &lt;NA&gt;
-#&gt; 20     rzilvm         other 17936, 17935, 17937, 17934         2019-02-10
-#&gt; 14     npizkt         other               17938, 17939         2019-02-09
-#&gt; 2      rzbdsl         other               17936, 17937         2019-02-13
-#&gt; 8      htmmeu      hospital               17940, 17939               &lt;NA&gt;
-#&gt; 3      gpcxez      hospital 17932, 17931, 17930, 17933         2019-02-12
-#&gt; 18     panxuj      hospital                      17928         2019-02-08
-#&gt; 1      gahzuy       funeral                      17935         2019-02-15
-#&gt; 6      svpqeh         other        17933, 17934, 17932         2019-02-14
-#&gt; 15     wxrasj      hospital 17928, 17927, 17926, 17929         2019-02-10
-#&gt; 4      trjfcx      hospital               17930, 17929         2019-02-12
-#&gt; 9      ooliwm         other               17929, 17931         2019-02-13
-#&gt; 12     ccxkxm       funeral 17932, 17930, 17929, 17931         2019-02-14
-#&gt; 7      ptebrn         other 17931, 17927, 17928, 17930         2019-02-14
-#&gt; 11     meciey        family 17926, 17928, 17927, 17930         2019-02-15
-#&gt; 10     hfeagh        family 17926, 17925, 17927, 17924         2019-02-15
-#&gt; 13     rocyce      hospital                      17929         2019-02-15
-#&gt; 17     ytpwoy       funeral                      17927         2019-02-14
-#&gt;    p_disease      p_onset   p_symptoms followup_priority
-#&gt; 19       0.3 9.999362e-01 2.999809e-01                 1
-#&gt; 5        0.3 9.765613e-01 2.929684e-01                 2
-#&gt; 16       0.3 9.661040e-01 2.898312e-01                 3
-#&gt; 20       0.3 9.280257e-01 2.784077e-01                 4
-#&gt; 14       0.3 6.768255e-01 2.030477e-01                 5
-#&gt; 2        0.3 5.984068e-01 1.795221e-01                 6
-#&gt; 8        0.3 3.676972e-01 1.103092e-01                 7
-#&gt; 3        0.3 1.766720e-02 5.300161e-03                 8
-#&gt; 18       0.3 1.290464e-02 3.871393e-03                 9
-#&gt; 1        0.3 1.038064e-02 3.114192e-03                10
-#&gt; 6        0.3 5.118783e-03 1.535635e-03                11
-#&gt; 15       0.3 7.556046e-04 2.266814e-04                12
-#&gt; 4        0.3 2.449339e-04 7.348017e-05                13
-#&gt; 9        0.3 2.168531e-04 6.505593e-05                14
-#&gt; 12       0.3 1.224669e-04 3.674008e-05                15
-#&gt; 7        0.3 1.783496e-05 5.350489e-06                16
-#&gt; 11       0.3 2.394549e-07 7.183648e-08                17
-#&gt; 10       0.3 0.000000e+00 0.000000e+00                18
-#&gt; 13       0.3 0.000000e+00 0.000000e+00                19
-#&gt; 17       0.3 0.000000e+00 0.000000e+00                20
-</code></pre>
-
+<span class="kw">to_html</span>(contact_list_p, <span class="dt">cols_round =</span> <span class="kw">list</span>(<span class="st">&quot;p_onset&quot;</span>, <span class="st">&quot;p_symptoms&quot;</span>), <span class="dt">date_cols =</span> <span class="kw">list</span>(<span class="st">&quot;dates_exposure&quot;</span>, <span class="st">&quot;date_last_followup&quot;</span>))</code></pre></div>
+<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:left;">
+id_contact
+</th>
+<th style="text-align:left;">
+type_exposure
+</th>
+<th style="text-align:left;">
+dates_exposure
+</th>
+<th style="text-align:left;">
+date_last_followup
+</th>
+<th style="text-align:right;">
+p_disease
+</th>
+<th style="text-align:left;">
+p_onset
+</th>
+<th style="text-align:left;">
+p_symptoms
+</th>
+<th style="text-align:right;">
+followup_priority
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+6
+</td>
+<td style="text-align:left;">
+dsq
+</td>
+<td style="text-align:left;">
+funeral
+</td>
+<td style="text-align:left;">
+c(“2019-02-06”, “2019-02-03”, “2019-02-04”)
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.3
+</td>
+<td style="text-align:left;">
+1.00
+</td>
+<td style="text-align:left;">
+0.30
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+hls
+</td>
+<td style="text-align:left;">
+family
+</td>
+<td style="text-align:left;">
+c(“2019-02-09”, “2019-02-08”)
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.3
+</td>
+<td style="text-align:left;">
+1.00
+</td>
+<td style="text-align:left;">
+0.30
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+12
+</td>
+<td style="text-align:left;">
+vna
+</td>
+<td style="text-align:left;">
+hospital
+</td>
+<td style="text-align:left;">
+2019-02-15
+</td>
+<td style="text-align:left;">
+2019-02-16
+</td>
+<td style="text-align:right;">
+0.3
+</td>
+<td style="text-align:left;">
+0.82
+</td>
+<td style="text-align:left;">
+0.24
+</td>
+<td style="text-align:right;">
+3
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:left;">
+koo
+</td>
+<td style="text-align:left;">
+other
+</td>
+<td style="text-align:left;">
+c(“2019-02-16”, “2019-02-14”, “2019-02-15”)
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.3
+</td>
+<td style="text-align:left;">
+0.77
+</td>
+<td style="text-align:left;">
+0.23
+</td>
+<td style="text-align:right;">
+4
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+7
+</td>
+<td style="text-align:left;">
+pns
+</td>
+<td style="text-align:left;">
+family
+</td>
+<td style="text-align:left;">
+c(“2019-02-17”, “2019-02-13”)
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.3
+</td>
+<td style="text-align:left;">
+0.59
+</td>
+<td style="text-align:left;">
+0.18
+</td>
+<td style="text-align:right;">
+5
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+jnf
+</td>
+<td style="text-align:left;">
+hospital
+</td>
+<td style="text-align:left;">
+2019-02-16
+</td>
+<td style="text-align:left;">
+2019-02-15
+</td>
+<td style="text-align:right;">
+0.3
+</td>
+<td style="text-align:left;">
+0.54
+</td>
+<td style="text-align:left;">
+0.16
+</td>
+<td style="text-align:right;">
+6
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+10
+</td>
+<td style="text-align:left;">
+sxm
+</td>
+<td style="text-align:left;">
+family
+</td>
+<td style="text-align:left;">
+c(“2019-02-16”, “2019-02-14”, “2019-02-18”)
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.3
+</td>
+<td style="text-align:left;">
+0.50
+</td>
+<td style="text-align:left;">
+0.15
+</td>
+<td style="text-align:right;">
+7
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+9
+</td>
+<td style="text-align:left;">
+lyh
+</td>
+<td style="text-align:left;">
+funeral
+</td>
+<td style="text-align:left;">
+c(“2019-02-08”, “2019-02-06”, “2019-02-07”, “2019-02-04”)
+</td>
+<td style="text-align:left;">
+2019-02-12
+</td>
+<td style="text-align:right;">
+0.3
+</td>
+<td style="text-align:left;">
+0.18
+</td>
+<td style="text-align:left;">
+0.05
+</td>
+<td style="text-align:right;">
+8
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+fft
+</td>
+<td style="text-align:left;">
+funeral
+</td>
+<td style="text-align:left;">
+c(“2019-02-12”, “2019-02-11”, “2019-02-10”, “2019-02-08”)
+</td>
+<td style="text-align:left;">
+2019-02-16
+</td>
+<td style="text-align:right;">
+0.3
+</td>
+<td style="text-align:left;">
+0.18
+</td>
+<td style="text-align:left;">
+0.05
+</td>
+<td style="text-align:right;">
+9
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+5
+</td>
+<td style="text-align:left;">
+efm
+</td>
+<td style="text-align:left;">
+hospital
+</td>
+<td style="text-align:left;">
+2019-02-06
+</td>
+<td style="text-align:left;">
+2019-02-13
+</td>
+<td style="text-align:right;">
+0.3
+</td>
+<td style="text-align:left;">
+0.01
+</td>
+<td style="text-align:left;">
+0.00
+</td>
+<td style="text-align:right;">
+10
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+8
+</td>
+<td style="text-align:left;">
+bfe
+</td>
+<td style="text-align:left;">
+other
+</td>
+<td style="text-align:left;">
+c(“2019-02-08”, “2019-02-10”)
+</td>
+<td style="text-align:left;">
+2019-02-18
+</td>
+<td style="text-align:right;">
+0.3
+</td>
+<td style="text-align:left;">
+0.00
+</td>
+<td style="text-align:left;">
+0.00
+</td>
+<td style="text-align:right;">
+11
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+4
+</td>
+<td style="text-align:left;">
+pop
+</td>
+<td style="text-align:left;">
+family
+</td>
+<td style="text-align:left;">
+2019-02-06
+</td>
+<td style="text-align:left;">
+2019-02-17
+</td>
+<td style="text-align:right;">
+0.3
+</td>
+<td style="text-align:left;">
+0.00
+</td>
+<td style="text-align:left;">
+0.00
+</td>
+<td style="text-align:right;">
+12
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="probability-of-getting-disease-depends-on-type-of-exposure" class="section level2">
 <h2>Probability of getting disease depends on type of exposure</h2>
-
 <p>Above we assumed that every kind of exposure results in the same probability of developing disease. Thus the prioritization is solely based on the incubation period, the time spent since exposure and the last follow up.</p>
-
-<p>Let&#39;s now take into account different exposure pathways and assign different probabilities of developing disease after different types of exposure:</p>
-
-<pre><code class="r">pathways = data.frame(
-  type_exposure = c(&quot;hospital&quot;, &quot;funeral&quot;, &quot;family&quot;, &quot;other&quot;),
-  p_disease = c(0.2, 0.3, 0.45, 0.12)
+<p>Let’s now take into account different exposure pathways and assign different probabilities of developing disease after different types of exposure:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pathways =<span class="st"> </span><span class="kw">data.frame</span>(
+  <span class="dt">type_exposure =</span> <span class="kw">c</span>(<span class="st">&quot;hospital&quot;</span>, <span class="st">&quot;funeral&quot;</span>, <span class="st">&quot;family&quot;</span>, <span class="st">&quot;other&quot;</span>),
+  <span class="dt">p_disease =</span> <span class="kw">c</span>(<span class="fl">0.2</span>, <span class="fl">0.3</span>, <span class="fl">0.45</span>, <span class="fl">0.12</span>)
 )
 
-print(pathways)
-#&gt;   type_exposure p_disease
-#&gt; 1      hospital      0.20
-#&gt; 2       funeral      0.30
-#&gt; 3        family      0.45
-#&gt; 4         other      0.12
-</code></pre>
-
+<span class="kw">to_html</span>(pathways)</code></pre></div>
+<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+type_exposure
+</th>
+<th style="text-align:right;">
+p_disease
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+hospital
+</td>
+<td style="text-align:right;">
+0.20
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+funeral
+</td>
+<td style="text-align:right;">
+0.30
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+family
+</td>
+<td style="text-align:right;">
+0.45
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+other
+</td>
+<td style="text-align:right;">
+0.12
+</td>
+</tr>
+</tbody>
+</table>
 <p>Include those probabilities in the contact list:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">contact_list &lt;-<span class="st"> </span>contact_list <span class="op">%&gt;%</span>
+<span class="st">                  </span>dplyr<span class="op">::</span><span class="kw">left_join</span>(pathways, <span class="dt">by =</span> <span class="st">&quot;type_exposure&quot;</span>)
 
-<pre><code class="r">contact_list &lt;- contact_list %&gt;%
-                  dplyr::left_join(pathways, by = &quot;type_exposure&quot;)
-
-print(contact_list)
-#&gt;    id_contact type_exposure             dates_exposure date_last_followup
-#&gt; 1      gahzuy       funeral                      17935         2019-02-15
-#&gt; 2      rzbdsl         other               17936, 17937         2019-02-13
-#&gt; 3      gpcxez      hospital 17932, 17931, 17930, 17933         2019-02-12
-#&gt; 4      trjfcx      hospital               17930, 17929         2019-02-12
-#&gt; 5      azqvap        family        17936, 17937, 17935               &lt;NA&gt;
-#&gt; 6      svpqeh         other        17933, 17934, 17932         2019-02-14
-#&gt; 7      ptebrn         other 17931, 17927, 17928, 17930         2019-02-14
-#&gt; 8      htmmeu      hospital               17940, 17939               &lt;NA&gt;
-#&gt; 9      ooliwm         other               17929, 17931         2019-02-13
-#&gt; 10     hfeagh        family 17926, 17925, 17927, 17924         2019-02-15
-#&gt; 11     meciey        family 17926, 17928, 17927, 17930         2019-02-15
-#&gt; 12     ccxkxm       funeral 17932, 17930, 17929, 17931         2019-02-14
-#&gt; 13     rocyce      hospital                      17929         2019-02-15
-#&gt; 14     npizkt         other               17938, 17939         2019-02-09
-#&gt; 15     wxrasj      hospital 17928, 17927, 17926, 17929         2019-02-10
-#&gt; 16     eawsrv       funeral               17937, 17936               &lt;NA&gt;
-#&gt; 17     ytpwoy       funeral                      17927         2019-02-14
-#&gt; 18     panxuj      hospital                      17928         2019-02-08
-#&gt; 19     bpphrf      hospital                      17933               &lt;NA&gt;
-#&gt; 20     rzilvm         other 17936, 17935, 17937, 17934         2019-02-10
-#&gt;    p_disease
-#&gt; 1       0.30
-#&gt; 2       0.12
-#&gt; 3       0.20
-#&gt; 4       0.20
-#&gt; 5       0.45
-#&gt; 6       0.12
-#&gt; 7       0.12
-#&gt; 8       0.20
-#&gt; 9       0.12
-#&gt; 10      0.45
-#&gt; 11      0.45
-#&gt; 12      0.30
-#&gt; 13      0.20
-#&gt; 14      0.12
-#&gt; 15      0.20
-#&gt; 16      0.30
-#&gt; 17      0.30
-#&gt; 18      0.20
-#&gt; 19      0.20
-#&gt; 20      0.12
-</code></pre>
-
+<span class="kw">to_html</span>(contact_list, <span class="dt">date_cols =</span> <span class="kw">list</span>(<span class="st">&quot;dates_exposure&quot;</span>, <span class="st">&quot;date_last_followup&quot;</span>))</code></pre></div>
+<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+id_contact
+</th>
+<th style="text-align:left;">
+type_exposure
+</th>
+<th style="text-align:left;">
+dates_exposure
+</th>
+<th style="text-align:left;">
+date_last_followup
+</th>
+<th style="text-align:right;">
+p_disease
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+jnf
+</td>
+<td style="text-align:left;">
+hospital
+</td>
+<td style="text-align:left;">
+2019-02-16
+</td>
+<td style="text-align:left;">
+2019-02-15
+</td>
+<td style="text-align:right;">
+0.20
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+koo
+</td>
+<td style="text-align:left;">
+other
+</td>
+<td style="text-align:left;">
+c(“2019-02-16”, “2019-02-14”, “2019-02-15”)
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.12
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+fft
+</td>
+<td style="text-align:left;">
+funeral
+</td>
+<td style="text-align:left;">
+c(“2019-02-12”, “2019-02-11”, “2019-02-10”, “2019-02-08”)
+</td>
+<td style="text-align:left;">
+2019-02-16
+</td>
+<td style="text-align:right;">
+0.30
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+pop
+</td>
+<td style="text-align:left;">
+family
+</td>
+<td style="text-align:left;">
+2019-02-06
+</td>
+<td style="text-align:left;">
+2019-02-17
+</td>
+<td style="text-align:right;">
+0.45
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+efm
+</td>
+<td style="text-align:left;">
+hospital
+</td>
+<td style="text-align:left;">
+2019-02-06
+</td>
+<td style="text-align:left;">
+2019-02-13
+</td>
+<td style="text-align:right;">
+0.20
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+dsq
+</td>
+<td style="text-align:left;">
+funeral
+</td>
+<td style="text-align:left;">
+c(“2019-02-06”, “2019-02-03”, “2019-02-04”)
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.30
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+pns
+</td>
+<td style="text-align:left;">
+family
+</td>
+<td style="text-align:left;">
+c(“2019-02-17”, “2019-02-13”)
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.45
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+bfe
+</td>
+<td style="text-align:left;">
+other
+</td>
+<td style="text-align:left;">
+c(“2019-02-08”, “2019-02-10”)
+</td>
+<td style="text-align:left;">
+2019-02-18
+</td>
+<td style="text-align:right;">
+0.12
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+lyh
+</td>
+<td style="text-align:left;">
+funeral
+</td>
+<td style="text-align:left;">
+c(“2019-02-08”, “2019-02-06”, “2019-02-07”, “2019-02-04”)
+</td>
+<td style="text-align:left;">
+2019-02-12
+</td>
+<td style="text-align:right;">
+0.30
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+sxm
+</td>
+<td style="text-align:left;">
+family
+</td>
+<td style="text-align:left;">
+c(“2019-02-16”, “2019-02-14”, “2019-02-18”)
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.45
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+hls
+</td>
+<td style="text-align:left;">
+family
+</td>
+<td style="text-align:left;">
+c(“2019-02-09”, “2019-02-08”)
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.45
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+vna
+</td>
+<td style="text-align:left;">
+hospital
+</td>
+<td style="text-align:left;">
+2019-02-15
+</td>
+<td style="text-align:left;">
+2019-02-16
+</td>
+<td style="text-align:right;">
+0.20
+</td>
+</tr>
+</tbody>
+</table>
 <p>Now recompute the priorities:</p>
-
-<pre><code class="r">contact_list_p2 &lt;- followup_priorities(
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">contact_list_p2 &lt;-<span class="st"> </span><span class="kw">followup_priorities</span>(
                   contact_list,
                   dates_exposure,
                   date_last_followup,
                   p_disease,
-                  incubation_period = incubation_frequency
+                  <span class="dt">incubation_period =</span> incubation_frequency
                 )
-#&gt; Warning in followup_priorities(contact_list, dates_exposure,
-#&gt; date_last_followup, : Incubation period probabilities don&#39;t sum to 1 but to
-#&gt; 0.999999873689809 Automatically adjusted.
+<span class="co">#&gt; Warning in followup_priorities(contact_list, dates_exposure,</span>
+<span class="co">#&gt; date_last_followup, : Incubation period probabilities don't sum to 1 but to</span>
+<span class="co">#&gt; 0.999999873689809 Automatically adjusted.</span>
 
-print(contact_list_p2)
-#&gt;    id_contact type_exposure             dates_exposure date_last_followup
-#&gt; 5      azqvap        family        17936, 17937, 17935               &lt;NA&gt;
-#&gt; 16     eawsrv       funeral               17937, 17936               &lt;NA&gt;
-#&gt; 19     bpphrf      hospital                      17933               &lt;NA&gt;
-#&gt; 20     rzilvm         other 17936, 17935, 17937, 17934         2019-02-10
-#&gt; 14     npizkt         other               17938, 17939         2019-02-09
-#&gt; 8      htmmeu      hospital               17940, 17939               &lt;NA&gt;
-#&gt; 2      rzbdsl         other               17936, 17937         2019-02-13
-#&gt; 3      gpcxez      hospital 17932, 17931, 17930, 17933         2019-02-12
-#&gt; 1      gahzuy       funeral                      17935         2019-02-15
-#&gt; 18     panxuj      hospital                      17928         2019-02-08
-#&gt; 6      svpqeh         other        17933, 17934, 17932         2019-02-14
-#&gt; 15     wxrasj      hospital 17928, 17927, 17926, 17929         2019-02-10
-#&gt; 4      trjfcx      hospital               17930, 17929         2019-02-12
-#&gt; 12     ccxkxm       funeral 17932, 17930, 17929, 17931         2019-02-14
-#&gt; 9      ooliwm         other               17929, 17931         2019-02-13
-#&gt; 7      ptebrn         other 17931, 17927, 17928, 17930         2019-02-14
-#&gt; 11     meciey        family 17926, 17928, 17927, 17930         2019-02-15
-#&gt; 10     hfeagh        family 17926, 17925, 17927, 17924         2019-02-15
-#&gt; 13     rocyce      hospital                      17929         2019-02-15
-#&gt; 17     ytpwoy       funeral                      17927         2019-02-14
-#&gt;    p_disease      p_onset   p_symptoms followup_priority
-#&gt; 5       0.45 9.765613e-01 4.394526e-01                 1
-#&gt; 16      0.30 9.661040e-01 2.898312e-01                 2
-#&gt; 19      0.20 9.999362e-01 1.999872e-01                 3
-#&gt; 20      0.12 9.280257e-01 1.113631e-01                 4
-#&gt; 14      0.12 6.768255e-01 8.121906e-02                 5
-#&gt; 8       0.20 3.676972e-01 7.353944e-02                 6
-#&gt; 2       0.12 5.984068e-01 7.180882e-02                 7
-#&gt; 3       0.20 1.766720e-02 3.533441e-03                 8
-#&gt; 1       0.30 1.038064e-02 3.114192e-03                 9
-#&gt; 18      0.20 1.290464e-02 2.580928e-03                10
-#&gt; 6       0.12 5.118783e-03 6.142539e-04                11
-#&gt; 15      0.20 7.556046e-04 1.511209e-04                12
-#&gt; 4       0.20 2.449339e-04 4.898678e-05                13
-#&gt; 12      0.30 1.224669e-04 3.674008e-05                14
-#&gt; 9       0.12 2.168531e-04 2.602237e-05                15
-#&gt; 7       0.12 1.783496e-05 2.140196e-06                16
-#&gt; 11      0.45 2.394549e-07 1.077547e-07                17
-#&gt; 10      0.45 0.000000e+00 0.000000e+00                18
-#&gt; 13      0.20 0.000000e+00 0.000000e+00                19
-#&gt; 17      0.30 0.000000e+00 0.000000e+00                20
-</code></pre>
+<span class="kw">to_html</span>(contact_list_p2, <span class="dt">cols_round =</span> <span class="kw">list</span>(<span class="st">&quot;p_onset&quot;</span>, <span class="st">&quot;p_symptoms&quot;</span>), <span class="dt">date_cols =</span> <span class="kw">list</span>(<span class="st">&quot;dates_exposure&quot;</span>, <span class="st">&quot;date_last_followup&quot;</span>))</code></pre></div>
+<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:left;">
+id_contact
+</th>
+<th style="text-align:left;">
+type_exposure
+</th>
+<th style="text-align:left;">
+dates_exposure
+</th>
+<th style="text-align:left;">
+date_last_followup
+</th>
+<th style="text-align:right;">
+p_disease
+</th>
+<th style="text-align:left;">
+p_onset
+</th>
+<th style="text-align:left;">
+p_symptoms
+</th>
+<th style="text-align:right;">
+followup_priority
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+hls
+</td>
+<td style="text-align:left;">
+family
+</td>
+<td style="text-align:left;">
+c(“2019-02-09”, “2019-02-08”)
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.45
+</td>
+<td style="text-align:left;">
+1.00
+</td>
+<td style="text-align:left;">
+0.45
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+6
+</td>
+<td style="text-align:left;">
+dsq
+</td>
+<td style="text-align:left;">
+funeral
+</td>
+<td style="text-align:left;">
+c(“2019-02-06”, “2019-02-03”, “2019-02-04”)
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.30
+</td>
+<td style="text-align:left;">
+1.00
+</td>
+<td style="text-align:left;">
+0.30
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+7
+</td>
+<td style="text-align:left;">
+pns
+</td>
+<td style="text-align:left;">
+family
+</td>
+<td style="text-align:left;">
+c(“2019-02-17”, “2019-02-13”)
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.45
+</td>
+<td style="text-align:left;">
+0.59
+</td>
+<td style="text-align:left;">
+0.27
+</td>
+<td style="text-align:right;">
+3
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+10
+</td>
+<td style="text-align:left;">
+sxm
+</td>
+<td style="text-align:left;">
+family
+</td>
+<td style="text-align:left;">
+c(“2019-02-16”, “2019-02-14”, “2019-02-18”)
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.45
+</td>
+<td style="text-align:left;">
+0.50
+</td>
+<td style="text-align:left;">
+0.23
+</td>
+<td style="text-align:right;">
+4
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+12
+</td>
+<td style="text-align:left;">
+vna
+</td>
+<td style="text-align:left;">
+hospital
+</td>
+<td style="text-align:left;">
+2019-02-15
+</td>
+<td style="text-align:left;">
+2019-02-16
+</td>
+<td style="text-align:right;">
+0.20
+</td>
+<td style="text-align:left;">
+0.82
+</td>
+<td style="text-align:left;">
+0.16
+</td>
+<td style="text-align:right;">
+5
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+jnf
+</td>
+<td style="text-align:left;">
+hospital
+</td>
+<td style="text-align:left;">
+2019-02-16
+</td>
+<td style="text-align:left;">
+2019-02-15
+</td>
+<td style="text-align:right;">
+0.20
+</td>
+<td style="text-align:left;">
+0.54
+</td>
+<td style="text-align:left;">
+0.11
+</td>
+<td style="text-align:right;">
+6
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:left;">
+koo
+</td>
+<td style="text-align:left;">
+other
+</td>
+<td style="text-align:left;">
+c(“2019-02-16”, “2019-02-14”, “2019-02-15”)
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.12
+</td>
+<td style="text-align:left;">
+0.77
+</td>
+<td style="text-align:left;">
+0.09
+</td>
+<td style="text-align:right;">
+7
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+9
+</td>
+<td style="text-align:left;">
+lyh
+</td>
+<td style="text-align:left;">
+funeral
+</td>
+<td style="text-align:left;">
+c(“2019-02-08”, “2019-02-06”, “2019-02-07”, “2019-02-04”)
+</td>
+<td style="text-align:left;">
+2019-02-12
+</td>
+<td style="text-align:right;">
+0.30
+</td>
+<td style="text-align:left;">
+0.18
+</td>
+<td style="text-align:left;">
+0.05
+</td>
+<td style="text-align:right;">
+8
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+fft
+</td>
+<td style="text-align:left;">
+funeral
+</td>
+<td style="text-align:left;">
+c(“2019-02-12”, “2019-02-11”, “2019-02-10”, “2019-02-08”)
+</td>
+<td style="text-align:left;">
+2019-02-16
+</td>
+<td style="text-align:right;">
+0.30
+</td>
+<td style="text-align:left;">
+0.18
+</td>
+<td style="text-align:left;">
+0.05
+</td>
+<td style="text-align:right;">
+9
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+5
+</td>
+<td style="text-align:left;">
+efm
+</td>
+<td style="text-align:left;">
+hospital
+</td>
+<td style="text-align:left;">
+2019-02-06
+</td>
+<td style="text-align:left;">
+2019-02-13
+</td>
+<td style="text-align:right;">
+0.20
+</td>
+<td style="text-align:left;">
+0.01
+</td>
+<td style="text-align:left;">
+0.00
+</td>
+<td style="text-align:right;">
+10
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+8
+</td>
+<td style="text-align:left;">
+bfe
+</td>
+<td style="text-align:left;">
+other
+</td>
+<td style="text-align:left;">
+c(“2019-02-08”, “2019-02-10”)
+</td>
+<td style="text-align:left;">
+2019-02-18
+</td>
+<td style="text-align:right;">
+0.12
+</td>
+<td style="text-align:left;">
+0.00
+</td>
+<td style="text-align:left;">
+0.00
+</td>
+<td style="text-align:right;">
+11
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+4
+</td>
+<td style="text-align:left;">
+pop
+</td>
+<td style="text-align:left;">
+family
+</td>
+<td style="text-align:left;">
+2019-02-06
+</td>
+<td style="text-align:left;">
+2019-02-17
+</td>
+<td style="text-align:right;">
+0.45
+</td>
+<td style="text-align:left;">
+0.00
+</td>
+<td style="text-align:left;">
+0.00
+</td>
+<td style="text-align:right;">
+12
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="probability-of-getting-disease-depends-on-type-and-duration-of-exposure" class="section level2">
+<h2>Probability of getting disease depends on type and duration of exposure</h2>
+<p>So far we assumed that the probability of getting the disease is independent of the duration of exposure. This may not be true in practice.</p>
+<p>This example uses the helper function <code>p_disease_saturation()</code> to take the number of exposure days into account when computing the probability of exposure leading to disease.</p>
+<p>Let’s assume that for very long exposure the probability of exposure leading to disease is the <code>p_disease</code> used above, so let’s rename it to <code>p_disease_max</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">names</span>(contact_list)[<span class="kw">names</span>(contact_list) <span class="op">==</span><span class="st"> &quot;p_disease&quot;</span>] &lt;-<span class="st"> &quot;p_disease_max&quot;</span></code></pre></div>
+<p>The function we are going to use to compute <code>p_disease</code> is a saturating fonction of the following form:</p>
+<p><span class="math display">\[p_S = p_{S\mathrm{max}} (1-\exp(-kd))\]</span></p>
+<p>where <span class="math inline">\(d\)</span> is the number of exposure days and <span class="math inline">\(k\)</span> can be computed using the duration <span class="math inline">\(d_{50}\)</span> for <span class="math inline">\(p_S\)</span> to reach half its maximum value:</p>
+<p><span class="math display">\[k = \dfrac{\log(2)}{d_{50}}\]</span></p>
+<p>To illustrate:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="dv">0</span>,<span class="dv">10</span>)
+d50 &lt;-<span class="st"> </span><span class="dv">1</span>
+p_disease_max =<span class="st"> </span><span class="dv">1</span>
+
+<span class="kw">plot</span>(d, <span class="kw">p_disease_saturation</span>(d, p_disease_max, d50))
+
+d50 &lt;-<span class="st"> </span><span class="dv">2</span>
+
+<span class="kw">points</span>(d, <span class="kw">p_disease_saturation</span>(d, p_disease_max, d50), <span class="dt">col =</span> <span class="st">&quot;red&quot;</span>)</code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<p>Let’s now get the number of exposure days for each contact and then compute their <code>p_disease</code>:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d50 &lt;-<span class="st"> </span><span class="dv">1</span>
+contact_list<span class="op">$</span>d_exposure &lt;-<span class="st"> </span><span class="kw">sapply</span>(contact_list<span class="op">$</span>dates_exposure, length)
+contact_list<span class="op">$</span>p_disease &lt;-<span class="st"> </span><span class="kw">mapply</span>(
+                              p_disease_saturation,
+                              contact_list<span class="op">$</span>d_exposure,
+                              contact_list<span class="op">$</span>p_disease_max,
+                              <span class="dt">MoreArgs =</span> <span class="kw">list</span>(<span class="dt">d50 =</span> d50)
+                            )
+
+<span class="kw">to_html</span>(contact_list, <span class="dt">cols_round =</span> <span class="kw">list</span>(<span class="st">&quot;p_disease&quot;</span>), <span class="dt">date_cols =</span> <span class="kw">list</span>(<span class="st">&quot;dates_exposure&quot;</span>, <span class="st">&quot;date_last_followup&quot;</span>))</code></pre></div>
+<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+id_contact
+</th>
+<th style="text-align:left;">
+type_exposure
+</th>
+<th style="text-align:left;">
+dates_exposure
+</th>
+<th style="text-align:left;">
+date_last_followup
+</th>
+<th style="text-align:right;">
+p_disease_max
+</th>
+<th style="text-align:right;">
+d_exposure
+</th>
+<th style="text-align:left;">
+p_disease
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+jnf
+</td>
+<td style="text-align:left;">
+hospital
+</td>
+<td style="text-align:left;">
+2019-02-16
+</td>
+<td style="text-align:left;">
+2019-02-15
+</td>
+<td style="text-align:right;">
+0.20
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+0.10
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+koo
+</td>
+<td style="text-align:left;">
+other
+</td>
+<td style="text-align:left;">
+c(“2019-02-16”, “2019-02-14”, “2019-02-15”)
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.12
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+0.10
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+fft
+</td>
+<td style="text-align:left;">
+funeral
+</td>
+<td style="text-align:left;">
+c(“2019-02-12”, “2019-02-11”, “2019-02-10”, “2019-02-08”)
+</td>
+<td style="text-align:left;">
+2019-02-16
+</td>
+<td style="text-align:right;">
+0.30
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:left;">
+0.28
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+pop
+</td>
+<td style="text-align:left;">
+family
+</td>
+<td style="text-align:left;">
+2019-02-06
+</td>
+<td style="text-align:left;">
+2019-02-17
+</td>
+<td style="text-align:right;">
+0.45
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+0.23
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+efm
+</td>
+<td style="text-align:left;">
+hospital
+</td>
+<td style="text-align:left;">
+2019-02-06
+</td>
+<td style="text-align:left;">
+2019-02-13
+</td>
+<td style="text-align:right;">
+0.20
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+0.10
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+dsq
+</td>
+<td style="text-align:left;">
+funeral
+</td>
+<td style="text-align:left;">
+c(“2019-02-06”, “2019-02-03”, “2019-02-04”)
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.30
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+0.26
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+pns
+</td>
+<td style="text-align:left;">
+family
+</td>
+<td style="text-align:left;">
+c(“2019-02-17”, “2019-02-13”)
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.45
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+0.34
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+bfe
+</td>
+<td style="text-align:left;">
+other
+</td>
+<td style="text-align:left;">
+c(“2019-02-08”, “2019-02-10”)
+</td>
+<td style="text-align:left;">
+2019-02-18
+</td>
+<td style="text-align:right;">
+0.12
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+0.09
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+lyh
+</td>
+<td style="text-align:left;">
+funeral
+</td>
+<td style="text-align:left;">
+c(“2019-02-08”, “2019-02-06”, “2019-02-07”, “2019-02-04”)
+</td>
+<td style="text-align:left;">
+2019-02-12
+</td>
+<td style="text-align:right;">
+0.30
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:left;">
+0.28
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+sxm
+</td>
+<td style="text-align:left;">
+family
+</td>
+<td style="text-align:left;">
+c(“2019-02-16”, “2019-02-14”, “2019-02-18”)
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.45
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+0.39
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+hls
+</td>
+<td style="text-align:left;">
+family
+</td>
+<td style="text-align:left;">
+c(“2019-02-09”, “2019-02-08”)
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.45
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+0.34
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+vna
+</td>
+<td style="text-align:left;">
+hospital
+</td>
+<td style="text-align:left;">
+2019-02-15
+</td>
+<td style="text-align:left;">
+2019-02-16
+</td>
+<td style="text-align:right;">
+0.20
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+0.10
+</td>
+</tr>
+</tbody>
+</table>
+<p>And then recompute the followup priorities:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">contact_list_p3 &lt;-<span class="st"> </span><span class="kw">followup_priorities</span>(
+                  contact_list,
+                  dates_exposure,
+                  date_last_followup,
+                  p_disease,
+                  <span class="dt">incubation_period =</span> incubation_frequency
+                )
+<span class="co">#&gt; Warning in followup_priorities(contact_list, dates_exposure,</span>
+<span class="co">#&gt; date_last_followup, : Incubation period probabilities don't sum to 1 but to</span>
+<span class="co">#&gt; 0.999999873689809 Automatically adjusted.</span>
+
+<span class="kw">to_html</span>(contact_list_p3, <span class="dt">cols_round =</span> <span class="kw">list</span>(<span class="st">&quot;p_disease&quot;</span>, <span class="st">&quot;p_onset&quot;</span>, <span class="st">&quot;p_symptoms&quot;</span>), <span class="dt">date_cols =</span> <span class="kw">list</span>(<span class="st">&quot;dates_exposure&quot;</span>, <span class="st">&quot;date_last_followup&quot;</span>))</code></pre></div>
+<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:left;">
+id_contact
+</th>
+<th style="text-align:left;">
+type_exposure
+</th>
+<th style="text-align:left;">
+dates_exposure
+</th>
+<th style="text-align:left;">
+date_last_followup
+</th>
+<th style="text-align:right;">
+p_disease_max
+</th>
+<th style="text-align:right;">
+d_exposure
+</th>
+<th style="text-align:left;">
+p_disease
+</th>
+<th style="text-align:left;">
+p_onset
+</th>
+<th style="text-align:left;">
+p_symptoms
+</th>
+<th style="text-align:right;">
+followup_priority
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+hls
+</td>
+<td style="text-align:left;">
+family
+</td>
+<td style="text-align:left;">
+c(“2019-02-09”, “2019-02-08”)
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.45
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+0.34
+</td>
+<td style="text-align:left;">
+1.00
+</td>
+<td style="text-align:left;">
+0.34
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+6
+</td>
+<td style="text-align:left;">
+dsq
+</td>
+<td style="text-align:left;">
+funeral
+</td>
+<td style="text-align:left;">
+c(“2019-02-06”, “2019-02-03”, “2019-02-04”)
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.30
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+0.26
+</td>
+<td style="text-align:left;">
+1.00
+</td>
+<td style="text-align:left;">
+0.26
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+7
+</td>
+<td style="text-align:left;">
+pns
+</td>
+<td style="text-align:left;">
+family
+</td>
+<td style="text-align:left;">
+c(“2019-02-17”, “2019-02-13”)
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.45
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+0.34
+</td>
+<td style="text-align:left;">
+0.59
+</td>
+<td style="text-align:left;">
+0.20
+</td>
+<td style="text-align:right;">
+3
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+10
+</td>
+<td style="text-align:left;">
+sxm
+</td>
+<td style="text-align:left;">
+family
+</td>
+<td style="text-align:left;">
+c(“2019-02-16”, “2019-02-14”, “2019-02-18”)
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.45
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+0.39
+</td>
+<td style="text-align:left;">
+0.50
+</td>
+<td style="text-align:left;">
+0.20
+</td>
+<td style="text-align:right;">
+4
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+12
+</td>
+<td style="text-align:left;">
+vna
+</td>
+<td style="text-align:left;">
+hospital
+</td>
+<td style="text-align:left;">
+2019-02-15
+</td>
+<td style="text-align:left;">
+2019-02-16
+</td>
+<td style="text-align:right;">
+0.20
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+0.10
+</td>
+<td style="text-align:left;">
+0.82
+</td>
+<td style="text-align:left;">
+0.08
+</td>
+<td style="text-align:right;">
+5
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:left;">
+koo
+</td>
+<td style="text-align:left;">
+other
+</td>
+<td style="text-align:left;">
+c(“2019-02-16”, “2019-02-14”, “2019-02-15”)
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.12
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+0.10
+</td>
+<td style="text-align:left;">
+0.77
+</td>
+<td style="text-align:left;">
+0.08
+</td>
+<td style="text-align:right;">
+6
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+jnf
+</td>
+<td style="text-align:left;">
+hospital
+</td>
+<td style="text-align:left;">
+2019-02-16
+</td>
+<td style="text-align:left;">
+2019-02-15
+</td>
+<td style="text-align:right;">
+0.20
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+0.10
+</td>
+<td style="text-align:left;">
+0.54
+</td>
+<td style="text-align:left;">
+0.05
+</td>
+<td style="text-align:right;">
+7
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+9
+</td>
+<td style="text-align:left;">
+lyh
+</td>
+<td style="text-align:left;">
+funeral
+</td>
+<td style="text-align:left;">
+c(“2019-02-08”, “2019-02-06”, “2019-02-07”, “2019-02-04”)
+</td>
+<td style="text-align:left;">
+2019-02-12
+</td>
+<td style="text-align:right;">
+0.30
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:left;">
+0.28
+</td>
+<td style="text-align:left;">
+0.18
+</td>
+<td style="text-align:left;">
+0.05
+</td>
+<td style="text-align:right;">
+8
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+fft
+</td>
+<td style="text-align:left;">
+funeral
+</td>
+<td style="text-align:left;">
+c(“2019-02-12”, “2019-02-11”, “2019-02-10”, “2019-02-08”)
+</td>
+<td style="text-align:left;">
+2019-02-16
+</td>
+<td style="text-align:right;">
+0.30
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:left;">
+0.28
+</td>
+<td style="text-align:left;">
+0.18
+</td>
+<td style="text-align:left;">
+0.05
+</td>
+<td style="text-align:right;">
+9
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+5
+</td>
+<td style="text-align:left;">
+efm
+</td>
+<td style="text-align:left;">
+hospital
+</td>
+<td style="text-align:left;">
+2019-02-06
+</td>
+<td style="text-align:left;">
+2019-02-13
+</td>
+<td style="text-align:right;">
+0.20
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+0.10
+</td>
+<td style="text-align:left;">
+0.01
+</td>
+<td style="text-align:left;">
+0.00
+</td>
+<td style="text-align:right;">
+10
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+8
+</td>
+<td style="text-align:left;">
+bfe
+</td>
+<td style="text-align:left;">
+other
+</td>
+<td style="text-align:left;">
+c(“2019-02-08”, “2019-02-10”)
+</td>
+<td style="text-align:left;">
+2019-02-18
+</td>
+<td style="text-align:right;">
+0.12
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+0.09
+</td>
+<td style="text-align:left;">
+0.00
+</td>
+<td style="text-align:left;">
+0.00
+</td>
+<td style="text-align:right;">
+11
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+4
+</td>
+<td style="text-align:left;">
+pop
+</td>
+<td style="text-align:left;">
+family
+</td>
+<td style="text-align:left;">
+2019-02-06
+</td>
+<td style="text-align:left;">
+2019-02-17
+</td>
+<td style="text-align:right;">
+0.45
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+0.23
+</td>
+<td style="text-align:left;">
+0.00
+</td>
+<td style="text-align:left;">
+0.00
+</td>
+<td style="text-align:right;">
+12
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
 
 </body>
-
 </html>
