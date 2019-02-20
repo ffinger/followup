@@ -50,6 +50,8 @@ __`p_integral_onset()`__ Computes the probability of new symptoms on a particula
 
 __`p_disease_saturation()`__ Helper function to compute the probability p_disease of getting disease after a certain number of days of exposure based on a saturating exponential growth model.
 
+__`to_html()`__ Helper function print contact list as html table.
+
 # Background
 
 ## Contact has never been followed up
