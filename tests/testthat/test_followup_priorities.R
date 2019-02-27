@@ -2,7 +2,7 @@ context("Testing followup_priorities function")
 
 myrank <- function(x) {
   res <- NA
-  res[order(x, decreasing = TRUE)] <- 1:length(x)
+  res[order(x, decreasing = TRUE)] <- seq_along(x)
   return(res)
 }
 

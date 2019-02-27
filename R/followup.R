@@ -25,7 +25,9 @@
 #' @importFrom tidyr complete full_seq
 #' @importFrom purrr map2_dbl pmap_dbl
 #' @importFrom checkmate assert_data_frame
-followup_priorities <- function(contact_list, exposure, exposure_end = NULL, last_followup = NULL, p_disease = 1, incubation_period = NULL, date_analysis = Sys.Date(), include_last_follow_up = TRUE, sort = TRUE) {
+followup_priorities <- function(contact_list, exposure, exposure_end = NULL,
+  last_followup = NULL, p_disease = 1, incubation_period = NULL,
+  date_analysis = Sys.Date(), include_last_follow_up = TRUE, sort = TRUE) {
 
   #-------------------------------------------------------------
   #------------- check inputs and transform --------------------
@@ -172,7 +174,7 @@ followup_priorities <- function(contact_list, exposure, exposure_end = NULL, las
   contact_list$p_symptoms <- contact_list$p_onset * p_disease
 
   #sort and add priorities
-  contact_list$followup_priority[order(contact_list$p_symptoms, decreasing = TRUE)] <- 1:nrow(contact_list)
+  contact_list$followup_priority[order(contact_list$p_symptoms, decreasing = TRUE)] <- seq_len(nrow(contact_list))
   if (sort) {
     contact_list <- contact_list[order(contact_list$followup_priority),]
   }
@@ -295,19 +297,19 @@ to_html <- function(contact_list, cols_round = list(), date_cols = list(), ndigi
   # date_cols <- dplyr::quos(unlist(date_cols))
 
   if (length(cols_round) > 0) {
-    for (i in 1:length(cols_round)) {
+    for (i in seq_along(cols_round)) {
       col <- cols_round[[i]]
       contact_list[col] <- htmlTable::txtRound(contact_list[col], ndigit)
     }
   }
 
   if (length(date_cols) > 0) {
-    for (i in 1:length(date_cols)) {
+    for (i in seq_along(date_cols)) {
       col <- date_cols[[i]]
       if (inherits(contact_list[[col]], "Date")) {
-          contact_list[col] <- sapply(contact_list[col], as.character)
+          contact_list[col] <- lapply(contact_list[col], as.character)
       } else if (inherits(contact_list[[col]], "list")) {
-          contact_list[col] <- sapply(contact_list[col], datevec_to_txt)
+          contact_list[col] <- lapply(contact_list[col], datevec_to_txt)
       } else {
         stop(paste("unexpected column type", class(contact_list[[col]])))
       }
@@ -319,7 +321,7 @@ to_html <- function(contact_list, cols_round = list(), date_cols = list(), ndigi
 }
 
 datevec_to_txt <- function(datevec) {
-    datevec <- sapply(datevec, as.Date)
-    datevec <- sapply(datevec, as.character)
+    datevec <- lapply(datevec, as.Date)
+    datevec <- lapply(datevec, as.character)
     return(paste(datevec))
 }
