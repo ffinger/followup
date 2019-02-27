@@ -1,10 +1,13 @@
 #' Compute the followup priorities for a list of contacts
 #'
-#' Outputs the probability that the symptoms onset of a contact was between the last follow up (day of last follow up included in interval by default, see parameter include_last_follow_up) and the analysis date, which defaults to day before current day and is included in interval.
+#' Outputs the probability that the symptoms onset of a contact was between the last follow up (day of last follow up included in interval by default, see parameter include_last_follow_up) and the analysis date, which defaults to day before current system date and is included in interval.
 #'
 #' @param contact_list A data.frame with one row per contact, containing at least a list column with possible dates of exposure.
 #' @param incubation_period The incubation period distribution. Can be a distcrete distribution, an empirical incubation period returned by epitrix::empirical_incubation_dist() (of type data.frame) or an atomic vector whose elements 1:n correspond to the probability of the incubation period being 0:(n-1).
-#' @param dates_exposure The name of the column of contact_list containing the dates of exposure (bare variable name or in quotes). Can be a list column containing vectors with several possible exposure dates per contact.
+#' @param exposure The name of the column of contact_list containing the dates of exposure (bare variable name or in quotes). Can be a list column containing vectors with several possible exposure dates per contact.
+#' @param exposure_end the name of a column containing dates representing the
+#'   end of the exposure period. This is `NULL` by default, indicating
+#'   all exposures are known and in the `exposure` column.
 #' @param last_followup The name of the column of contact_list containing the last follow up date for each contact (bare variable name or in quotes). Should contain NA if unknown or contact has never been followed.
 #' @param p_disease The overall probability that exposure leads to disease. Can either be a scalar applying to all contacts, or the name of a column (bare variable name or in quotes) in contact_list containing a different probability per contact. Defaults to 1.
 #' @param date_analysis the date on which the prioritization should be done. The probability of symptoms onset is computed until the end of the previous day. Defaults to the system date (i.e. today).
@@ -22,7 +25,7 @@
 #' @importFrom tidyr complete full_seq
 #' @importFrom purrr map2_dbl pmap_dbl
 #' @importFrom checkmate assert_data_frame
-followup_priorities <- function(contact_list, dates_exposure, last_followup = NULL, p_disease = 1, incubation_period = NULL, date_analysis = Sys.Date(), include_last_follow_up = TRUE, sort = TRUE) {
+followup_priorities <- function(contact_list, exposure, exposure_end = NULL, last_followup = NULL, p_disease = 1, incubation_period = NULL, date_analysis = Sys.Date(), include_last_follow_up = TRUE, sort = TRUE) {
 
   #-------------------------------------------------------------
   #------------- check inputs and transform --------------------
@@ -32,8 +35,23 @@ followup_priorities <- function(contact_list, dates_exposure, last_followup = NU
   checkmate::assert_data_frame(contact_list, min.rows = 1, min.cols = 1)
 
   #get dates exposure
-  dates_exposure <- rlang::enquo(dates_exposure)
-  dates_exposure <- dplyr::pull(contact_list, !!dates_exposure)
+  exposure <- rlang::enquo(exposure)
+  exposure <- dplyr::pull(contact_list, !!exposure)
+  exposure_end  <- rlang::enquo(exposure_end)
+  end_is_here   <- !is.null(rlang::get_expr(exposure_end))
+
+  if (end_is_here) {
+    # We need to create the list for each date
+    if (is.list(exposure) || !inherits(exposure, "Date")) {
+      stop("if exposure_end is specified, then exposure must be a vector of Dates")
+    }
+    e     <- exposure
+    ee    <- dplyr::pull(contact_list, !! exposure_end)
+    exposure <- vector(mode = "list", length = length(e))
+    for (i in seq(exposure)) {
+      exposure[[i]] <- seq(from = e[i], to = ee[i], by = "1 day")
+    }
+  }
 
   #get last_followup
   last_followup <- rlang::enquo(last_followup)
@@ -82,7 +100,7 @@ followup_priorities <- function(contact_list, dates_exposure, last_followup = NU
     #from distcrete
 
     max_inc <- as.integer(
-      max(date_analysis - as.Date(unlist(dates_exposure)), origin = as.Date("1970-01-01"))
+      max(date_analysis - as.Date(unlist(exposure)), origin = as.Date("1970-01-01"))
     )
 
     incubation_period <- incubation_period$d(0:max_inc)
@@ -116,7 +134,7 @@ followup_priorities <- function(contact_list, dates_exposure, last_followup = NU
     stop("incubation_period contains NA.")
   }
 
-  if (date_analysis < min(unlist(dates_exposure))) {
+  if (date_analysis < min(unlist(exposure))) {
     stop("date_analysis before first exposure date.")
   }
 
@@ -126,7 +144,7 @@ followup_priorities <- function(contact_list, dates_exposure, last_followup = NU
   #----------------------------------------------
 
   #the first exposure date for each contact
-  min_exp <- as.Date(vapply(dates_exposure, min, 1), origin = as.Date("1970-01-01"))
+  min_exp <- as.Date(vapply(exposure, min, 1), origin = as.Date("1970-01-01"))
 
   increment <- 0
   if (!include_last_follow_up) {
@@ -143,7 +161,7 @@ followup_priorities <- function(contact_list, dates_exposure, last_followup = NU
   #compute probs
   p_onset <- purrr::map2_dbl(
     date_lower,
-    dates_exposure,
+    exposure,
     function(x,y) p_integral_onset(incubation_period, x, date_analysis, y)
   )
 
@@ -170,13 +188,13 @@ followup_priorities <- function(contact_list, dates_exposure, last_followup = NU
 #' @param incubation_period a vector of probabilities. Has to sum to 1.
 #' @param date_lower the lower limit for which to compute the probability of new symptoms.
 #' @param date_upper the upper limit for which to compute the probability of new symptoms.
-#' @param dates_exposure a vector containing one or several possible dates of exposure. They are equally weighted.
+#' @param exposure a vector containing one or several possible dates of exposure. They are equally weighted.
 #' @return a probability
 #'
 #' @export
-p_integral_onset <- function(incubation_period, date_lower, date_upper, dates_exposure) {
+p_integral_onset <- function(incubation_period, date_lower, date_upper, exposure) {
 
-  fct <- function(x) p_new_onset(incubation_period, x, dates_exposure)
+  fct <- function(x) p_new_onset(incubation_period, x, exposure)
 
   if (date_lower > date_upper) {
     stop("date_upper is before date_lower.")
@@ -196,11 +214,11 @@ p_integral_onset <- function(incubation_period, date_lower, date_upper, dates_ex
 #'
 #' @param incubation_period a vector of probabilities. Has to sum to 1.
 #' @param date_analysis the date for which to compute the probability of new symptoms
-#' @param dates_exposure a vector containing one or several possible dates of exposure. They are equally weighted.
+#' @param exposure a vector containing one or several possible dates of exposure. They are equally weighted.
 #' @return a probability
 #'
 #' @export
-p_new_onset <- function(incubation_period, date_analysis, dates_exposure) {
+p_new_onset <- function(incubation_period, date_analysis, exposure) {
 
   if (sum(incubation_period) != 1) {
     stop("incubation_period doesn't sum to 1.")
@@ -210,7 +228,7 @@ p_new_onset <- function(incubation_period, date_analysis, dates_exposure) {
     stop("incubation_period contains negative elements.")
   }
 
-  idx <- as.integer(date_analysis - dates_exposure) + 1
+  idx <- as.integer(date_analysis - exposure) + 1
   incubation_period <- incubation_period[ 1 : max( which( incubation_period != 0 )) ] #remove trailing 0s
   idx <- idx[idx <= length(incubation_period)] #remove index larger than maximal incubation period
 
@@ -223,7 +241,7 @@ p_new_onset <- function(incubation_period, date_analysis, dates_exposure) {
   if (length(idx) == 0) {
     p <- 0 #all exposures are further in the past than the maximal incubation period or after the analysis date
   } else {
-    p <- sum(incubation_period[idx])/length(dates_exposure)
+    p <- sum(incubation_period[idx])/length(exposure)
   }
 
   return(p)

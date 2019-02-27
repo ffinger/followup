@@ -11,7 +11,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 
-<meta name="date" content="2019-02-20" />
+<meta name="date" content="2019-02-27" />
 
 <title>followup: package overview</title>
 
@@ -69,7 +69,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 
 <h1 class="title toc-ignore">followup: package overview</h1>
-<h4 class="date"><em>2019-02-20</em></h4>
+<h4 class="date"><em>2019-02-27</em></h4>
 
 
 <div id="TOC">
@@ -81,7 +81,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li><a href="#contact-has-previously-been-followed-up">Contact has previously been followed up</a></li>
 </ul></li>
 <li><a href="#examples">Examples</a><ul>
+<li><a href="#create-toy-data">Create toy data</a></li>
 <li><a href="#all-contacts-have-the-same-probability-of-getting-disease">All contacts have the same probability of getting disease</a></li>
+<li><a href="#non-consecutive-exposure-dates">Non-consecutive exposure dates</a></li>
 <li><a href="#probability-of-getting-disease-depends-on-type-of-exposure">Probability of getting disease depends on type of exposure</a></li>
 <li><a href="#probability-of-getting-disease-depends-on-type-and-duration-of-exposure">Probability of getting disease depends on type and duration of exposure</a></li>
 </ul></li>
@@ -90,13 +92,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <div id="installing-the-package" class="section level1">
 <h1>Installing the package</h1>
-<!-- To install the current stable, CRAN version of the package, type:
-
-```r
-install.packages("followup")
-``` -->
+<p>To install the current stable, CRAN version of the package, type:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">install.packages</span>(<span class="st">&quot;followup&quot;</span>)</code></pre></div>
 <p>To benefit from the latest features and bug fixes, install the development, <em>github</em> version of the package using:</p>
-<p>```</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;reconhub/followup&quot;</span>)</code></pre></div>
 <p>Note that this requires the package <em>devtools</em> installed.</p>
 </div>
@@ -108,6 +106,7 @@ install.packages("followup")
 <p><strong><code>p_new_onset()</code></strong> Computes the probability of new symptoms within a range of dates for a particular contact, given the incubation period.</p>
 <p><strong><code>p_integral_onset()</code></strong> Computes the probability of new symptoms on a particular day for a particular contact.</p>
 <p><strong><code>p_disease_saturation()</code></strong> Helper function to compute the probability p_disease of getting disease after a certain number of days of exposure based on a saturating exponential growth model.</p>
+<p><strong><code>to_html()</code></strong> Helper function print contact list as html table.</p>
 </div>
 <div id="background" class="section level1">
 <h1>Background</h1>
@@ -143,21 +142,21 @@ incubation_frequency &lt;-<span class="st"> </span><span class="kw">distcrete</s
 
 <span class="kw">plot</span>(incubation_days, incubation_frequency, <span class="dt">type =</span> <span class="st">&quot;h&quot;</span>)</code></pre></div>
 <p><img src="data:image/png;base64,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" /><!-- --></p>
-<p>Make a list of example contacts each having several possible <strong>exposure dates</strong> and some having a date when they were <strong>last followed up</strong>. Contacts that have never been followed up will have NA in the <code>date_last_followup</code> column:</p>
+<div id="create-toy-data" class="section level2">
+<h2>Create toy data</h2>
+<p>Make a list of example contacts each having a sequence of consecutive <strong>exposure dates</strong>. The beginning of the exposure is given in column <code>dates_exposure</code> and the end in <code>exposure_end</code>. Some contacts hae a date when they were <strong>last followed up</strong>. Contacts that have never been followed up will have NA in the <code>date_last_followup</code> column.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">n =<span class="st"> </span><span class="dv">12</span>
 contact_list &lt;-<span class="st"> </span><span class="kw">data.frame</span>(
   <span class="dt">id_contact =</span> <span class="kw">replicate</span>(n, <span class="kw">paste</span>(<span class="kw">sample</span>(letters, <span class="dv">3</span>, <span class="dt">replace =</span> <span class="ot">TRUE</span>),
           <span class="dt">collapse =</span> <span class="st">&quot;&quot;</span>)),
-  <span class="dt">type_exposure =</span> <span class="kw">sample</span>(<span class="kw">c</span>(<span class="st">&quot;hospital&quot;</span>, <span class="st">&quot;funeral&quot;</span>, <span class="st">&quot;family&quot;</span>, <span class="st">&quot;other&quot;</span>), n, <span class="dt">replace =</span> <span class="ot">TRUE</span>)
+  <span class="dt">type_exposure =</span> <span class="kw">sample</span>(<span class="kw">c</span>(<span class="st">&quot;hospital&quot;</span>, <span class="st">&quot;funeral&quot;</span>, <span class="st">&quot;family&quot;</span>, <span class="st">&quot;other&quot;</span>), n, <span class="dt">replace =</span> <span class="ot">TRUE</span>),
+  <span class="dt">dates_exposure =</span> <span class="kw">Sys.Date</span>() <span class="op">-</span><span class="st"> </span><span class="kw">sample</span>(<span class="dv">6</span><span class="op">:</span><span class="dv">20</span>, n, <span class="dt">replace =</span> <span class="ot">TRUE</span>)
 )
 
-<span class="co">#function used to create toy exposure dates</span>
-mkexposures &lt;-<span class="st"> </span><span class="cf">function</span>(foo) foo <span class="op">-</span><span class="st"> </span>base<span class="op">::</span><span class="kw">sample</span>(incubation_days, <span class="dt">size =</span> <span class="kw">sample.int</span>(<span class="dv">4</span>, <span class="dt">size =</span> <span class="dv">1</span>), <span class="dt">replace =</span> <span class="ot">FALSE</span>, <span class="dt">prob =</span> incubation_frequency)
-
-contact_list<span class="op">$</span>dates_exposure &lt;-<span class="st"> </span><span class="kw">sapply</span>(<span class="kw">Sys.Date</span>() <span class="op">-</span><span class="st"> </span><span class="dv">15</span> <span class="op">+</span><span class="st"> </span><span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">15</span>, n, <span class="dt">replace =</span> <span class="ot">TRUE</span>), mkexposures)
+contact_list<span class="op">$</span>exposure_end &lt;-<span class="st"> </span>contact_list<span class="op">$</span>dates_exposure <span class="op">+</span><span class="st"> </span><span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>, n, <span class="dt">replace =</span> <span class="ot">TRUE</span>)
 contact_list<span class="op">$</span>date_last_followup &lt;-<span class="st"> </span><span class="kw">Sys.Date</span>() <span class="op">-</span><span class="st"> </span><span class="kw">sample</span>(<span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">8</span>, <span class="kw">rep</span>(<span class="ot">NA</span>, <span class="dv">6</span>)), n, <span class="dt">replace =</span> <span class="ot">TRUE</span>)
 
-<span class="kw">to_html</span>(contact_list, <span class="dt">date_cols =</span> <span class="kw">list</span>(<span class="st">&quot;dates_exposure&quot;</span>, <span class="st">&quot;date_last_followup&quot;</span>))</code></pre></div>
+<span class="kw">to_html</span>(contact_list, <span class="dt">date_cols =</span> <span class="kw">list</span>(<span class="st">&quot;dates_exposure&quot;</span>, <span class="st">&quot;exposure_end&quot;</span>, <span class="st">&quot;date_last_followup&quot;</span>))</code></pre></div>
 <table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
@@ -171,6 +170,9 @@ type_exposure
 dates_exposure
 </th>
 <th style="text-align:left;">
+exposure_end
+</th>
+<th style="text-align:left;">
 date_last_followup
 </th>
 </tr>
@@ -178,161 +180,41 @@ date_last_followup
 <tbody>
 <tr>
 <td style="text-align:left;">
-jnf
+dcu
 </td>
 <td style="text-align:left;">
-hospital
+funeral
 </td>
 <td style="text-align:left;">
-2019-02-16
+2019-02-09
 </td>
 <td style="text-align:left;">
-2019-02-15
+2019-02-14
+</td>
+<td style="text-align:left;">
+NA
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-koo
+jqn
 </td>
 <td style="text-align:left;">
 other
 </td>
 <td style="text-align:left;">
-c(“2019-02-16”, “2019-02-14”, “2019-02-15”)
-</td>
-<td style="text-align:left;">
-NA
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-fft
-</td>
-<td style="text-align:left;">
-funeral
-</td>
-<td style="text-align:left;">
-c(“2019-02-12”, “2019-02-11”, “2019-02-10”, “2019-02-08”)
-</td>
-<td style="text-align:left;">
-2019-02-16
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-pop
-</td>
-<td style="text-align:left;">
-family
-</td>
-<td style="text-align:left;">
-2019-02-06
-</td>
-<td style="text-align:left;">
-2019-02-17
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-efm
-</td>
-<td style="text-align:left;">
-hospital
-</td>
-<td style="text-align:left;">
-2019-02-06
-</td>
-<td style="text-align:left;">
-2019-02-13
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-dsq
-</td>
-<td style="text-align:left;">
-funeral
-</td>
-<td style="text-align:left;">
-c(“2019-02-06”, “2019-02-03”, “2019-02-04”)
-</td>
-<td style="text-align:left;">
-NA
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-pns
-</td>
-<td style="text-align:left;">
-family
-</td>
-<td style="text-align:left;">
-c(“2019-02-17”, “2019-02-13”)
-</td>
-<td style="text-align:left;">
-NA
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-bfe
-</td>
-<td style="text-align:left;">
-other
-</td>
-<td style="text-align:left;">
-c(“2019-02-08”, “2019-02-10”)
-</td>
-<td style="text-align:left;">
-2019-02-18
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-lyh
-</td>
-<td style="text-align:left;">
-funeral
-</td>
-<td style="text-align:left;">
-c(“2019-02-08”, “2019-02-06”, “2019-02-07”, “2019-02-04”)
+2019-02-09
 </td>
 <td style="text-align:left;">
 2019-02-12
 </td>
-</tr>
-<tr>
 <td style="text-align:left;">
-sxm
-</td>
-<td style="text-align:left;">
-family
-</td>
-<td style="text-align:left;">
-c(“2019-02-16”, “2019-02-14”, “2019-02-18”)
-</td>
-<td style="text-align:left;">
-NA
+2019-02-26
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-hls
-</td>
-<td style="text-align:left;">
-family
-</td>
-<td style="text-align:left;">
-c(“2019-02-09”, “2019-02-08”)
-</td>
-<td style="text-align:left;">
-NA
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-vna
+jrl
 </td>
 <td style="text-align:left;">
 hospital
@@ -341,24 +223,379 @@ hospital
 2019-02-15
 </td>
 <td style="text-align:left;">
-2019-02-16
+2019-02-19
+</td>
+<td style="text-align:left;">
+2019-02-26
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+hbi
+</td>
+<td style="text-align:left;">
+funeral
+</td>
+<td style="text-align:left;">
+2019-02-12
+</td>
+<td style="text-align:left;">
+2019-02-15
+</td>
+<td style="text-align:left;">
+2019-02-21
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+qwu
+</td>
+<td style="text-align:left;">
+funeral
+</td>
+<td style="text-align:left;">
+2019-02-12
+</td>
+<td style="text-align:left;">
+2019-02-14
+</td>
+<td style="text-align:left;">
+2019-02-25
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+nqd
+</td>
+<td style="text-align:left;">
+other
+</td>
+<td style="text-align:left;">
+2019-02-09
+</td>
+<td style="text-align:left;">
+2019-02-10
+</td>
+<td style="text-align:left;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+etc
+</td>
+<td style="text-align:left;">
+funeral
+</td>
+<td style="text-align:left;">
+2019-02-19
+</td>
+<td style="text-align:left;">
+2019-02-20
+</td>
+<td style="text-align:left;">
+2019-02-21
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+zsb
+</td>
+<td style="text-align:left;">
+funeral
+</td>
+<td style="text-align:left;">
+2019-02-12
+</td>
+<td style="text-align:left;">
+2019-02-13
+</td>
+<td style="text-align:left;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+vdz
+</td>
+<td style="text-align:left;">
+family
+</td>
+<td style="text-align:left;">
+2019-02-08
+</td>
+<td style="text-align:left;">
+2019-02-10
+</td>
+<td style="text-align:left;">
+2019-02-19
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ehj
+</td>
+<td style="text-align:left;">
+other
+</td>
+<td style="text-align:left;">
+2019-02-18
+</td>
+<td style="text-align:left;">
+2019-02-22
+</td>
+<td style="text-align:left;">
+2019-02-26
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+doo
+</td>
+<td style="text-align:left;">
+family
+</td>
+<td style="text-align:left;">
+2019-02-19
+</td>
+<td style="text-align:left;">
+2019-02-23
+</td>
+<td style="text-align:left;">
+2019-02-20
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+nmu
+</td>
+<td style="text-align:left;">
+funeral
+</td>
+<td style="text-align:left;">
+2019-02-07
+</td>
+<td style="text-align:left;">
+2019-02-09
+</td>
+<td style="text-align:left;">
+2019-02-26
 </td>
 </tr>
 </tbody>
 </table>
+<p>Sometimes <strong>exposure dates</strong> for a contact are not consecutive. In this case we can give the possible exposure dates for each patient as a list. Make a separate contact list to illustrate this case:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">contact_list_<span class="dv">2</span> &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(contact_list, id_contact, type_exposure, date_last_followup)
+
+<span class="co">#function used to create toy non-consecutive exposure dates</span>
+mkexposures &lt;-<span class="st"> </span><span class="cf">function</span>(foo) foo <span class="op">-</span><span class="st"> </span>base<span class="op">::</span><span class="kw">sample</span>(incubation_days, <span class="dt">size =</span> <span class="kw">sample.int</span>(<span class="dv">4</span>, <span class="dt">size =</span> <span class="dv">1</span>), <span class="dt">replace =</span> <span class="ot">FALSE</span>, <span class="dt">prob =</span> incubation_frequency)
+
+contact_list_<span class="dv">2</span><span class="op">$</span>dates_exposure &lt;-<span class="st"> </span><span class="kw">sapply</span>(<span class="kw">Sys.Date</span>() <span class="op">-</span><span class="st"> </span><span class="dv">15</span> <span class="op">+</span><span class="st"> </span><span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">15</span>, n, <span class="dt">replace =</span> <span class="ot">TRUE</span>), mkexposures)
+
+<span class="kw">to_html</span>(contact_list_<span class="dv">2</span>, <span class="dt">date_cols =</span> <span class="kw">list</span>(<span class="st">&quot;dates_exposure&quot;</span>, <span class="st">&quot;date_last_followup&quot;</span>))</code></pre></div>
+<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+id_contact
+</th>
+<th style="text-align:left;">
+type_exposure
+</th>
+<th style="text-align:left;">
+date_last_followup
+</th>
+<th style="text-align:left;">
+dates_exposure
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+dcu
+</td>
+<td style="text-align:left;">
+funeral
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+c(“2019-02-11”, “2019-02-13”, “2019-02-14”)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+jqn
+</td>
+<td style="text-align:left;">
+other
+</td>
+<td style="text-align:left;">
+2019-02-26
+</td>
+<td style="text-align:left;">
+c(“2019-02-18”, “2019-02-17”)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+jrl
+</td>
+<td style="text-align:left;">
+hospital
+</td>
+<td style="text-align:left;">
+2019-02-26
+</td>
+<td style="text-align:left;">
+c(“2019-02-15”, “2019-02-14”)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+hbi
+</td>
+<td style="text-align:left;">
+funeral
+</td>
+<td style="text-align:left;">
+2019-02-21
+</td>
+<td style="text-align:left;">
+c(“2019-02-20”, “2019-02-19”, “2019-02-21”)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+qwu
+</td>
+<td style="text-align:left;">
+funeral
+</td>
+<td style="text-align:left;">
+2019-02-25
+</td>
+<td style="text-align:left;">
+c(“2019-02-21”, “2019-02-17”, “2019-02-19”, “2019-02-18”)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+nqd
+</td>
+<td style="text-align:left;">
+other
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+c(“2019-02-21”, “2019-02-20”, “2019-02-22”)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+etc
+</td>
+<td style="text-align:left;">
+funeral
+</td>
+<td style="text-align:left;">
+2019-02-21
+</td>
+<td style="text-align:left;">
+c(“2019-02-17”, “2019-02-18”, “2019-02-19”, “2019-02-16”)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+zsb
+</td>
+<td style="text-align:left;">
+funeral
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+c(“2019-02-19”, “2019-02-20”, “2019-02-18”, “2019-02-21”)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+vdz
+</td>
+<td style="text-align:left;">
+family
+</td>
+<td style="text-align:left;">
+2019-02-19
+</td>
+<td style="text-align:left;">
+c(“2019-02-16”, “2019-02-15”, “2019-02-14”, “2019-02-17”)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ehj
+</td>
+<td style="text-align:left;">
+other
+</td>
+<td style="text-align:left;">
+2019-02-26
+</td>
+<td style="text-align:left;">
+c(“2019-02-14”, “2019-02-16”, “2019-02-11”)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+doo
+</td>
+<td style="text-align:left;">
+family
+</td>
+<td style="text-align:left;">
+2019-02-20
+</td>
+<td style="text-align:left;">
+c(“2019-02-25”, “2019-02-22”, “2019-02-24”, “2019-02-26”)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+nmu
+</td>
+<td style="text-align:left;">
+funeral
+</td>
+<td style="text-align:left;">
+2019-02-26
+</td>
+<td style="text-align:left;">
+c(“2019-02-20”, “2019-02-17”, “2019-02-19”, “2019-02-18”)
+</td>
+</tr>
+</tbody>
+</table>
+</div>
 <div id="all-contacts-have-the-same-probability-of-getting-disease" class="section level2">
 <h2>All contacts have the same probability of getting disease</h2>
 <p>Now compute the probability of the symptoms onset being between the last day of follow up and yesterday (including start and end days):</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">contact_list_p &lt;-<span class="st"> </span><span class="kw">followup_priorities</span>(
-                  contact_list,
-                  dates_exposure,
-                  date_last_followup,
-                  <span class="dt">p_disease =</span> <span class="fl">0.3</span>,
-                  <span class="dt">incubation_period =</span> incubation_frequency
+                    contact_list,
+                    <span class="dt">exposure =</span> dates_exposure,
+                    <span class="dt">exposure_end =</span> exposure_end,
+                    <span class="dt">last_followup =</span> date_last_followup,
+                    <span class="dt">p_disease =</span> <span class="fl">0.3</span>,
+                    <span class="dt">incubation_period =</span> incubation_frequency
                 )
-<span class="co">#&gt; Warning in followup_priorities(contact_list, dates_exposure,</span>
-<span class="co">#&gt; date_last_followup, : Incubation period probabilities don't sum to 1 but to</span>
-<span class="co">#&gt; 0.999999873689809 Automatically adjusted.</span>
+<span class="co">#&gt; Warning in followup_priorities(contact_list, exposure = dates_exposure, :</span>
+<span class="co">#&gt; Incubation period probabilities don't sum to 1 but to 0.999999873689809</span>
+<span class="co">#&gt; Automatically adjusted.</span>
 
 <span class="kw">to_html</span>(contact_list_p, <span class="dt">cols_round =</span> <span class="kw">list</span>(<span class="st">&quot;p_onset&quot;</span>, <span class="st">&quot;p_symptoms&quot;</span>), <span class="dt">date_cols =</span> <span class="kw">list</span>(<span class="st">&quot;dates_exposure&quot;</span>, <span class="st">&quot;date_last_followup&quot;</span>))</code></pre></div>
 <table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
@@ -374,6 +611,9 @@ type_exposure
 </th>
 <th style="text-align:left;">
 dates_exposure
+</th>
+<th style="text-align:left;">
+exposure_end
 </th>
 <th style="text-align:left;">
 date_last_followup
@@ -395,16 +635,19 @@ followup_priority
 <tbody>
 <tr>
 <td style="text-align:left;">
-6
+1
 </td>
 <td style="text-align:left;">
-dsq
+dcu
 </td>
 <td style="text-align:left;">
 funeral
 </td>
 <td style="text-align:left;">
-c(“2019-02-06”, “2019-02-03”, “2019-02-04”)
+2019-02-09
+</td>
+<td style="text-align:left;">
+2019-02-14
 </td>
 <td style="text-align:left;">
 NA
@@ -424,16 +667,19 @@ NA
 </tr>
 <tr>
 <td style="text-align:left;">
-11
+6
 </td>
 <td style="text-align:left;">
-hls
+nqd
 </td>
 <td style="text-align:left;">
-family
+other
 </td>
 <td style="text-align:left;">
-c(“2019-02-09”, “2019-02-08”)
+2019-02-09
+</td>
+<td style="text-align:left;">
+2019-02-10
 </td>
 <td style="text-align:left;">
 NA
@@ -453,45 +699,19 @@ NA
 </tr>
 <tr>
 <td style="text-align:left;">
-12
+8
 </td>
 <td style="text-align:left;">
-vna
+zsb
 </td>
 <td style="text-align:left;">
-hospital
+funeral
 </td>
 <td style="text-align:left;">
-2019-02-15
+2019-02-12
 </td>
 <td style="text-align:left;">
-2019-02-16
-</td>
-<td style="text-align:right;">
-0.3
-</td>
-<td style="text-align:left;">
-0.82
-</td>
-<td style="text-align:left;">
-0.24
-</td>
-<td style="text-align:right;">
-3
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-2
-</td>
-<td style="text-align:left;">
-koo
-</td>
-<td style="text-align:left;">
-other
-</td>
-<td style="text-align:left;">
-c(“2019-02-16”, “2019-02-14”, “2019-02-15”)
+2019-02-13
 </td>
 <td style="text-align:left;">
 NA
@@ -500,10 +720,42 @@ NA
 0.3
 </td>
 <td style="text-align:left;">
-0.77
+1.00
 </td>
 <td style="text-align:left;">
-0.23
+0.30
+</td>
+<td style="text-align:right;">
+3
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+7
+</td>
+<td style="text-align:left;">
+etc
+</td>
+<td style="text-align:left;">
+funeral
+</td>
+<td style="text-align:left;">
+2019-02-19
+</td>
+<td style="text-align:left;">
+2019-02-20
+</td>
+<td style="text-align:left;">
+2019-02-21
+</td>
+<td style="text-align:right;">
+0.3
+</td>
+<td style="text-align:left;">
+0.98
+</td>
+<td style="text-align:left;">
+0.29
 </td>
 <td style="text-align:right;">
 4
@@ -511,60 +763,34 @@ NA
 </tr>
 <tr>
 <td style="text-align:left;">
-7
+11
 </td>
 <td style="text-align:left;">
-pns
+doo
 </td>
 <td style="text-align:left;">
 family
 </td>
 <td style="text-align:left;">
-c(“2019-02-17”, “2019-02-13”)
+2019-02-19
 </td>
 <td style="text-align:left;">
-NA
+2019-02-23
+</td>
+<td style="text-align:left;">
+2019-02-20
 </td>
 <td style="text-align:right;">
 0.3
 </td>
 <td style="text-align:left;">
-0.59
+0.86
 </td>
 <td style="text-align:left;">
-0.18
+0.26
 </td>
 <td style="text-align:right;">
 5
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-1
-</td>
-<td style="text-align:left;">
-jnf
-</td>
-<td style="text-align:left;">
-hospital
-</td>
-<td style="text-align:left;">
-2019-02-16
-</td>
-<td style="text-align:left;">
-2019-02-15
-</td>
-<td style="text-align:right;">
-0.3
-</td>
-<td style="text-align:left;">
-0.54
-</td>
-<td style="text-align:left;">
-0.16
-</td>
-<td style="text-align:right;">
-6
 </td>
 </tr>
 <tr>
@@ -572,25 +798,60 @@ hospital
 10
 </td>
 <td style="text-align:left;">
-sxm
+ehj
 </td>
 <td style="text-align:left;">
-family
+other
 </td>
 <td style="text-align:left;">
-c(“2019-02-16”, “2019-02-14”, “2019-02-18”)
+2019-02-18
 </td>
 <td style="text-align:left;">
-NA
+2019-02-22
+</td>
+<td style="text-align:left;">
+2019-02-26
 </td>
 <td style="text-align:right;">
 0.3
 </td>
 <td style="text-align:left;">
-0.50
+0.09
 </td>
 <td style="text-align:left;">
-0.15
+0.03
+</td>
+<td style="text-align:right;">
+6
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+4
+</td>
+<td style="text-align:left;">
+hbi
+</td>
+<td style="text-align:left;">
+funeral
+</td>
+<td style="text-align:left;">
+2019-02-12
+</td>
+<td style="text-align:left;">
+2019-02-15
+</td>
+<td style="text-align:left;">
+2019-02-21
+</td>
+<td style="text-align:right;">
+0.3
+</td>
+<td style="text-align:left;">
+0.02
+</td>
+<td style="text-align:left;">
+0.01
 </td>
 <td style="text-align:right;">
 7
@@ -598,28 +859,31 @@ NA
 </tr>
 <tr>
 <td style="text-align:left;">
-9
+3
 </td>
 <td style="text-align:left;">
-lyh
+jrl
 </td>
 <td style="text-align:left;">
-funeral
+hospital
 </td>
 <td style="text-align:left;">
-c(“2019-02-08”, “2019-02-06”, “2019-02-07”, “2019-02-04”)
+2019-02-15
 </td>
 <td style="text-align:left;">
-2019-02-12
+2019-02-19
+</td>
+<td style="text-align:left;">
+2019-02-26
 </td>
 <td style="text-align:right;">
 0.3
 </td>
 <td style="text-align:left;">
-0.18
+0.00
 </td>
 <td style="text-align:left;">
-0.05
+0.00
 </td>
 <td style="text-align:right;">
 8
@@ -627,28 +891,31 @@ c(“2019-02-08”, “2019-02-06”, “2019-02-07”, “2019-02-04”)
 </tr>
 <tr>
 <td style="text-align:left;">
-3
+9
 </td>
 <td style="text-align:left;">
-fft
+vdz
 </td>
 <td style="text-align:left;">
-funeral
+family
 </td>
 <td style="text-align:left;">
-c(“2019-02-12”, “2019-02-11”, “2019-02-10”, “2019-02-08”)
+2019-02-08
 </td>
 <td style="text-align:left;">
-2019-02-16
+2019-02-10
+</td>
+<td style="text-align:left;">
+2019-02-19
 </td>
 <td style="text-align:right;">
 0.3
 </td>
 <td style="text-align:left;">
-0.18
+0.00
 </td>
 <td style="text-align:left;">
-0.05
+0.00
 </td>
 <td style="text-align:right;">
 9
@@ -659,16 +926,394 @@ c(“2019-02-12”, “2019-02-11”, “2019-02-10”, “2019-02-08”)
 5
 </td>
 <td style="text-align:left;">
-efm
+qwu
 </td>
 <td style="text-align:left;">
-hospital
+funeral
 </td>
 <td style="text-align:left;">
-2019-02-06
+2019-02-12
 </td>
 <td style="text-align:left;">
-2019-02-13
+2019-02-14
+</td>
+<td style="text-align:left;">
+2019-02-25
+</td>
+<td style="text-align:right;">
+0.3
+</td>
+<td style="text-align:left;">
+0.00
+</td>
+<td style="text-align:left;">
+0.00
+</td>
+<td style="text-align:right;">
+10
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:left;">
+jqn
+</td>
+<td style="text-align:left;">
+other
+</td>
+<td style="text-align:left;">
+2019-02-09
+</td>
+<td style="text-align:left;">
+2019-02-12
+</td>
+<td style="text-align:left;">
+2019-02-26
+</td>
+<td style="text-align:right;">
+0.3
+</td>
+<td style="text-align:left;">
+0.00
+</td>
+<td style="text-align:left;">
+0.00
+</td>
+<td style="text-align:right;">
+11
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+12
+</td>
+<td style="text-align:left;">
+nmu
+</td>
+<td style="text-align:left;">
+funeral
+</td>
+<td style="text-align:left;">
+2019-02-07
+</td>
+<td style="text-align:left;">
+2019-02-09
+</td>
+<td style="text-align:left;">
+2019-02-26
+</td>
+<td style="text-align:right;">
+0.3
+</td>
+<td style="text-align:left;">
+0.00
+</td>
+<td style="text-align:left;">
+0.00
+</td>
+<td style="text-align:right;">
+12
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="non-consecutive-exposure-dates" class="section level2">
+<h2>Non-consecutive exposure dates</h2>
+<p>Do the same for contact_list_2, where exposure_dates are non-consecutive:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">contact_list_p2 &lt;-<span class="st"> </span><span class="kw">followup_priorities</span>(
+                    contact_list_<span class="dv">2</span>,
+                    <span class="dt">exposure =</span> dates_exposure,
+                    <span class="dt">last_followup =</span> date_last_followup,
+                    <span class="dt">p_disease =</span> <span class="fl">0.3</span>,
+                    <span class="dt">incubation_period =</span> incubation_frequency
+                )
+<span class="co">#&gt; Warning in followup_priorities(contact_list_2, exposure = dates_exposure, :</span>
+<span class="co">#&gt; Incubation period probabilities don't sum to 1 but to 0.999999873689809</span>
+<span class="co">#&gt; Automatically adjusted.</span>
+
+<span class="kw">to_html</span>(contact_list_p2, <span class="dt">cols_round =</span> <span class="kw">list</span>(<span class="st">&quot;p_onset&quot;</span>, <span class="st">&quot;p_symptoms&quot;</span>), <span class="dt">date_cols =</span> <span class="kw">list</span>(<span class="st">&quot;dates_exposure&quot;</span>, <span class="st">&quot;date_last_followup&quot;</span>))</code></pre></div>
+<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:left;">
+id_contact
+</th>
+<th style="text-align:left;">
+type_exposure
+</th>
+<th style="text-align:left;">
+date_last_followup
+</th>
+<th style="text-align:left;">
+dates_exposure
+</th>
+<th style="text-align:right;">
+p_disease
+</th>
+<th style="text-align:left;">
+p_onset
+</th>
+<th style="text-align:left;">
+p_symptoms
+</th>
+<th style="text-align:right;">
+followup_priority
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+dcu
+</td>
+<td style="text-align:left;">
+funeral
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+c(“2019-02-11”, “2019-02-13”, “2019-02-14”)
+</td>
+<td style="text-align:right;">
+0.3
+</td>
+<td style="text-align:left;">
+1.00
+</td>
+<td style="text-align:left;">
+0.30
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+8
+</td>
+<td style="text-align:left;">
+zsb
+</td>
+<td style="text-align:left;">
+funeral
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+c(“2019-02-19”, “2019-02-20”, “2019-02-18”, “2019-02-21”)
+</td>
+<td style="text-align:right;">
+0.3
+</td>
+<td style="text-align:left;">
+0.98
+</td>
+<td style="text-align:left;">
+0.29
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+4
+</td>
+<td style="text-align:left;">
+hbi
+</td>
+<td style="text-align:left;">
+funeral
+</td>
+<td style="text-align:left;">
+2019-02-21
+</td>
+<td style="text-align:left;">
+c(“2019-02-20”, “2019-02-19”, “2019-02-21”)
+</td>
+<td style="text-align:right;">
+0.3
+</td>
+<td style="text-align:left;">
+0.97
+</td>
+<td style="text-align:left;">
+0.29
+</td>
+<td style="text-align:right;">
+3
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+6
+</td>
+<td style="text-align:left;">
+nqd
+</td>
+<td style="text-align:left;">
+other
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+c(“2019-02-21”, “2019-02-20”, “2019-02-22”)
+</td>
+<td style="text-align:right;">
+0.3
+</td>
+<td style="text-align:left;">
+0.92
+</td>
+<td style="text-align:left;">
+0.27
+</td>
+<td style="text-align:right;">
+4
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+9
+</td>
+<td style="text-align:left;">
+vdz
+</td>
+<td style="text-align:left;">
+family
+</td>
+<td style="text-align:left;">
+2019-02-19
+</td>
+<td style="text-align:left;">
+c(“2019-02-16”, “2019-02-15”, “2019-02-14”, “2019-02-17”)
+</td>
+<td style="text-align:right;">
+0.3
+</td>
+<td style="text-align:left;">
+0.61
+</td>
+<td style="text-align:left;">
+0.18
+</td>
+<td style="text-align:right;">
+5
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+7
+</td>
+<td style="text-align:left;">
+etc
+</td>
+<td style="text-align:left;">
+funeral
+</td>
+<td style="text-align:left;">
+2019-02-21
+</td>
+<td style="text-align:left;">
+c(“2019-02-17”, “2019-02-18”, “2019-02-19”, “2019-02-16”)
+</td>
+<td style="text-align:right;">
+0.3
+</td>
+<td style="text-align:left;">
+0.61
+</td>
+<td style="text-align:left;">
+0.18
+</td>
+<td style="text-align:right;">
+6
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+doo
+</td>
+<td style="text-align:left;">
+family
+</td>
+<td style="text-align:left;">
+2019-02-20
+</td>
+<td style="text-align:left;">
+c(“2019-02-25”, “2019-02-22”, “2019-02-24”, “2019-02-26”)
+</td>
+<td style="text-align:right;">
+0.3
+</td>
+<td style="text-align:left;">
+0.26
+</td>
+<td style="text-align:left;">
+0.08
+</td>
+<td style="text-align:right;">
+7
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+5
+</td>
+<td style="text-align:left;">
+qwu
+</td>
+<td style="text-align:left;">
+funeral
+</td>
+<td style="text-align:left;">
+2019-02-25
+</td>
+<td style="text-align:left;">
+c(“2019-02-21”, “2019-02-17”, “2019-02-19”, “2019-02-18”)
+</td>
+<td style="text-align:right;">
+0.3
+</td>
+<td style="text-align:left;">
+0.12
+</td>
+<td style="text-align:left;">
+0.04
+</td>
+<td style="text-align:right;">
+8
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+12
+</td>
+<td style="text-align:left;">
+nmu
+</td>
+<td style="text-align:left;">
+funeral
+</td>
+<td style="text-align:left;">
+2019-02-26
+</td>
+<td style="text-align:left;">
+c(“2019-02-20”, “2019-02-17”, “2019-02-19”, “2019-02-18”)
 </td>
 <td style="text-align:right;">
 0.3
@@ -680,24 +1325,53 @@ hospital
 0.00
 </td>
 <td style="text-align:right;">
-10
+9
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-8
+2
 </td>
 <td style="text-align:left;">
-bfe
+jqn
 </td>
 <td style="text-align:left;">
 other
 </td>
 <td style="text-align:left;">
-c(“2019-02-08”, “2019-02-10”)
+2019-02-26
 </td>
 <td style="text-align:left;">
-2019-02-18
+c(“2019-02-18”, “2019-02-17”)
+</td>
+<td style="text-align:right;">
+0.3
+</td>
+<td style="text-align:left;">
+0.00
+</td>
+<td style="text-align:left;">
+0.00
+</td>
+<td style="text-align:right;">
+10
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+10
+</td>
+<td style="text-align:left;">
+ehj
+</td>
+<td style="text-align:left;">
+other
+</td>
+<td style="text-align:left;">
+2019-02-26
+</td>
+<td style="text-align:left;">
+c(“2019-02-14”, “2019-02-16”, “2019-02-11”)
 </td>
 <td style="text-align:right;">
 0.3
@@ -714,19 +1388,19 @@ c(“2019-02-08”, “2019-02-10”)
 </tr>
 <tr>
 <td style="text-align:left;">
-4
+3
 </td>
 <td style="text-align:left;">
-pop
+jrl
 </td>
 <td style="text-align:left;">
-family
+hospital
 </td>
 <td style="text-align:left;">
-2019-02-06
+2019-02-26
 </td>
 <td style="text-align:left;">
-2019-02-17
+c(“2019-02-15”, “2019-02-14”)
 </td>
 <td style="text-align:right;">
 0.3
@@ -818,6 +1492,9 @@ type_exposure
 dates_exposure
 </th>
 <th style="text-align:left;">
+exposure_end
+</th>
+<th style="text-align:left;">
 date_last_followup
 </th>
 <th style="text-align:right;">
@@ -828,98 +1505,16 @@ p_disease
 <tbody>
 <tr>
 <td style="text-align:left;">
-jnf
-</td>
-<td style="text-align:left;">
-hospital
-</td>
-<td style="text-align:left;">
-2019-02-16
-</td>
-<td style="text-align:left;">
-2019-02-15
-</td>
-<td style="text-align:right;">
-0.20
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-koo
-</td>
-<td style="text-align:left;">
-other
-</td>
-<td style="text-align:left;">
-c(“2019-02-16”, “2019-02-14”, “2019-02-15”)
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:right;">
-0.12
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-fft
+dcu
 </td>
 <td style="text-align:left;">
 funeral
 </td>
 <td style="text-align:left;">
-c(“2019-02-12”, “2019-02-11”, “2019-02-10”, “2019-02-08”)
+2019-02-09
 </td>
 <td style="text-align:left;">
-2019-02-16
-</td>
-<td style="text-align:right;">
-0.30
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-pop
-</td>
-<td style="text-align:left;">
-family
-</td>
-<td style="text-align:left;">
-2019-02-06
-</td>
-<td style="text-align:left;">
-2019-02-17
-</td>
-<td style="text-align:right;">
-0.45
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-efm
-</td>
-<td style="text-align:left;">
-hospital
-</td>
-<td style="text-align:left;">
-2019-02-06
-</td>
-<td style="text-align:left;">
-2019-02-13
-</td>
-<td style="text-align:right;">
-0.20
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-dsq
-</td>
-<td style="text-align:left;">
-funeral
-</td>
-<td style="text-align:left;">
-c(“2019-02-06”, “2019-02-03”, “2019-02-04”)
+2019-02-14
 </td>
 <td style="text-align:left;">
 NA
@@ -930,92 +1525,27 @@ NA
 </tr>
 <tr>
 <td style="text-align:left;">
-pns
-</td>
-<td style="text-align:left;">
-family
-</td>
-<td style="text-align:left;">
-c(“2019-02-17”, “2019-02-13”)
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:right;">
-0.45
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-bfe
+jqn
 </td>
 <td style="text-align:left;">
 other
 </td>
 <td style="text-align:left;">
-c(“2019-02-08”, “2019-02-10”)
-</td>
-<td style="text-align:left;">
-2019-02-18
-</td>
-<td style="text-align:right;">
-0.12
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-lyh
-</td>
-<td style="text-align:left;">
-funeral
-</td>
-<td style="text-align:left;">
-c(“2019-02-08”, “2019-02-06”, “2019-02-07”, “2019-02-04”)
+2019-02-09
 </td>
 <td style="text-align:left;">
 2019-02-12
 </td>
+<td style="text-align:left;">
+2019-02-26
+</td>
 <td style="text-align:right;">
-0.30
+0.12
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-sxm
-</td>
-<td style="text-align:left;">
-family
-</td>
-<td style="text-align:left;">
-c(“2019-02-16”, “2019-02-14”, “2019-02-18”)
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:right;">
-0.45
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-hls
-</td>
-<td style="text-align:left;">
-family
-</td>
-<td style="text-align:left;">
-c(“2019-02-09”, “2019-02-08”)
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:right;">
-0.45
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-vna
+jrl
 </td>
 <td style="text-align:left;">
 hospital
@@ -1024,27 +1554,211 @@ hospital
 2019-02-15
 </td>
 <td style="text-align:left;">
-2019-02-16
+2019-02-19
+</td>
+<td style="text-align:left;">
+2019-02-26
 </td>
 <td style="text-align:right;">
 0.20
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+hbi
+</td>
+<td style="text-align:left;">
+funeral
+</td>
+<td style="text-align:left;">
+2019-02-12
+</td>
+<td style="text-align:left;">
+2019-02-15
+</td>
+<td style="text-align:left;">
+2019-02-21
+</td>
+<td style="text-align:right;">
+0.30
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+qwu
+</td>
+<td style="text-align:left;">
+funeral
+</td>
+<td style="text-align:left;">
+2019-02-12
+</td>
+<td style="text-align:left;">
+2019-02-14
+</td>
+<td style="text-align:left;">
+2019-02-25
+</td>
+<td style="text-align:right;">
+0.30
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+nqd
+</td>
+<td style="text-align:left;">
+other
+</td>
+<td style="text-align:left;">
+2019-02-09
+</td>
+<td style="text-align:left;">
+2019-02-10
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.12
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+etc
+</td>
+<td style="text-align:left;">
+funeral
+</td>
+<td style="text-align:left;">
+2019-02-19
+</td>
+<td style="text-align:left;">
+2019-02-20
+</td>
+<td style="text-align:left;">
+2019-02-21
+</td>
+<td style="text-align:right;">
+0.30
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+zsb
+</td>
+<td style="text-align:left;">
+funeral
+</td>
+<td style="text-align:left;">
+2019-02-12
+</td>
+<td style="text-align:left;">
+2019-02-13
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.30
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+vdz
+</td>
+<td style="text-align:left;">
+family
+</td>
+<td style="text-align:left;">
+2019-02-08
+</td>
+<td style="text-align:left;">
+2019-02-10
+</td>
+<td style="text-align:left;">
+2019-02-19
+</td>
+<td style="text-align:right;">
+0.45
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ehj
+</td>
+<td style="text-align:left;">
+other
+</td>
+<td style="text-align:left;">
+2019-02-18
+</td>
+<td style="text-align:left;">
+2019-02-22
+</td>
+<td style="text-align:left;">
+2019-02-26
+</td>
+<td style="text-align:right;">
+0.12
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+doo
+</td>
+<td style="text-align:left;">
+family
+</td>
+<td style="text-align:left;">
+2019-02-19
+</td>
+<td style="text-align:left;">
+2019-02-23
+</td>
+<td style="text-align:left;">
+2019-02-20
+</td>
+<td style="text-align:right;">
+0.45
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+nmu
+</td>
+<td style="text-align:left;">
+funeral
+</td>
+<td style="text-align:left;">
+2019-02-07
+</td>
+<td style="text-align:left;">
+2019-02-09
+</td>
+<td style="text-align:left;">
+2019-02-26
+</td>
+<td style="text-align:right;">
+0.30
 </td>
 </tr>
 </tbody>
 </table>
 <p>Now recompute the priorities:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">contact_list_p2 &lt;-<span class="st"> </span><span class="kw">followup_priorities</span>(
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">contact_list_p3 &lt;-<span class="st"> </span><span class="kw">followup_priorities</span>(
                   contact_list,
-                  dates_exposure,
-                  date_last_followup,
-                  p_disease,
+                  <span class="dt">exposure =</span> dates_exposure,
+                  <span class="dt">exposure_end =</span> exposure_end,
+                  <span class="dt">last_followup =</span> date_last_followup,
+                  <span class="dt">p_disease =</span> p_disease,
                   <span class="dt">incubation_period =</span> incubation_frequency
                 )
-<span class="co">#&gt; Warning in followup_priorities(contact_list, dates_exposure,</span>
-<span class="co">#&gt; date_last_followup, : Incubation period probabilities don't sum to 1 but to</span>
-<span class="co">#&gt; 0.999999873689809 Automatically adjusted.</span>
+<span class="co">#&gt; Warning in followup_priorities(contact_list, exposure = dates_exposure, :</span>
+<span class="co">#&gt; Incubation period probabilities don't sum to 1 but to 0.999999873689809</span>
+<span class="co">#&gt; Automatically adjusted.</span>
 
-<span class="kw">to_html</span>(contact_list_p2, <span class="dt">cols_round =</span> <span class="kw">list</span>(<span class="st">&quot;p_onset&quot;</span>, <span class="st">&quot;p_symptoms&quot;</span>), <span class="dt">date_cols =</span> <span class="kw">list</span>(<span class="st">&quot;dates_exposure&quot;</span>, <span class="st">&quot;date_last_followup&quot;</span>))</code></pre></div>
+<span class="kw">to_html</span>(contact_list_p3, <span class="dt">cols_round =</span> <span class="kw">list</span>(<span class="st">&quot;p_onset&quot;</span>, <span class="st">&quot;p_symptoms&quot;</span>), <span class="dt">date_cols =</span> <span class="kw">list</span>(<span class="st">&quot;dates_exposure&quot;</span>, <span class="st">&quot;date_last_followup&quot;</span>))</code></pre></div>
 <table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
@@ -1058,6 +1772,9 @@ type_exposure
 </th>
 <th style="text-align:left;">
 dates_exposure
+</th>
+<th style="text-align:left;">
+exposure_end
 </th>
 <th style="text-align:left;">
 date_last_followup
@@ -1082,25 +1799,28 @@ followup_priority
 11
 </td>
 <td style="text-align:left;">
-hls
+doo
 </td>
 <td style="text-align:left;">
 family
 </td>
 <td style="text-align:left;">
-c(“2019-02-09”, “2019-02-08”)
+2019-02-19
 </td>
 <td style="text-align:left;">
-NA
+2019-02-23
+</td>
+<td style="text-align:left;">
+2019-02-20
 </td>
 <td style="text-align:right;">
 0.45
 </td>
 <td style="text-align:left;">
-1.00
+0.86
 </td>
 <td style="text-align:left;">
-0.45
+0.39
 </td>
 <td style="text-align:right;">
 1
@@ -1108,16 +1828,19 @@ NA
 </tr>
 <tr>
 <td style="text-align:left;">
-6
+1
 </td>
 <td style="text-align:left;">
-dsq
+dcu
 </td>
 <td style="text-align:left;">
 funeral
 </td>
 <td style="text-align:left;">
-c(“2019-02-06”, “2019-02-03”, “2019-02-04”)
+2019-02-09
+</td>
+<td style="text-align:left;">
+2019-02-14
 </td>
 <td style="text-align:left;">
 NA
@@ -1137,28 +1860,31 @@ NA
 </tr>
 <tr>
 <td style="text-align:left;">
-7
+8
 </td>
 <td style="text-align:left;">
-pns
+zsb
 </td>
 <td style="text-align:left;">
-family
+funeral
 </td>
 <td style="text-align:left;">
-c(“2019-02-17”, “2019-02-13”)
+2019-02-12
+</td>
+<td style="text-align:left;">
+2019-02-13
 </td>
 <td style="text-align:left;">
 NA
 </td>
 <td style="text-align:right;">
-0.45
+0.30
 </td>
 <td style="text-align:left;">
-0.59
+1.00
 </td>
 <td style="text-align:left;">
-0.27
+0.30
 </td>
 <td style="text-align:right;">
 3
@@ -1166,28 +1892,31 @@ NA
 </tr>
 <tr>
 <td style="text-align:left;">
-10
+7
 </td>
 <td style="text-align:left;">
-sxm
+etc
 </td>
 <td style="text-align:left;">
-family
+funeral
 </td>
 <td style="text-align:left;">
-c(“2019-02-16”, “2019-02-14”, “2019-02-18”)
+2019-02-19
 </td>
 <td style="text-align:left;">
-NA
+2019-02-20
+</td>
+<td style="text-align:left;">
+2019-02-21
 </td>
 <td style="text-align:right;">
-0.45
+0.30
 </td>
 <td style="text-align:left;">
-0.50
+0.98
 </td>
 <td style="text-align:left;">
-0.23
+0.29
 </td>
 <td style="text-align:right;">
 4
@@ -1195,74 +1924,19 @@ NA
 </tr>
 <tr>
 <td style="text-align:left;">
-12
-</td>
-<td style="text-align:left;">
-vna
-</td>
-<td style="text-align:left;">
-hospital
-</td>
-<td style="text-align:left;">
-2019-02-15
-</td>
-<td style="text-align:left;">
-2019-02-16
-</td>
-<td style="text-align:right;">
-0.20
-</td>
-<td style="text-align:left;">
-0.82
-</td>
-<td style="text-align:left;">
-0.16
-</td>
-<td style="text-align:right;">
-5
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-1
-</td>
-<td style="text-align:left;">
-jnf
-</td>
-<td style="text-align:left;">
-hospital
-</td>
-<td style="text-align:left;">
-2019-02-16
-</td>
-<td style="text-align:left;">
-2019-02-15
-</td>
-<td style="text-align:right;">
-0.20
-</td>
-<td style="text-align:left;">
-0.54
-</td>
-<td style="text-align:left;">
-0.11
-</td>
-<td style="text-align:right;">
 6
 </td>
-</tr>
-<tr>
 <td style="text-align:left;">
-2
-</td>
-<td style="text-align:left;">
-koo
+nqd
 </td>
 <td style="text-align:left;">
 other
 </td>
 <td style="text-align:left;">
-c(“2019-02-16”, “2019-02-14”, “2019-02-15”)
+2019-02-09
+</td>
+<td style="text-align:left;">
+2019-02-10
 </td>
 <td style="text-align:left;">
 NA
@@ -1271,10 +1945,74 @@ NA
 0.12
 </td>
 <td style="text-align:left;">
-0.77
+1.00
+</td>
+<td style="text-align:left;">
+0.12
+</td>
+<td style="text-align:right;">
+5
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+10
+</td>
+<td style="text-align:left;">
+ehj
+</td>
+<td style="text-align:left;">
+other
+</td>
+<td style="text-align:left;">
+2019-02-18
+</td>
+<td style="text-align:left;">
+2019-02-22
+</td>
+<td style="text-align:left;">
+2019-02-26
+</td>
+<td style="text-align:right;">
+0.12
 </td>
 <td style="text-align:left;">
 0.09
+</td>
+<td style="text-align:left;">
+0.01
+</td>
+<td style="text-align:right;">
+6
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+4
+</td>
+<td style="text-align:left;">
+hbi
+</td>
+<td style="text-align:left;">
+funeral
+</td>
+<td style="text-align:left;">
+2019-02-12
+</td>
+<td style="text-align:left;">
+2019-02-15
+</td>
+<td style="text-align:left;">
+2019-02-21
+</td>
+<td style="text-align:right;">
+0.30
+</td>
+<td style="text-align:left;">
+0.02
+</td>
+<td style="text-align:left;">
+0.01
 </td>
 <td style="text-align:right;">
 7
@@ -1282,28 +2020,31 @@ NA
 </tr>
 <tr>
 <td style="text-align:left;">
-9
+3
 </td>
 <td style="text-align:left;">
-lyh
+jrl
 </td>
 <td style="text-align:left;">
-funeral
+hospital
 </td>
 <td style="text-align:left;">
-c(“2019-02-08”, “2019-02-06”, “2019-02-07”, “2019-02-04”)
+2019-02-15
 </td>
 <td style="text-align:left;">
-2019-02-12
+2019-02-19
+</td>
+<td style="text-align:left;">
+2019-02-26
 </td>
 <td style="text-align:right;">
-0.30
+0.20
 </td>
 <td style="text-align:left;">
-0.18
+0.00
 </td>
 <td style="text-align:left;">
-0.05
+0.00
 </td>
 <td style="text-align:right;">
 8
@@ -1311,28 +2052,31 @@ c(“2019-02-08”, “2019-02-06”, “2019-02-07”, “2019-02-04”)
 </tr>
 <tr>
 <td style="text-align:left;">
-3
+9
 </td>
 <td style="text-align:left;">
-fft
+vdz
 </td>
 <td style="text-align:left;">
-funeral
+family
 </td>
 <td style="text-align:left;">
-c(“2019-02-12”, “2019-02-11”, “2019-02-10”, “2019-02-08”)
+2019-02-08
 </td>
 <td style="text-align:left;">
-2019-02-16
+2019-02-10
+</td>
+<td style="text-align:left;">
+2019-02-19
 </td>
 <td style="text-align:right;">
-0.30
+0.45
 </td>
 <td style="text-align:left;">
-0.18
+0.00
 </td>
 <td style="text-align:left;">
-0.05
+0.00
 </td>
 <td style="text-align:right;">
 9
@@ -1343,22 +2087,25 @@ c(“2019-02-12”, “2019-02-11”, “2019-02-10”, “2019-02-08”)
 5
 </td>
 <td style="text-align:left;">
-efm
+qwu
 </td>
 <td style="text-align:left;">
-hospital
+funeral
 </td>
 <td style="text-align:left;">
-2019-02-06
+2019-02-12
 </td>
 <td style="text-align:left;">
-2019-02-13
+2019-02-14
+</td>
+<td style="text-align:left;">
+2019-02-25
 </td>
 <td style="text-align:right;">
-0.20
+0.30
 </td>
 <td style="text-align:left;">
-0.01
+0.00
 </td>
 <td style="text-align:left;">
 0.00
@@ -1369,19 +2116,22 @@ hospital
 </tr>
 <tr>
 <td style="text-align:left;">
-8
+2
 </td>
 <td style="text-align:left;">
-bfe
+jqn
 </td>
 <td style="text-align:left;">
 other
 </td>
 <td style="text-align:left;">
-c(“2019-02-08”, “2019-02-10”)
+2019-02-09
 </td>
 <td style="text-align:left;">
-2019-02-18
+2019-02-12
+</td>
+<td style="text-align:left;">
+2019-02-26
 </td>
 <td style="text-align:right;">
 0.12
@@ -1398,22 +2148,25 @@ c(“2019-02-08”, “2019-02-10”)
 </tr>
 <tr>
 <td style="text-align:left;">
-4
+12
 </td>
 <td style="text-align:left;">
-pop
+nmu
 </td>
 <td style="text-align:left;">
-family
+funeral
 </td>
 <td style="text-align:left;">
-2019-02-06
+2019-02-07
 </td>
 <td style="text-align:left;">
-2019-02-17
+2019-02-09
+</td>
+<td style="text-align:left;">
+2019-02-26
 </td>
 <td style="text-align:right;">
-0.45
+0.30
 </td>
 <td style="text-align:left;">
 0.00
@@ -1473,6 +2226,9 @@ type_exposure
 dates_exposure
 </th>
 <th style="text-align:left;">
+exposure_end
+</th>
+<th style="text-align:left;">
 date_last_followup
 </th>
 <th style="text-align:right;">
@@ -1489,16 +2245,71 @@ p_disease
 <tbody>
 <tr>
 <td style="text-align:left;">
-jnf
+dcu
+</td>
+<td style="text-align:left;">
+funeral
+</td>
+<td style="text-align:left;">
+2019-02-09
+</td>
+<td style="text-align:left;">
+2019-02-14
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.30
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+0.15
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+jqn
+</td>
+<td style="text-align:left;">
+other
+</td>
+<td style="text-align:left;">
+2019-02-09
+</td>
+<td style="text-align:left;">
+2019-02-12
+</td>
+<td style="text-align:left;">
+2019-02-26
+</td>
+<td style="text-align:right;">
+0.12
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+0.06
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+jrl
 </td>
 <td style="text-align:left;">
 hospital
 </td>
 <td style="text-align:left;">
-2019-02-16
+2019-02-15
 </td>
 <td style="text-align:left;">
-2019-02-15
+2019-02-19
+</td>
+<td style="text-align:left;">
+2019-02-26
 </td>
 <td style="text-align:right;">
 0.20
@@ -1512,13 +2323,68 @@ hospital
 </tr>
 <tr>
 <td style="text-align:left;">
-koo
+hbi
+</td>
+<td style="text-align:left;">
+funeral
+</td>
+<td style="text-align:left;">
+2019-02-12
+</td>
+<td style="text-align:left;">
+2019-02-15
+</td>
+<td style="text-align:left;">
+2019-02-21
+</td>
+<td style="text-align:right;">
+0.30
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+0.15
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+qwu
+</td>
+<td style="text-align:left;">
+funeral
+</td>
+<td style="text-align:left;">
+2019-02-12
+</td>
+<td style="text-align:left;">
+2019-02-14
+</td>
+<td style="text-align:left;">
+2019-02-25
+</td>
+<td style="text-align:right;">
+0.30
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+0.15
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+nqd
 </td>
 <td style="text-align:left;">
 other
 </td>
 <td style="text-align:left;">
-c(“2019-02-16”, “2019-02-14”, “2019-02-15”)
+2019-02-09
+</td>
+<td style="text-align:left;">
+2019-02-10
 </td>
 <td style="text-align:left;">
 NA
@@ -1527,47 +2393,79 @@ NA
 0.12
 </td>
 <td style="text-align:right;">
-3
+1
 </td>
 <td style="text-align:left;">
-0.10
+0.06
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-fft
+etc
 </td>
 <td style="text-align:left;">
 funeral
 </td>
 <td style="text-align:left;">
-c(“2019-02-12”, “2019-02-11”, “2019-02-10”, “2019-02-08”)
+2019-02-19
 </td>
 <td style="text-align:left;">
-2019-02-16
+2019-02-20
+</td>
+<td style="text-align:left;">
+2019-02-21
 </td>
 <td style="text-align:right;">
 0.30
 </td>
 <td style="text-align:right;">
-4
+1
 </td>
 <td style="text-align:left;">
-0.28
+0.15
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-pop
+zsb
+</td>
+<td style="text-align:left;">
+funeral
+</td>
+<td style="text-align:left;">
+2019-02-12
+</td>
+<td style="text-align:left;">
+2019-02-13
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.30
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+0.15
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+vdz
 </td>
 <td style="text-align:left;">
 family
 </td>
 <td style="text-align:left;">
-2019-02-06
+2019-02-08
 </td>
 <td style="text-align:left;">
-2019-02-17
+2019-02-10
+</td>
+<td style="text-align:left;">
+2019-02-19
 </td>
 <td style="text-align:right;">
 0.45
@@ -1581,203 +2479,98 @@ family
 </tr>
 <tr>
 <td style="text-align:left;">
-efm
-</td>
-<td style="text-align:left;">
-hospital
-</td>
-<td style="text-align:left;">
-2019-02-06
-</td>
-<td style="text-align:left;">
-2019-02-13
-</td>
-<td style="text-align:right;">
-0.20
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-0.10
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-dsq
-</td>
-<td style="text-align:left;">
-funeral
-</td>
-<td style="text-align:left;">
-c(“2019-02-06”, “2019-02-03”, “2019-02-04”)
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:right;">
-0.30
-</td>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:left;">
-0.26
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-pns
-</td>
-<td style="text-align:left;">
-family
-</td>
-<td style="text-align:left;">
-c(“2019-02-17”, “2019-02-13”)
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:right;">
-0.45
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:left;">
-0.34
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-bfe
+ehj
 </td>
 <td style="text-align:left;">
 other
 </td>
 <td style="text-align:left;">
-c(“2019-02-08”, “2019-02-10”)
+2019-02-18
 </td>
 <td style="text-align:left;">
-2019-02-18
+2019-02-22
+</td>
+<td style="text-align:left;">
+2019-02-26
 </td>
 <td style="text-align:right;">
 0.12
 </td>
 <td style="text-align:right;">
-2
+1
 </td>
 <td style="text-align:left;">
-0.09
+0.06
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-lyh
-</td>
-<td style="text-align:left;">
-funeral
-</td>
-<td style="text-align:left;">
-c(“2019-02-08”, “2019-02-06”, “2019-02-07”, “2019-02-04”)
-</td>
-<td style="text-align:left;">
-2019-02-12
-</td>
-<td style="text-align:right;">
-0.30
-</td>
-<td style="text-align:right;">
-4
-</td>
-<td style="text-align:left;">
-0.28
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-sxm
+doo
 </td>
 <td style="text-align:left;">
 family
 </td>
 <td style="text-align:left;">
-c(“2019-02-16”, “2019-02-14”, “2019-02-18”)
+2019-02-19
 </td>
 <td style="text-align:left;">
-NA
+2019-02-23
+</td>
+<td style="text-align:left;">
+2019-02-20
 </td>
 <td style="text-align:right;">
 0.45
-</td>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:left;">
-0.39
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-hls
-</td>
-<td style="text-align:left;">
-family
-</td>
-<td style="text-align:left;">
-c(“2019-02-09”, “2019-02-08”)
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:right;">
-0.45
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:left;">
-0.34
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-vna
-</td>
-<td style="text-align:left;">
-hospital
-</td>
-<td style="text-align:left;">
-2019-02-15
-</td>
-<td style="text-align:left;">
-2019-02-16
-</td>
-<td style="text-align:right;">
-0.20
 </td>
 <td style="text-align:right;">
 1
 </td>
 <td style="text-align:left;">
-0.10
+0.23
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+nmu
+</td>
+<td style="text-align:left;">
+funeral
+</td>
+<td style="text-align:left;">
+2019-02-07
+</td>
+<td style="text-align:left;">
+2019-02-09
+</td>
+<td style="text-align:left;">
+2019-02-26
+</td>
+<td style="text-align:right;">
+0.30
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+0.15
 </td>
 </tr>
 </tbody>
 </table>
 <p>And then recompute the followup priorities:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">contact_list_p3 &lt;-<span class="st"> </span><span class="kw">followup_priorities</span>(
-                  contact_list,
-                  dates_exposure,
-                  date_last_followup,
-                  p_disease,
-                  <span class="dt">incubation_period =</span> incubation_frequency
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">contact_list_p4 &lt;-<span class="st"> </span><span class="kw">followup_priorities</span>(
+                      contact_list,
+                      <span class="dt">exposure =</span> dates_exposure,
+                      <span class="dt">exposure_end =</span> exposure_end,
+                      <span class="dt">last_followup =</span> date_last_followup,
+                      <span class="dt">p_disease =</span> p_disease,
+                      <span class="dt">incubation_period =</span> incubation_frequency
                 )
-<span class="co">#&gt; Warning in followup_priorities(contact_list, dates_exposure,</span>
-<span class="co">#&gt; date_last_followup, : Incubation period probabilities don't sum to 1 but to</span>
-<span class="co">#&gt; 0.999999873689809 Automatically adjusted.</span>
+<span class="co">#&gt; Warning in followup_priorities(contact_list, exposure = dates_exposure, :</span>
+<span class="co">#&gt; Incubation period probabilities don't sum to 1 but to 0.999999873689809</span>
+<span class="co">#&gt; Automatically adjusted.</span>
 
-<span class="kw">to_html</span>(contact_list_p3, <span class="dt">cols_round =</span> <span class="kw">list</span>(<span class="st">&quot;p_disease&quot;</span>, <span class="st">&quot;p_onset&quot;</span>, <span class="st">&quot;p_symptoms&quot;</span>), <span class="dt">date_cols =</span> <span class="kw">list</span>(<span class="st">&quot;dates_exposure&quot;</span>, <span class="st">&quot;date_last_followup&quot;</span>))</code></pre></div>
+<span class="kw">to_html</span>(contact_list_p4, <span class="dt">cols_round =</span> <span class="kw">list</span>(<span class="st">&quot;p_disease&quot;</span>, <span class="st">&quot;p_onset&quot;</span>, <span class="st">&quot;p_symptoms&quot;</span>), <span class="dt">date_cols =</span> <span class="kw">list</span>(<span class="st">&quot;dates_exposure&quot;</span>, <span class="st">&quot;date_last_followup&quot;</span>))</code></pre></div>
 <table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
@@ -1791,6 +2584,9 @@ type_exposure
 </th>
 <th style="text-align:left;">
 dates_exposure
+</th>
+<th style="text-align:left;">
+exposure_end
 </th>
 <th style="text-align:left;">
 date_last_followup
@@ -1821,31 +2617,34 @@ followup_priority
 11
 </td>
 <td style="text-align:left;">
-hls
+doo
 </td>
 <td style="text-align:left;">
 family
 </td>
 <td style="text-align:left;">
-c(“2019-02-09”, “2019-02-08”)
+2019-02-19
 </td>
 <td style="text-align:left;">
-NA
+2019-02-23
+</td>
+<td style="text-align:left;">
+2019-02-20
 </td>
 <td style="text-align:right;">
 0.45
 </td>
 <td style="text-align:right;">
-2
+1
 </td>
 <td style="text-align:left;">
-0.34
+0.23
 </td>
 <td style="text-align:left;">
-1.00
+0.86
 </td>
 <td style="text-align:left;">
-0.34
+0.19
 </td>
 <td style="text-align:right;">
 1
@@ -1853,16 +2652,19 @@ NA
 </tr>
 <tr>
 <td style="text-align:left;">
-6
+1
 </td>
 <td style="text-align:left;">
-dsq
+dcu
 </td>
 <td style="text-align:left;">
 funeral
 </td>
 <td style="text-align:left;">
-c(“2019-02-06”, “2019-02-03”, “2019-02-04”)
+2019-02-09
+</td>
+<td style="text-align:left;">
+2019-02-14
 </td>
 <td style="text-align:left;">
 NA
@@ -1871,19 +2673,57 @@ NA
 0.30
 </td>
 <td style="text-align:right;">
-3
+1
 </td>
 <td style="text-align:left;">
-0.26
+0.15
 </td>
 <td style="text-align:left;">
 1.00
 </td>
 <td style="text-align:left;">
-0.26
+0.15
 </td>
 <td style="text-align:right;">
 2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+8
+</td>
+<td style="text-align:left;">
+zsb
+</td>
+<td style="text-align:left;">
+funeral
+</td>
+<td style="text-align:left;">
+2019-02-12
+</td>
+<td style="text-align:left;">
+2019-02-13
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0.30
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+0.15
+</td>
+<td style="text-align:left;">
+1.00
+</td>
+<td style="text-align:left;">
+0.15
+</td>
+<td style="text-align:right;">
+3
 </td>
 </tr>
 <tr>
@@ -1891,66 +2731,34 @@ NA
 7
 </td>
 <td style="text-align:left;">
-pns
+etc
 </td>
 <td style="text-align:left;">
-family
+funeral
 </td>
 <td style="text-align:left;">
-c(“2019-02-17”, “2019-02-13”)
+2019-02-19
 </td>
 <td style="text-align:left;">
-NA
+2019-02-20
+</td>
+<td style="text-align:left;">
+2019-02-21
 </td>
 <td style="text-align:right;">
-0.45
+0.30
 </td>
 <td style="text-align:right;">
-2
+1
 </td>
 <td style="text-align:left;">
-0.34
+0.15
 </td>
 <td style="text-align:left;">
-0.59
+0.98
 </td>
 <td style="text-align:left;">
-0.20
-</td>
-<td style="text-align:right;">
-3
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-10
-</td>
-<td style="text-align:left;">
-sxm
-</td>
-<td style="text-align:left;">
-family
-</td>
-<td style="text-align:left;">
-c(“2019-02-16”, “2019-02-14”, “2019-02-18”)
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:right;">
-0.45
-</td>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:left;">
-0.39
-</td>
-<td style="text-align:left;">
-0.50
-</td>
-<td style="text-align:left;">
-0.20
+0.15
 </td>
 <td style="text-align:right;">
 4
@@ -1958,51 +2766,19 @@ NA
 </tr>
 <tr>
 <td style="text-align:left;">
-12
+6
 </td>
 <td style="text-align:left;">
-vna
-</td>
-<td style="text-align:left;">
-hospital
-</td>
-<td style="text-align:left;">
-2019-02-15
-</td>
-<td style="text-align:left;">
-2019-02-16
-</td>
-<td style="text-align:right;">
-0.20
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-0.10
-</td>
-<td style="text-align:left;">
-0.82
-</td>
-<td style="text-align:left;">
-0.08
-</td>
-<td style="text-align:right;">
-5
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-2
-</td>
-<td style="text-align:left;">
-koo
+nqd
 </td>
 <td style="text-align:left;">
 other
 </td>
 <td style="text-align:left;">
-c(“2019-02-16”, “2019-02-14”, “2019-02-15”)
+2019-02-09
+</td>
+<td style="text-align:left;">
+2019-02-10
 </td>
 <td style="text-align:left;">
 NA
@@ -2011,16 +2787,54 @@ NA
 0.12
 </td>
 <td style="text-align:right;">
-3
+1
 </td>
 <td style="text-align:left;">
-0.10
+0.06
 </td>
 <td style="text-align:left;">
-0.77
+1.00
 </td>
 <td style="text-align:left;">
-0.08
+0.06
+</td>
+<td style="text-align:right;">
+5
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+10
+</td>
+<td style="text-align:left;">
+ehj
+</td>
+<td style="text-align:left;">
+other
+</td>
+<td style="text-align:left;">
+2019-02-18
+</td>
+<td style="text-align:left;">
+2019-02-22
+</td>
+<td style="text-align:left;">
+2019-02-26
+</td>
+<td style="text-align:right;">
+0.12
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+0.06
+</td>
+<td style="text-align:left;">
+0.09
+</td>
+<td style="text-align:left;">
+0.01
 </td>
 <td style="text-align:right;">
 6
@@ -2028,19 +2842,60 @@ NA
 </tr>
 <tr>
 <td style="text-align:left;">
+4
+</td>
+<td style="text-align:left;">
+hbi
+</td>
+<td style="text-align:left;">
+funeral
+</td>
+<td style="text-align:left;">
+2019-02-12
+</td>
+<td style="text-align:left;">
+2019-02-15
+</td>
+<td style="text-align:left;">
+2019-02-21
+</td>
+<td style="text-align:right;">
+0.30
+</td>
+<td style="text-align:right;">
 1
 </td>
 <td style="text-align:left;">
-jnf
+0.15
+</td>
+<td style="text-align:left;">
+0.02
+</td>
+<td style="text-align:left;">
+0.00
+</td>
+<td style="text-align:right;">
+7
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+jrl
 </td>
 <td style="text-align:left;">
 hospital
 </td>
 <td style="text-align:left;">
-2019-02-16
+2019-02-15
 </td>
 <td style="text-align:left;">
-2019-02-15
+2019-02-19
+</td>
+<td style="text-align:left;">
+2019-02-26
 </td>
 <td style="text-align:right;">
 0.20
@@ -2052,45 +2907,10 @@ hospital
 0.10
 </td>
 <td style="text-align:left;">
-0.54
+0.00
 </td>
 <td style="text-align:left;">
-0.05
-</td>
-<td style="text-align:right;">
-7
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-9
-</td>
-<td style="text-align:left;">
-lyh
-</td>
-<td style="text-align:left;">
-funeral
-</td>
-<td style="text-align:left;">
-c(“2019-02-08”, “2019-02-06”, “2019-02-07”, “2019-02-04”)
-</td>
-<td style="text-align:left;">
-2019-02-12
-</td>
-<td style="text-align:right;">
-0.30
-</td>
-<td style="text-align:right;">
-4
-</td>
-<td style="text-align:left;">
-0.28
-</td>
-<td style="text-align:left;">
-0.18
-</td>
-<td style="text-align:left;">
-0.05
+0.00
 </td>
 <td style="text-align:right;">
 8
@@ -2098,34 +2918,37 @@ c(“2019-02-08”, “2019-02-06”, “2019-02-07”, “2019-02-04”)
 </tr>
 <tr>
 <td style="text-align:left;">
-3
+9
 </td>
 <td style="text-align:left;">
-fft
+vdz
 </td>
 <td style="text-align:left;">
-funeral
+family
 </td>
 <td style="text-align:left;">
-c(“2019-02-12”, “2019-02-11”, “2019-02-10”, “2019-02-08”)
+2019-02-08
 </td>
 <td style="text-align:left;">
-2019-02-16
+2019-02-10
+</td>
+<td style="text-align:left;">
+2019-02-19
 </td>
 <td style="text-align:right;">
-0.30
+0.45
 </td>
 <td style="text-align:right;">
-4
+1
 </td>
 <td style="text-align:left;">
-0.28
+0.23
 </td>
 <td style="text-align:left;">
-0.18
+0.00
 </td>
 <td style="text-align:left;">
-0.05
+0.00
 </td>
 <td style="text-align:right;">
 9
@@ -2136,28 +2959,31 @@ c(“2019-02-12”, “2019-02-11”, “2019-02-10”, “2019-02-08”)
 5
 </td>
 <td style="text-align:left;">
-efm
+qwu
 </td>
 <td style="text-align:left;">
-hospital
+funeral
 </td>
 <td style="text-align:left;">
-2019-02-06
+2019-02-12
 </td>
 <td style="text-align:left;">
-2019-02-13
+2019-02-14
+</td>
+<td style="text-align:left;">
+2019-02-25
 </td>
 <td style="text-align:right;">
-0.20
+0.30
 </td>
 <td style="text-align:right;">
 1
 </td>
 <td style="text-align:left;">
-0.10
+0.15
 </td>
 <td style="text-align:left;">
-0.01
+0.00
 </td>
 <td style="text-align:left;">
 0.00
@@ -2168,28 +2994,31 @@ hospital
 </tr>
 <tr>
 <td style="text-align:left;">
-8
+2
 </td>
 <td style="text-align:left;">
-bfe
+jqn
 </td>
 <td style="text-align:left;">
 other
 </td>
 <td style="text-align:left;">
-c(“2019-02-08”, “2019-02-10”)
+2019-02-09
 </td>
 <td style="text-align:left;">
-2019-02-18
+2019-02-12
+</td>
+<td style="text-align:left;">
+2019-02-26
 </td>
 <td style="text-align:right;">
 0.12
 </td>
 <td style="text-align:right;">
-2
+1
 </td>
 <td style="text-align:left;">
-0.09
+0.06
 </td>
 <td style="text-align:left;">
 0.00
@@ -2203,28 +3032,31 @@ c(“2019-02-08”, “2019-02-10”)
 </tr>
 <tr>
 <td style="text-align:left;">
-4
+12
 </td>
 <td style="text-align:left;">
-pop
+nmu
 </td>
 <td style="text-align:left;">
-family
+funeral
 </td>
 <td style="text-align:left;">
-2019-02-06
+2019-02-07
 </td>
 <td style="text-align:left;">
-2019-02-17
+2019-02-09
+</td>
+<td style="text-align:left;">
+2019-02-26
 </td>
 <td style="text-align:right;">
-0.45
+0.30
 </td>
 <td style="text-align:right;">
 1
 </td>
 <td style="text-align:left;">
-0.23
+0.15
 </td>
 <td style="text-align:left;">
 0.00

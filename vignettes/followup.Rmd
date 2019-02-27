@@ -23,10 +23,10 @@ knitr::opts_chunk$set(
 
 # Installing the package
 
-<!-- To install the current stable, CRAN version of the package, type:
+To install the current stable, CRAN version of the package, type:
 ```{r install, eval=FALSE}
 install.packages("followup")
-``` -->
+```
 
 To benefit from the latest features and bug fixes, install the development, *github* version of the package using:
 
@@ -100,24 +100,38 @@ incubation_frequency <- distcrete("gamma", 1, shape = 12, rate = 3, w =
 plot(incubation_days, incubation_frequency, type = "h")
 ```
 
-Make a list of example contacts each having several possible __exposure dates__ and some having a date when they were __last followed up__. Contacts that have never been followed up will have NA in the `date_last_followup` column:
+## Create toy data
+
+Make a list of example contacts each having a sequence of consecutive __exposure dates__. The beginning of the exposure is given in column `dates_exposure` and the end in `exposure_end`. Some contacts hae a date when they were __last followed up__. Contacts that have never been followed up will have NA in the `date_last_followup` column.
 
 ```{r, echo = TRUE}
 n = 12
 contact_list <- data.frame(
   id_contact = replicate(n, paste(sample(letters, 3, replace = TRUE),
           collapse = "")),
-  type_exposure = sample(c("hospital", "funeral", "family", "other"), n, replace = TRUE)
+  type_exposure = sample(c("hospital", "funeral", "family", "other"), n, replace = TRUE),
+  dates_exposure = Sys.Date() - sample(6:20, n, replace = TRUE)
 )
 
-#function used to create toy exposure dates
-mkexposures <- function(foo) foo - base::sample(incubation_days, size = sample.int(4, size = 1), replace = FALSE, prob = incubation_frequency)
-
-contact_list$dates_exposure <- sapply(Sys.Date() - 15 + sample(1:15, n, replace = TRUE), mkexposures)
+contact_list$exposure_end <- contact_list$dates_exposure + sample(1:5, n, replace = TRUE)
 contact_list$date_last_followup <- Sys.Date() - sample(c(1:8, rep(NA, 6)), n, replace = TRUE)
 
-to_html(contact_list, date_cols = list("dates_exposure", "date_last_followup"))
+to_html(contact_list, date_cols = list("dates_exposure", "exposure_end", "date_last_followup"))
 ```
+
+Sometimes __exposure dates__ for a contact are not consecutive. In this case we can give the possible exposure dates for each patient as a list. Make a separate contact list to illustrate this case:
+
+```{r, echo = TRUE}
+contact_list_2 <- dplyr::select(contact_list, id_contact, type_exposure, date_last_followup)
+
+#function used to create toy non-consecutive exposure dates
+mkexposures <- function(foo) foo - base::sample(incubation_days, size = sample.int(4, size = 1), replace = FALSE, prob = incubation_frequency)
+
+contact_list_2$dates_exposure <- sapply(Sys.Date() - 15 + sample(1:15, n, replace = TRUE), mkexposures)
+
+to_html(contact_list_2, date_cols = list("dates_exposure", "date_last_followup"))
+```
+
 
 ## All contacts have the same probability of getting disease
 
@@ -125,14 +139,31 @@ Now compute the probability of the symptoms onset being between the last day of 
 
 ```{r, echo = TRUE}
 contact_list_p <- followup_priorities(
-                  contact_list,
-                  dates_exposure,
-                  date_last_followup,
-                  p_disease = 0.3,
-                  incubation_period = incubation_frequency
+                    contact_list,
+                    exposure = dates_exposure,
+                    exposure_end = exposure_end,
+                    last_followup = date_last_followup,
+                    p_disease = 0.3,
+                    incubation_period = incubation_frequency
                 )
 
 to_html(contact_list_p, cols_round = list("p_onset", "p_symptoms"), date_cols = list("dates_exposure", "date_last_followup"))
+```
+
+## Non-consecutive exposure dates
+
+Do the same for contact_list_2, where exposure_dates are non-consecutive:
+
+```{r, echo = TRUE}
+contact_list_p2 <- followup_priorities(
+                    contact_list_2,
+                    exposure = dates_exposure,
+                    last_followup = date_last_followup,
+                    p_disease = 0.3,
+                    incubation_period = incubation_frequency
+                )
+
+to_html(contact_list_p2, cols_round = list("p_onset", "p_symptoms"), date_cols = list("dates_exposure", "date_last_followup"))
 ```
 
 ## Probability of getting disease depends on type of exposure
@@ -162,15 +193,16 @@ to_html(contact_list, date_cols = list("dates_exposure", "date_last_followup"))
 Now recompute the priorities:
 
 ```{r, echo = TRUE}
-contact_list_p2 <- followup_priorities(
+contact_list_p3 <- followup_priorities(
                   contact_list,
-                  dates_exposure,
-                  date_last_followup,
-                  p_disease,
+                  exposure = dates_exposure,
+                  exposure_end = exposure_end,
+                  last_followup = date_last_followup,
+                  p_disease = p_disease,
                   incubation_period = incubation_frequency
                 )
 
-to_html(contact_list_p2, cols_round = list("p_onset", "p_symptoms"), date_cols = list("dates_exposure", "date_last_followup"))
+to_html(contact_list_p3, cols_round = list("p_onset", "p_symptoms"), date_cols = list("dates_exposure", "date_last_followup"))
 ```
 
 
@@ -226,13 +258,14 @@ to_html(contact_list, cols_round = list("p_disease"), date_cols = list("dates_ex
 And then recompute the followup priorities:
 
 ```{r, echo = TRUE}
-contact_list_p3 <- followup_priorities(
-                  contact_list,
-                  dates_exposure,
-                  date_last_followup,
-                  p_disease,
-                  incubation_period = incubation_frequency
+contact_list_p4 <- followup_priorities(
+                      contact_list,
+                      exposure = dates_exposure,
+                      exposure_end = exposure_end,
+                      last_followup = date_last_followup,
+                      p_disease = p_disease,
+                      incubation_period = incubation_frequency
                 )
 
-to_html(contact_list_p3, cols_round = list("p_disease", "p_onset", "p_symptoms"), date_cols = list("dates_exposure", "date_last_followup"))
+to_html(contact_list_p4, cols_round = list("p_disease", "p_onset", "p_symptoms"), date_cols = list("dates_exposure", "date_last_followup"))
 ```

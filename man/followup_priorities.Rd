@@ -4,15 +4,19 @@
 \alias{followup_priorities}
 \title{Compute the followup priorities for a list of contacts}
 \usage{
-followup_priorities(contact_list, dates_exposure, last_followup = NULL,
-  p_disease = 1, incubation_period = NULL,
+followup_priorities(contact_list, exposure, exposure_end = NULL,
+  last_followup = NULL, p_disease = 1, incubation_period = NULL,
   date_analysis = Sys.Date(), include_last_follow_up = TRUE,
   sort = TRUE)
 }
 \arguments{
 \item{contact_list}{A data.frame with one row per contact, containing at least a list column with possible dates of exposure.}
 
-\item{dates_exposure}{The name of the column of contact_list containing the dates of exposure (bare variable name or in quotes). Can be a list column containing vectors with several possible exposure dates per contact.}
+\item{exposure}{The name of the column of contact_list containing the dates of exposure (bare variable name or in quotes). Can be a list column containing vectors with several possible exposure dates per contact.}
+
+\item{exposure_end}{the name of a column containing dates representing the
+end of the exposure period. This is `NULL` by default, indicating
+all exposures are known and in the `exposure` column.}
 
 \item{last_followup}{The name of the column of contact_list containing the last follow up date for each contact (bare variable name or in quotes). Should contain NA if unknown or contact has never been followed.}
 
@@ -36,5 +40,5 @@ A data.frame containing all columns in contact_list and the following additional
 * followup_priority, an index ranging from 1 for the highest priority to the number of patients
 }
 \description{
-Outputs the probability that the symptoms onset of a contact was between the last follow up (day of last follow up included in interval by default, see parameter include_last_follow_up) and the analysis date, which defaults to day before current day and is included in interval.
+Outputs the probability that the symptoms onset of a contact was between the last follow up (day of last follow up included in interval by default, see parameter include_last_follow_up) and the analysis date, which defaults to day before current system date and is included in interval.
 }

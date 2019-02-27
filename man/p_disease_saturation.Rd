@@ -7,14 +7,14 @@
 p_disease_saturation(d, p_disease_max = 1, d50 = 1)
 }
 \arguments{
-\item{d}{the number of exposure days.}
+\item{d}{the number of exposure days, larger than 0. Can be a vector.}
 
 \item{p_disease_max}{the maximum probability of getting disease, reached for high d only.}
 
 \item{d50}{the number of exposure days after which p_disease = 0.5*p_disease_max is reached. Can be float.}
 }
 \value{
-the proabbility p_disease
+the proabbility p_disease, same length as d.
 }
 \description{
 Helper function to compute the probability p_disease of getting disease after a certain number of days of exposure based on a saturating exponential growth model.

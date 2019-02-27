@@ -4,14 +4,14 @@
 \alias{p_new_onset}
 \title{Computes the probability of new symptoms on a particular day for a particular contact}
 \usage{
-p_new_onset(incubation_period, date_analysis, dates_exposure)
+p_new_onset(incubation_period, date_analysis, exposure)
 }
 \arguments{
 \item{incubation_period}{a vector of probabilities. Has to sum to 1.}
 
 \item{date_analysis}{the date for which to compute the probability of new symptoms}
 
-\item{dates_exposure}{a vector containing one or several possible dates of exposure. They are equally weighted.}
+\item{exposure}{a vector containing one or several possible dates of exposure. They are equally weighted.}
 }
 \value{
 a probability

@@ -4,7 +4,7 @@
 \alias{p_integral_onset}
 \title{Computes the probability of new symptoms within a range of dates for a particular contact, given the incubation period.}
 \usage{
-p_integral_onset(incubation_period, date_lower, date_upper, dates_exposure)
+p_integral_onset(incubation_period, date_lower, date_upper, exposure)
 }
 \arguments{
 \item{incubation_period}{a vector of probabilities. Has to sum to 1.}
@@ -13,7 +13,7 @@ p_integral_onset(incubation_period, date_lower, date_upper, dates_exposure)
 
 \item{date_upper}{the upper limit for which to compute the probability of new symptoms.}
 
-\item{dates_exposure}{a vector containing one or several possible dates of exposure. They are equally weighted.}
+\item{exposure}{a vector containing one or several possible dates of exposure. They are equally weighted.}
 }
 \value{
 a probability
