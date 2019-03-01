@@ -6,4 +6,5 @@ doc
 ^\.Ruserdata
 ^\.httr-oauth
 *~$
+*.swp
 ^inst/doc
