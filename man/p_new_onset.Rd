@@ -9,9 +9,11 @@ p_new_onset(incubation_period, date_analysis, exposure)
 \arguments{
 \item{incubation_period}{a vector of probabilities. Has to sum to 1.}
 
-\item{date_analysis}{the date for which to compute the probability of new symptoms}
+\item{date_analysis}{the date for which to compute the probability of new
+symptoms}
 
-\item{exposure}{a vector containing one or several possible dates of exposure. They are equally weighted.}
+\item{exposure}{a vector containing one or several possible dates of
+exposure. They are equally weighted.}
 }
 \value{
 a probability

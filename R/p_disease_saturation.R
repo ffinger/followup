@@ -1,8 +1,12 @@
-#' Helper function to compute the probability p_disease of getting disease after a certain number of days of exposure based on a saturating exponential growth model.
+#' Helper function to compute the probability p_disease of getting disease after
+#' a certain number of days of exposure based on a saturating exponential growth
+#' model.
 #'
 #' @param d the number of exposure days, larger than 0. Can be a vector.
-#' @param p_disease_max the maximum probability of getting disease, reached for high d only.
-#' @param d50 the number of exposure days after which p_disease = 0.5*p_disease_max is reached. Can be float.
+#' @param p_disease_max the maximum probability of getting disease, reached for
+#'   high d only.
+#' @param d50 the number of exposure days after which p_disease =
+#'   0.5*p_disease_max is reached. Can be float.
 #'
 #' @return the proabbility p_disease, same length as d.
 #'

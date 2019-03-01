@@ -18,6 +18,7 @@ Imports: dplyr,
   magrittr
 Suggests: testthat, roxygen2, knitr, distcrete, epitrix
 RoxygenNote: 6.1.1
+Roxygen: list(markdown = TRUE)
 URL: https://github.com/reconhub/followup
 BugReports: https://github.com/reconhub/followup/issues
 VignetteBuilder: knitr

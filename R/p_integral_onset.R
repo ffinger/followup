@@ -1,11 +1,17 @@
-#' Computes the probability of new symptoms within a range of dates for a particular contact, given the incubation period.
+#' Computes the probability of new symptoms within a range of dates for a
+#' particular contact, given the incubation period.
 #'
-#' The lower but not the upper limit is included in the interval such that the probability returned is the sum over the probability for each date_analysis that fulfils the following: date_lower <= date_analysis < date_upper.
+#' The lower but not the upper limit is included in the interval such that the
+#' probability returned is the sum over the probability for each date_analysis
+#' that fulfils the following: date_lower <= date_analysis < date_upper.
 #'
 #' @param incubation_period a vector of probabilities. Has to sum to 1.
-#' @param date_lower the lower limit for which to compute the probability of new symptoms.
-#' @param date_upper the upper limit for which to compute the probability of new symptoms.
-#' @param exposure a vector containing one or several possible dates of exposure. They are equally weighted.
+#' @param date_lower the lower limit for which to compute the probability of new
+#'   symptoms.
+#' @param date_upper the upper limit for which to compute the probability of new
+#'   symptoms.
+#' @param exposure a vector containing one or several possible dates of
+#'   exposure. They are equally weighted.
 #' @return a probability
 #'
 #' @export

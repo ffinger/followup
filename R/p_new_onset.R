@@ -1,10 +1,12 @@
 #' Computes the probability of new symptoms on a particular day for a particular contact
 #'
 #' @param incubation_period a vector of probabilities. Has to sum to 1.
-#' @param date_analysis the date for which to compute the probability of new symptoms
-#' @param exposure a vector containing one or several possible dates of exposure. They are equally weighted.
+#' @param date_analysis the date for which to compute the probability of new
+#'   symptoms
+#' @param exposure a vector containing one or several possible dates of
+#'   exposure. They are equally weighted.
 #' @return a probability
-#'
+#'   
 #' @export
 p_new_onset <- function(incubation_period, date_analysis, exposure) {
 

@@ -1,23 +1,54 @@
 #' Compute the followup priorities for a list of contacts
 #'
-#' Outputs the probability that the symptoms onset of a contact was between the last follow up (day of last follow up included in interval by default, see parameter include_last_follow_up) and the analysis date, which defaults to day before current system date and is included in interval.
+#' Outputs the probability that the symptoms onset of a contact was between the
+#' last follow up (day of last follow up included in interval by default, see
+#' parameter include_last_follow_up) and the analysis date, which defaults to
+#' day before current system date and is included in interval.
 #'
-#' @param contact_list A data.frame with one row per contact, containing at least a list column with possible dates of exposure.
-#' @param incubation_period The incubation period distribution. Can be a distcrete distribution, an empirical incubation period returned by epitrix::empirical_incubation_dist() (of type data.frame) or an atomic vector whose elements 1:n correspond to the probability of the incubation period being 0:(n-1).
-#' @param exposure The name of the column of contact_list containing the dates of exposure (bare variable name or in quotes). Can be a list column containing vectors with several possible exposure dates per contact.
+#' @param contact_list A data.frame with one row per contact, containing at
+#'   least a list column with possible dates of exposure.
+#'   
+#' @param incubation_period The incubation period distribution. Can be a
+#'   distcrete distribution, an empirical incubation period returned by
+#'   epitrix::empirical_incubation_dist() (of type data.frame) or an atomic
+#'   vector whose elements 1:n correspond to the probability of the incubation
+#'   period being 0:(n-1).
+#' 
+#' @param exposure The name of the column of contact_list containing the dates
+#'   of exposure (bare variable name or in quotes). Can be a list column
+#'   containing vectors with several possible exposure dates per contact.
+#' 
 #' @param exposure_end the name of a column containing dates representing the
-#'   end of the exposure period. This is `NULL` by default, indicating
-#'   all exposures are known and in the `exposure` column.
-#' @param last_followup The name of the column of contact_list containing the last follow up date for each contact (bare variable name or in quotes). Should contain NA if unknown or contact has never been followed.
-#' @param p_disease The overall probability that exposure leads to disease. Can either be a scalar applying to all contacts, or the name of a column (bare variable name or in quotes) in contact_list containing a different probability per contact. Defaults to 1.
-#' @param date_analysis the date on which the prioritization should be done. The probability of symptoms onset is computed until the end of the previous day. Defaults to the system date (i.e. today).
-#' @param include_last_follow_up TRUE if the date of last follow up should be included in the date range and thus the probability of symptoms starting on that date included in the result, FALSE if not (default TRUE).
+#'   end of the exposure period. This is `NULL` by default, indicating all
+#'   exposures are known and in the `exposure` column.
+#' 
+#' @param last_followup The name of the column of contact_list containing the
+#'   last follow up date for each contact (bare variable name or in quotes).
+#'   Should contain NA if unknown or contact has never been followed.
+#' 
+#' @param p_disease The overall probability that exposure leads to disease. Can
+#'   either be a scalar applying to all contacts, or the name of a column (bare
+#'   variable name or in quotes) in contact_list containing a different
+#'   probability per contact. Defaults to 1.
+#' 
+#' @param date_analysis the date on which the prioritization should be done. The
+#'   probability of symptoms onset is computed until the end of the previous
+#'   day. Defaults to the system date (i.e. today).
+#' 
+#' @param include_last_follow_up TRUE if the date of last follow up should be
+#'   included in the date range and thus the probability of symptoms starting on
+#'   that date included in the result, FALSE if not (default TRUE).
+#' 
 #' @param sort If TRUE (default) the result is sorted by followup priority.
 #'
-#' @return A data.frame containing all columns in contact_list and the following additional columns:
-#' @return   * p_onset, the probability of disease has onset by date_analysis given that the exposure results in disease
-#' @return   * p_symptoms, the overall probability of disease has onset by date_analysis
-#' @return   * followup_priority, an index ranging from 1 for the highest priority to the number of patients
+#' @return A data.frame containing all columns in contact_list and the following
+#'   additional columns:
+#' - p_onset, the probability of disease has onset by date_analysis
+#'   given that the exposure results in disease
+#' - p_symptoms, the overall probability of disease has onset by
+#'   date_analysis
+#' - followup_priority, an index ranging from 1 for the highest
+#'   priority to the number of patients
 #'
 #' @export
 #' @importFrom rlang enquo "!!" get_expr
@@ -25,10 +56,11 @@
 #' @importFrom tidyr complete full_seq
 #' @importFrom purrr map2_dbl pmap_dbl
 #' @importFrom checkmate assert_data_frame
-followup_priorities <- function(contact_list, exposure, exposure_end = NULL,
-  last_followup = NULL, p_disease = 1, incubation_period = NULL,
-  date_analysis = Sys.Date(), include_last_follow_up = TRUE, sort = TRUE) {
-
+followup_priorities <- function(contact_list, exposure, exposure_end = NULL, 
+                                last_followup = NULL, p_disease = 1, 
+                                incubation_period = NULL, 
+                                date_analysis = Sys.Date(), 
+                                include_last_follow_up = TRUE, sort = TRUE) { 
   #-------------------------------------------------------------
   #------------- check inputs and transform --------------------
   #-------------------------------------------------------------
