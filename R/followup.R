@@ -55,7 +55,6 @@
 #' @importFrom dplyr pull if_else
 #' @importFrom tidyr complete full_seq
 #' @importFrom purrr map2_dbl pmap_dbl
-#' @importFrom checkmate assert_data_frame
 followup_priorities <- function(contact_list, exposure, exposure_end = NULL, 
                                 last_followup = NULL, p_disease = 1, 
                                 incubation_period = NULL, 
@@ -66,7 +65,7 @@ followup_priorities <- function(contact_list, exposure, exposure_end = NULL,
   #-------------------------------------------------------------
 
   #is contact list a df and has at least one row and col
-  checkmate::assert_data_frame(contact_list, min.rows = 1, min.cols = 1)
+  stopifnot(is.data.frame(contact_list), nrow(contact_list) > 0, ncol(contact_list) > 0)
 
   #get dates exposure
   exposure <- rlang::enquo(exposure)

@@ -12,7 +12,6 @@ Imports: dplyr,
   purrr,
   rlang,
   tidyr,
-  checkmate,
   htmlTable,
   kableExtra,
   magrittr
