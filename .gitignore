@@ -12,3 +12,4 @@ doc
 vignettes/*.html
 vignettes/*.R
 vignettes/*/
+README.html

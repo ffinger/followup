@@ -1,13 +1,20 @@
 
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/followup)](https://cran.r-project.org/package=followup)
 
-Welcome to the *followup* package!
-==================================
+# Welcome to the *followup* package\!
 
-This is just a template. Please remove, add or edit parts as you see fit.
+Contact tracing is an essential part of the COVID-19 response in many
+countries and of infectious diseases in general. Regular (phone)
+followup of known contacts to ask them if they have developed symptoms
+improves can improve the performance of the procedure since contacts who
+develop symptoms can immediately be directed towards triage and testing
+facilities, isolation and medical care, decreasing the risk for them to
+infect others. With high numbers of reported cases the number of
+contacts in many countries becomes difficult to manage. This package
+provides a way to objectively prioritize contacts to be followed-up
+according to the probability that they have yet developed symptoms.
 
-Installing the package
-----------------------
+## Installing the package
 
 To install the current stable, CRAN version of the package, type:
 
@@ -15,7 +22,8 @@ To install the current stable, CRAN version of the package, type:
 install.packages("followup")
 ```
 
-To benefit from the latest features and bug fixes, install the development, *github* version of the package using:
+To benefit from the latest features and bug fixes, install the
+development, *github* version of the package using:
 
 ``` r
 devtools::install_github("ffinger/followup")
@@ -23,33 +31,28 @@ devtools::install_github("ffinger/followup")
 
 Note that this requires the package *devtools* installed.
 
-What does it do?
-================
+**Please see the vignette for further details**
+
+# What does it do?
 
 The main features of the package include:
 
-Resources
-=========
+  - Compute followup priorities for a list of contacts based on
+    potential dates of exposure, incubation period distributions and
+    dates of last follow-up.
+  - Outputs the probability that the symptoms onset of a contact was
+    between the last follow up and today.
 
-Vignettes
----------
+# Resources
+
+## Vignettes
 
 An overview and examples of *followup* are provided in the vignettes:
 
-...
-
-Websites
---------
-
-The following websites are available:
-
-...
-
-Getting help online
--------------------
-
-Bug reports and feature requests should be posted on *github* using the [*issue*](http://github.com/reconhub/followup/issues) system. All other questions should be posted on the **RECON forum**: <br> <http://www.repidemicsconsortium.org/forum/>
+followup
 
 Contributions are welcome via **pull requests**.
 
-Please note that this project is released with a [Contributor Code of Conduct](CONDUCT.md). By participating in this project you agree to abide by its terms.
+Please note that this project is released with a [Contributor Code of
+Conduct](CONDUCT.md). By participating in this project you agree to
+abide by its terms.

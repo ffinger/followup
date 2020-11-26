@@ -6,7 +6,7 @@ output: github_document
 
 # Welcome to the *followup* package!
 
-This is just a template. Please remove, add or edit parts as you see fit.
+Contact tracing is an essential part of the COVID-19 response in many countries and of infectious diseases in general. Regular (phone) followup of known contacts to ask them if they have developed symptoms improves can improve the performance of the procedure since contacts who develop symptoms can immediately be directed towards triage and testing facilities, isolation and medical care, decreasing the risk for them to infect others. With high numbers of reported cases the number of contacts in many countries becomes difficult to manage. This package provides a way to objectively prioritize contacts to be followed-up according to the probability that they have yet developed symptoms.
 
 ## Installing the package
 
@@ -22,11 +22,15 @@ devtools::install_github("ffinger/followup")
 
 Note that this requires the package *devtools* installed.
 
+__Please see the vignette for further details__
+
 
 # What does it do?
 
 The main features of the package include:
 
+- Compute followup priorities for a list of contacts based on potential dates of exposure, incubation period distributions and dates of last follow-up.
+- Outputs the probability that the symptoms onset of a contact was between the last follow up and today.
 
 
 # Resources
@@ -35,18 +39,7 @@ The main features of the package include:
 
 An overview and examples of *followup* are provided in the vignettes:
 
-...
-
-## Websites
-
-The following websites are available:
-
-...
-
-## Getting help online
-
-Bug reports and feature requests should be posted on *github* using the [*issue*](http://github.com/reconhub/followup/issues) system. All other questions should be posted on the **RECON forum**: <br>
-[http://www.repidemicsconsortium.org/forum/](http://www.repidemicsconsortium.org/forum/)
+followup
 
 Contributions are welcome via **pull requests**.
 
