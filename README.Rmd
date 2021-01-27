@@ -8,7 +8,7 @@ output: github_document
 
 Contact tracing is an essential part of the COVID-19 response in many countries and of infectious diseases in general. Regular (phone) followup of known contacts to ask them if they have developed symptoms improves can improve the performance of the procedure since contacts who develop symptoms can immediately be directed towards triage and testing facilities, isolation and medical care, decreasing the risk for them to infect others. With high numbers of reported cases the number of contacts in many countries becomes difficult to manage. This package provides a way to objectively prioritize contacts to be followed-up according to the probability that they have yet developed symptoms.
 
-__THIS PACKAGE IS UNDER ACTIVE DEVELOPMENT, PLEASE TAKE CONTACT WITH ITS AUTHORS BEFORE ANY USE__
+__THIS PACKAGE IS PRELIMINARY AND UNDER ACTIVE DEVELOPMENT, PLEASE CONTACT ITS AUTHORS BEFORE ANY USE__
 
 ## Installing the package
 

@@ -14,6 +14,9 @@ contacts in many countries becomes difficult to manage. This package
 provides a way to objectively prioritize contacts to be followed-up
 according to the probability that they have yet developed symptoms.
 
+**THIS PACKAGE IS PRELIMINARY AND UNDER ACTIVE DEVELOPMENT, PLEASE
+CONTACT ITS AUTHORS BEFORE ANY USE**
+
 ## Installing the package
 
 To install the current stable, CRAN version of the package, type:
