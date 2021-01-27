@@ -1,0 +1,113 @@
+---
+title: "followup: incubation functions"
+date: "`r Sys.Date()`"
+output:
+   rmarkdown::html_vignette:
+     toc: true
+     toc_depth: 2
+     df_print: tibble
+vignette: >
+  %\VignetteIndexEntry{Incubation functions}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width=7,
+  fig.height=5,
+  fig.path="figs-overview/")
+```
+
+
+
+Load environment:
+
+```{r, echo = TRUE, message=FALSE}
+library(dplyr)
+library(epitrix)
+library(distcrete)
+library(followup)
+```
+
+Set up the incubation period distribution:
+
+```{r, echo = TRUE}
+incubation_days <- 0:3
+incubation_frequency <- c(1,3,2,1)
+incubation_frequency <- incubation_frequency/sum(incubation_frequency)
+
+plot(incubation_days, incubation_frequency, type = "h")
+```
+
+# The integrate_incubation function
+
+Make a list of example contacts each having just one exposure date in `dates_exposure`.
+
+```{r, echo = TRUE}
+contact_list <- data.frame(
+  id_contact = c("a", "b", "c", "d"),
+  type_exposure = c("hospital", "funeral", "family", "restaurant"),
+  dates_exposure = as.Date(c("2021-01-15", "2021-01-14", "2021-01-10", "2021-01-16"))
+)
+
+contact_list
+```
+
+
+```{r}
+date_analysis <- as.Date("2021-01-16")
+
+res <- purrr::map(contact_list$dates_exposure, function(x) integrate_incubation(incubation_frequency, date_low = x, date_high = date_analysis))
+res <- unlist(res)
+
+res
+```
+
+We can compute the results by hand and compare:
+
+```{r}
+expected <- c(4/7, 6/7, 1, 1/7)
+testthat::expect_equal(res, expected)
+```
+
+Should get exactly the same result using the function including a followup when
+ 1) last follow-up is NA
+ 2) last follow-up is in before exposure
+
+```{r}
+testthat::expect_equal(
+  expected,
+  integrate_incubation_followup(incubation_frequency, date_exposure = contact_list$dates_exposure, date_analysis = date_analysis, date_last_followup = NA)
+  )
+
+testthat::expect_equal(
+  expected,
+  integrate_incubation_followup(incubation_frequency, date_exposure = contact_list$dates_exposure, date_analysis = date_analysis, date_last_followup = as.Date("2021-01-01"))
+  )
+```
+
+
+# Check the integrate_incubation_followup function
+
+Now add a date of last follow-up for each contact:
+
+```{r}
+contact_list$dates_last_followup <- as.Date(c("2021-01-15", "2021-01-15", "2021-01-12", "2021-01-16"))
+
+contact_list
+```
+
+```{r}
+res <- integrate_incubation_followup(incubation_frequency, date_exposure = contact_list$dates_exposure, date_analysis = date_analysis, date_last_followup = contact_list$dates_last_followup)
+```
+
+```{r}
+expected <- c((3/7) / (1-1/7), (2/7) / (1-1/7-3/7), 1, 0)
+testthat::expect_equal(res, expected)
+```
+
+__there is a few more special cases here that should be illustrated here, see code__
+

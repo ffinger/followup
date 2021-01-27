@@ -44,11 +44,9 @@ __`followup_priorities()`__ : Compute the followup priorities for a list of cont
 
 Outputs the probability that the symptoms onset of a contact was between the last follow up (day of last follow up included in interval by default, see parameter include_last_follow_up) and the analysis date, which defaults to day before current day and is included in interval.
 
-__`p_new_onset()`__ Computes the probability of new symptoms on a particular day for a particular contact
-
-__`p_integral_onset()`__ Computes the probability of new symptoms within a range of dates for a particular contact, given the incubation period.
-
 # Background
+
+__THIS SECTION NEEDS UPDATING__
 
 ## Contact has never been followed up
 
@@ -151,7 +149,7 @@ contact_list_p <- followup_priorities(
                     exposure = dates_exposure,
                     exposure_end = exposure_end,
                     last_followup = date_last_followup,
-                    p_disease = 0.3,
+                    rate_infectious_contact = 0.3,
                     incubation_period = incubation_frequency
                 )
 
@@ -167,7 +165,7 @@ contact_list_p2 <- followup_priorities(
                     contact_list_2,
                     exposure = dates_exposure,
                     last_followup = date_last_followup,
-                    p_disease = 0.3,
+                    rate_infectious_contact = 0.3,
                     incubation_period = incubation_frequency
                 )
 
@@ -183,7 +181,7 @@ Let's now take into account different exposure pathways and assign different pro
 ```{r, echo = TRUE}
 pathways = data.frame(
   type_exposure = c("hospital", "funeral", "family", "other"),
-  p_disease = c(0.2, 0.3, 0.45, 0.12)
+  rate_infectious_contact = c(0.2, 0.3, 0.45, 0.12)
 )
 
 pathways
@@ -205,74 +203,9 @@ contact_list_p3 <- followup_priorities(
                   exposure = dates_exposure,
                   exposure_end = exposure_end,
                   last_followup = date_last_followup,
-                  p_disease = p_disease,
+                  rate_infectious_contact = contact_list$rate_infectious_contact,
                   incubation_period = incubation_frequency
                 )
 
 contact_list_p3
-```
-
-
-## Probability of getting disease depends on type and duration of exposure
-
-So far we assumed that the probability of getting the disease is independent of the duration of exposure. This may not be true in practice.
-
-This example uses the helper function `p_disease_saturation()` to take the number of exposure days into account when computing the probability of exposure leading to disease.
-
-Let's assume that for very long exposure the probability of exposure leading to disease is the `p_disease` used above, so let's rename it to `p_disease_max`.
-
-```{r, echo = TRUE, eval = FALSE}
-names(contact_list)[names(contact_list) == "p_disease"] <- "p_disease_max"
-```
-
-The function we are going to use to compute `p_disease` is a saturating fonction of the following form:
-
-$$p_S = p_{S\mathrm{max}} (1-\exp(-kd))$$
-
-where $d$ is the number of exposure days and $k$ can be computed using the duration $d_{50}$ for $p_S$ to reach half its maximum value:
-
-$$k = \dfrac{\log(2)}{d_{50}}$$
-
-To illustrate:
-
-```{r, echo = TRUE, eval = FALSE}
-d <- seq(0,10)
-d50 <- 1
-p_disease_max = 1
-
-plot(d, p_disease_saturation(d, p_disease_max, d50))
-
-d50 <- 2
-
-points(d, p_disease_saturation(d, p_disease_max, d50), col = "red")
-```
-
-Let's now get the number of exposure days for each contact and then compute their `p_disease`:
-
-```{r, echo = TRUE, eval = FALSE}
-d50 <- 1
-contact_list$d_exposure <- sapply(contact_list$dates_exposure, length)
-contact_list$p_disease <- mapply(
-                              p_disease_saturation,
-                              contact_list$d_exposure,
-                              contact_list$p_disease_max,
-                              MoreArgs = list(d50 = d50)
-                            )
-
-contact_list
-```
-
-And then recompute the followup priorities:
-
-```{r, echo = TRUE, eval = FALSE}
-contact_list_p4 <- followup_priorities(
-                      contact_list,
-                      exposure = dates_exposure,
-                      exposure_end = exposure_end,
-                      last_followup = date_last_followup,
-                      p_disease = p_disease,
-                      incubation_period = incubation_frequency
-                )
-
-contact_list_p4
 ```

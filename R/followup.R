@@ -1,12 +1,12 @@
 #' Compute the followup priorities for a list of contacts
 #'
 #' Outputs the probability that the symptoms onset of a contact was between the
-#' last follow up (day of last follow up included in interval by default, see
-#' parameter include_last_follow_up) and the analysis date, which defaults to
+#' last follow up (day of last follow up not included in interval)
+#' and the analysis date, which defaults to
 #' day before current system date and is included in interval.
 #'
 #' @param contact_list A data.frame with one row per contact, containing at
-#'   least a list column with possible dates of exposure.
+#'   least a column with possible dates of exposure.
 #'
 #' @param incubation_period The incubation period distribution. Can be a
 #'   distcrete distribution, an empirical incubation period returned by
@@ -15,40 +15,32 @@
 #'   period being 0:(n-1).
 #'
 #' @param exposure The name of the column of contact_list containing the dates
-#'   of exposure (bare variable name or in quotes). Can be a list column
+#'   of exposure (variable name or in quotes). Can be a list column
 #'   containing vectors with several possible exposure dates per contact.
 #'
-#' @param exposure_end the name of a column containing dates representing the
+#' @param exposure_end The name of a column containing dates representing the
 #'   end of the exposure period. This is `NULL` by default, indicating all
-#'   exposures are known and in the `exposure` column.
+#'   exposures are in the `exposure` column.
 #'
-#' @param exposure_weight a vector containing weights for each exposure date.
-#'   Contains a weight for each exposure date. The sum is adjusted to one.
+#' @param rate_infectious_contact a vector containing rates of infectious contact corresponding
+#'   to each exposure date in exposure, or between exposure and exposure_end.
+#'   same length as exposure. Defaults to rep(1, length(exposure)).
 #'
 #' @param last_followup The name of the column of contact_list containing the
-#'   last follow up date for each contact (bare variable name or in quotes).
+#'   last follow up date for each contact (variable name or in quotes).
 #'   Should contain NA if unknown or contact has never been followed.
-#'
-#' @param p_disease The overall probability that exposure leads to disease. Can
-#'   either be a scalar applying to all contacts, or the name of a column (bare
-#'   variable name or in quotes) in contact_list containing a different
-#'   probability per contact. Defaults to 1.
-#'
+#' 
 #' @param date_analysis the date on which the prioritization should be done. The
 #'   probability of symptoms onset is computed until the end of the previous
 #'   day. Defaults to the system date (i.e. today).
-#'
-#' @param include_last_follow_up TRUE if the date of last follow up should be
-#'   included in the date range and thus the probability of symptoms starting on
-#'   that date included in the result, FALSE if not (default TRUE).
 #'
 #' @param sort If TRUE (default) the result is sorted by followup priority.
 #'
 #' @return A data.frame containing all columns in contact_list and the following
 #'   additional columns:
-#' - p_onset, the probability of disease has onset by date_analysis
-#'   given that the exposure results in disease
-#' - p_symptoms, the overall probability of disease has onset by
+#' - rate_onset the overall rate of disease onset by
+#'   date_analysis
+#' - p_onset the overall probability of disease onset by
 #'   date_analysis
 #' - followup_priority, an index ranging from 1 for the highest
 #'   priority to the number of patients
@@ -59,11 +51,11 @@
 #' @importFrom tidyr complete full_seq
 #' @importFrom purrr map2_dbl pmap_dbl
 followup_priorities <- function(contact_list, exposure, exposure_end = NULL,
-                                exposure_weight = NULL,
-                                last_followup = NULL, p_disease = 1,
+                                rate_infectious_contact = NULL,
+                                last_followup = NULL,
                                 incubation_period = NULL,
                                 date_analysis = Sys.Date(),
-                                include_last_follow_up = TRUE, sort = TRUE) {
+                                sort = TRUE) {
   #-------------------------------------------------------------
   #------------- check inputs and transform --------------------
   #-------------------------------------------------------------
@@ -102,29 +94,12 @@ followup_priorities <- function(contact_list, exposure, exposure_end = NULL,
 
     last_followup <- dplyr::pull(contact_list, !!last_followup)
 
-    if (any(last_followup > date_analysis, na.rm = TRUE) & include_last_follow_up) {
+    if (any(last_followup > date_analysis, na.rm = TRUE)) {
       warning("Some followup dates are after the analysis date. Ignoring them.")
       last_followup[last_followup > date_analysis] <- as.Date(NA)
-    } else if (any(last_followup >= date_analysis, na.rm = TRUE) & !include_last_follow_up) {
-      warning("Some followup dates are equal or after the analysis date. Ignoring them.")
-      last_followup[last_followup >= date_analysis] <- as.Date(NA)
     }
   } else {
     stop("last_followup is not a column of contact_list")
-  }
-
-  #get p_disease
-  if (rlang::quo_text(rlang::enquo(p_disease)) %in% names(contact_list)) { #is a column
-    p_disease <- rlang::enquo(p_disease)
-    p_disease <- dplyr::pull(contact_list, !!p_disease)
-  } else if ((inherits(p_disease, "numeric") & (length(p_disease) == 1)) ) { #is a single numeric
-    contact_list$p_disease <- p_disease
-  } else {
-    stop("p_disease is not a scalar and not a column of contact_list")
-  }
-
-  if (any(p_disease < 0) | any(p_disease > 1, na.rm = TRUE)) {
-    stop("p_disease should be between 0 and 1")
   }
 
   #incubation_period
@@ -180,48 +155,39 @@ followup_priorities <- function(contact_list, exposure, exposure_end = NULL,
   #------------- do the work --------------------
   #----------------------------------------------
 
-  #the first exposure date for each contact
-  min_exp <- as.Date(vapply(exposure, min, 1), origin = as.Date("1970-01-01"))
+  #### THIS PART COULD BE DE-TIDYVERSIFIED IF NEEDED
 
-  increment <- 0
-  if (!include_last_follow_up) {
-    increment <- 1
-  }
-
-  #lower lim of integration
-  date_lower <- dplyr::if_else(
-    is.na(last_followup),
-    min_exp,
-    last_followup + increment #add increment of 1 if last followup not included in integration range
-  )
-
-  #compute probs
-  p_onset <- purrr::map2_dbl(
-    date_lower,
+  #prepare df to work with
+  work_df <- tibble::tibble(
     exposure,
-    function(x, y) p_integral_onset(incubation_period, x, date_analysis, y, exposure_weight)
+    last_followup,
+    rate_infectious_contact
   )
 
-  # correct the probs for previous follow up
-  p_corr <- purrr::pmap_dbl(
-    list(
-      min_exp,
-      pmax(date_lower, min_exp),
-      exposure
-    ),
-    function(x,y,z) p_integral_onset(incubation_period, x, y, z, exposure_weight)
-  )
+  work_df <- tibble::rowid_to_column(work_df)
 
-  p_onset <- ifelse(p_corr == 1, 0, p_onset/(1-p_corr)) #escape case when probability is extremely low resulting in 0/0
+  #one row per exposure date
+  work_df <- tidyr::unnest(work_df, c(exposure, rate_infectious_contact))
+  
+  #compute rates
+  inc <- integrate_incubation_followup(
+    incubation_period = incubation_period,
+    date_exposure = work_df$exposure,
+    date_analysis = date_analysis,
+    date_last_followup = work_df$last_followup
+    )
 
-  #put into df
-  contact_list$p_onset <- p_onset
+  work_df$rate_onset <- work_df$rate_infectious_contact * inc
+  
+  #sum rates of several for same contact exposures and put back to original df
+  work_df <- summarize(group_by(work_df, rowid), rate_onset = sum(rate_onset), .groups = "drop")
+  contact_list$rate_onset <- work_df$rate_onset
 
-  #apply base probability of disease being transmitted
-  contact_list$p_symptoms <- contact_list$p_onset * p_disease
+  #compute probability of onset from rate
+  contact_list$p_onset <- 1 - exp(-contact_list$rate_onset)
 
   #sort and add priorities
-  contact_list$followup_priority[order(contact_list$p_symptoms, decreasing = TRUE)] <- seq_len(nrow(contact_list))
+  contact_list$followup_priority[order(contact_list$p_onset, decreasing = TRUE)] <- seq_len(nrow(contact_list))
   if (sort) {
     contact_list <- contact_list[order(contact_list$followup_priority),]
   }

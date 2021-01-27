@@ -14,7 +14,8 @@ LazyData: true
 Imports: dplyr,
   purrr,
   rlang,
-  tidyr
+  tidyr,
+  tibble
 Suggests: testthat, roxygen2, knitr, distcrete, epitrix, DT
 RoxygenNote: 6.1.1
 Roxygen: list(markdown = TRUE)
